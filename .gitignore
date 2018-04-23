@@ -1,0 +1,15 @@
+# jMonkeyEngine
+nbproject/private
+build
+
+# MacOS
+.DS_Store
+
+# https://hub.jmonkeyengine.org/t/good-gitignore-for-typical-jme3-project/24635/4
+*.dll
+*.so
+dist
+bin
+
+# IntelliJ
+.idea
