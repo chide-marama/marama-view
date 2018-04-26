@@ -35,3 +35,4 @@ Building for iOS is only available inside a OSX/MacOS environment.
 - [libGDX documentation](https://libgdx.badlogicgames.com/documentation/)
 - [libGDX Wiki](https://github.com/libgdx/libgdx/wiki) 
 - [libGDX API Docs](https://libgdx.badlogicgames.com/nightlies/docs/api/)
+- [useful tutorials](https://xoppa.github.io/blog/basic-3d-using-libgdx/)
