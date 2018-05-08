@@ -30,6 +30,7 @@ www-test/
 /android/out/
 com_crashlytics_export_strings.xml
 out/
+auxil/
 
 ## Eclipse
 .classpath
@@ -96,7 +97,6 @@ nbactions.xml
 nb-configuration.xml
 
 ## Gradle
-
 /local.properties
 .gradle/
 gradle-app.setting
