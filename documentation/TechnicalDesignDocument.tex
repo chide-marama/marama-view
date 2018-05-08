@@ -1,8 +1,8 @@
 \documentclass[10pt]{extarticle} % article doctype, possible font size range from 8pt to 20pt with not all being avaiable.
 \setcounter{secnumdepth}{4} % Max. section depth, e.g. 3 means 4.1.1 is possible but not 4.1.1.2
 \title{\huge Technical Design Document MaramaUU}
-\author{Tim Hintzbergen    \\s1097561
-\\ICTGPb
+\author{Tim Hintzbergen, <nextname>    \\s1097561, <nextcode>
+\\\\ICTGPb
 \\Wilco Moerman}
 \date{May 8th, 2018}
 
@@ -11,8 +11,8 @@
 \usepackage{caption}
 \usepackage{mathabx}
 \usepackage[margin=1.0in]{geometry} % Sets page margin, 2.0in is default.
-\usepackage{url}
 \usepackage{titlesec}
+\usepackage{hyperref}
 
 \DeclareCaptionFormat{cancaption}{#1#2#3\par} % Normal format actually
 \DeclareCaptionLabelFormat{cancaptionlabel}{#1}
@@ -79,7 +79,7 @@
     Epics are a collection of user stories that share a goal or functionality.
 
     \subsubsection{3D Camera Controls}
-    \paragraph{\#2e2ca As a MGD or player I want to zoom in/out on the world when pinching}
+    \paragraph{\href{https://app.clickup.com/757520/761304/t/2e2ca}{\#2e2ca} As a MGD or player I want to zoom in/out on the world when pinching}
     Zoom functionality is already implemented and enabled by libGDX on all supported devices (Desktop, Android).
 
     \subsubsection{UI}
