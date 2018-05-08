@@ -1,5 +1,4 @@
 ## Java
-
 *.class
 *.war
 *.ear
@@ -30,9 +29,9 @@ www-test/
 *.iml
 /android/out/
 com_crashlytics_export_strings.xml
+out/
 
 ## Eclipse
-
 .classpath
 .project
 .metadata/
@@ -112,6 +111,7 @@ gradle-app.setting
 ## OS Specific
 .DS_Store
 Thumbs.db
+.knownPackages
 
 ## iOS
 /ios/xcode/*.xcodeproj/*
@@ -123,3 +123,8 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/xcshareddata
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
+
+## LaTeX
+/documentation/*.synctex
+/documentation/*.pdf
+
