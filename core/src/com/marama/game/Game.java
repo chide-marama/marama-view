@@ -2,6 +2,7 @@ package com.marama.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.*;
@@ -13,7 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.Timer;
@@ -53,17 +56,29 @@ public class Game implements ApplicationListener {
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         stage = new Stage(new ScreenViewport());
+
         final TextButton button =  new TextButton("Click me", skin, "default");
-        button.setWidth(200f);
-        button.setHeight(50f);
+        button.setWidth(100f);
+        button.setHeight(100f);
+        final Container<Actor> container = new Container<Actor>(button);
+        container.setWidth(300f);
+        container.setHeight(300f);
+        container.setX(100f);
+        container.setY(100f);
 
         final Dialog dialog = new Dialog("Nee, dat is niet hoe het werkt, vriend!", skin);
 
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-            	System.out.println("AAA");
                 dialog.show(stage);
+
+                dialog.addListener(new ClickListener(){
+                    @Override
+                    public void clicked(InputEvent event, float x, float y){
+                        dialog.hide();
+                    }
+                });
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run(){
@@ -72,26 +87,34 @@ public class Game implements ApplicationListener {
                 }, 3);
             }
         });
-        stage.addActor(button);
-        Gdx.input.setInputProcessor(stage);
+        stage.addActor(container);
+//        Gdx.input.setInputProcessor(stage);
 
 //
-//		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//		cam.position.set(7f, 7f, 7f);
-//		cam.lookAt(0,0,0);
-//		cam.near = 1f;
-//		cam.far = 300f;
-//		cam.update();
-//
-//		camController = new CameraInputController(cam);
-//		Gdx.input.setInputProcessor(camController);
-//
-//		assets = new AssetManager();
-//		assets.load(SHIP_PATH, Model.class);
-//		assets.load(BLOCK_PATH, Model.class);
-//		assets.load(INVADER_PATH, Model.class);
-//		assets.load(SPACE_SPHERE_PATH, Model.class);
-//		loading = true;
+		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.position.set(7f, 7f, 7f);
+		cam.lookAt(0,0,0);
+		cam.near = 1f;
+		cam.far = 300f;
+		cam.update();
+
+		camController = new CameraInputController(cam);
+		Gdx.input.setInputProcessor(camController);
+
+
+
+		assets = new AssetManager();
+		assets.load(SHIP_PATH, Model.class);
+		assets.load(BLOCK_PATH, Model.class);
+		assets.load(INVADER_PATH, Model.class);
+		assets.load(SPACE_SPHERE_PATH, Model.class);
+		loading = true;
+
+
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(stage);
+        multiplexer.addProcessor(camController);
+        Gdx.input.setInputProcessor(multiplexer);
 	}
 
 	private void doneLoading(){
@@ -129,19 +152,19 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void render () {
-//		if(loading && assets.update())
-//		    doneLoading();
-//		camController.update();
+		if(loading && assets.update())
+		    doneLoading();
+		camController.update();
 
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-//		modelBatch.begin(cam);
-//		modelBatch.render(instances, environment);
-//		if(space != null)
-//		    modelBatch.render(space);
-//		modelBatch.end();
+		modelBatch.begin(cam);
+		modelBatch.render(instances, environment);
+		if(space != null)
+		    modelBatch.render(space);
+		modelBatch.end();
 
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
@@ -159,8 +182,8 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void dispose () {
-//		modelBatch.dispose();
-//		instances.clear();
-//		assets.dispose();
+		modelBatch.dispose();
+		instances.clear();
+		assets.dispose();
 	}
 }
