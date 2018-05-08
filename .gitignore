@@ -1,3 +1,7 @@
+## Our own added
+out/
+
+
 ## Java
 
 *.class
@@ -11,6 +15,7 @@ hs_err_pid*
 ## GWT
 /html/war/
 /html/gwt-unitCache/
+.apt_generated/
 .apt_generated/
 .gwt/
 gwt-unitCache/
