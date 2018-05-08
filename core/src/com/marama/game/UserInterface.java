@@ -7,18 +7,19 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class UserInterface extends Table {
+public class UserInterface extends Stage implements Renderable {
     public Skin Skin;
-    public Stage Stage;
+    public Table Table;
 
-    public void create(){
-        Skin = new Skin(Gdx.files.internal("Skin/uiskin.json"));
-        Stage = new Stage(new ScreenViewport());
+    public UserInterface(Viewport viewport, String skinPath) {
+        super(viewport);
+        Skin = new Skin(Gdx.files.internal(skinPath));
+        Table = new Table();
+        addActor(Table);
 
-
-        final TextButton button =  new TextButton("Click me", Skin, "default");
+        final TextButton button = new TextButton("Click me", Skin, "default");
         button.setWidth(50f);
         button.setHeight(50f);
         final Container<Actor> container = new Container<Actor>(button);
@@ -30,31 +31,49 @@ public class UserInterface extends Table {
 
         final Dialog dialog = new Dialog("Nee, dat is niet hoe het werkt, vriend!", Skin);
 
-        button.addListener(new ClickListener(){
+        dialog.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y){
-                dialog.show(Stage);
+            public void clicked(InputEvent event, float x, float y) {
+                dialog.hide();
+            }
+        });
+        // Used to remember this inside the implicit function definition.
+        final UserInterface self = this;
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dialog.show(self);
 
-                dialog.addListener(new ClickListener(){
-                    @Override
-                    public void clicked(InputEvent event, float x, float y){
-                        dialog.hide();
-                    }
-                });
                 Timer.schedule(new Timer.Task() {
                     @Override
-                    public void run(){
+                    public void run() {
                         dialog.hide();
                     }
                 }, 3);
             }
         });
 
-        Stage.addActor(container);
+        addActor(container);
     }
 
-    public void render(){
-        Stage.act(Gdx.graphics.getDeltaTime());
-        Stage.draw();
+    @Override
+    public void render() {
+        act(Gdx.graphics.getDeltaTime());
+        draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
     }
 }

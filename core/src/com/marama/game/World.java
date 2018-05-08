@@ -1,9 +1,6 @@
 package com.marama.game;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -15,19 +12,19 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-public class World implements ApplicationListener {
+public class World extends Environment implements Renderable{
+    //TODO: should be removed, or modeled, we could figure this out later
     final String SPACE_SPHERE_PATH = "models/spacesphere/spacesphere.obj";
     final String BLOCK_PATH = "models/block/block.obj";
     final String INVADER_PATH = "models/invader/invader.obj";
     final String SHIP_PATH = "models/ship/ship.obj";
 
-    private PerspectiveCamera cam;
+    private PerspectiveCamera camera;
     private AssetManager assets;
     private ModelBatch modelBatch;
-    private Environment environment;
     private boolean loading;
-    public CameraInputController CamController;
 
+    public CameraInputController CamController;
 
     // GameElements
     public Array<ModelInstance> instances = new Array<ModelInstance>();
@@ -38,36 +35,33 @@ public class World implements ApplicationListener {
     public ModelInstance ship;
     public ModelInstance space;
 
-
-    @Override
-    public void create() {
+    public World(ColorAttribute color, DirectionalLight light, PerspectiveCamera camera, AssetManager assetManager){
         modelBatch = new ModelBatch();
-        environment = new Environment();
 
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        light.set(
+                0.8f, 0.8f, 0.8f,
+                -1f, -0.8f, -0.2f
+        );
 
+        camera.position.set(7f, 7f, 7f);
+        camera.lookAt(0, 0, 0);
+        camera.near = 1f;
+        camera.far = 300f;
 
-        cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cam.position.set(7f, 7f, 7f);
-        cam.lookAt(0, 0, 0);
-        cam.near = 1f;
-        cam.far = 300f;
-        cam.update();
-
-
-        assets = new AssetManager();
         assets.load(SHIP_PATH, Model.class);
         assets.load(BLOCK_PATH, Model.class);
         assets.load(INVADER_PATH, Model.class);
         assets.load(SPACE_SPHERE_PATH, Model.class);
+
+        set(color);
+        add(light);
+        this.camera = camera;
+        this.assets = assetManager;
+
         loading = true;
 
-
-        CamController = new CameraInputController(cam);
-
+        CamController = new CameraInputController(this.camera);
     }
-
 
     private void doneLoading() {
         ship = new ModelInstance(assets.get(SHIP_PATH, Model.class));
@@ -94,25 +88,27 @@ public class World implements ApplicationListener {
     }
 
     @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
     public void render() {
         if (loading && assets.update())
             doneLoading();
         CamController.update();
 
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-        modelBatch.begin(cam);
-        modelBatch.render(instances, environment);
+        modelBatch.begin(camera);
+        modelBatch.render(instances, this);
         if (space != null)
             modelBatch.render(space);
         modelBatch.end();
+    }
+
+    @Override
+    public void dispose() {
+        modelBatch.dispose();
+        instances.clear();
+        assets.dispose();
+    }
+
+    @Override
+    public void resize(int width, int height) {
 
     }
 
@@ -124,12 +120,5 @@ public class World implements ApplicationListener {
     @Override
     public void resume() {
 
-    }
-
-    @Override
-    public void dispose() {
-        modelBatch.dispose();
-        instances.clear();
-        assets.dispose();
     }
 }
