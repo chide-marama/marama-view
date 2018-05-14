@@ -9,102 +9,61 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 public class World extends Environment implements Renderable {
-    //TODO: should be removed, or modeled, we could figure this out later
-    final String SPACE_SPHERE_PATH = "models/spacesphere/spacesphere.obj";
-    final String BLOCK_PATH = "models/block/block.obj";
-    final String INVADER_PATH = "models/invader/invader.obj";
-    final String SHIP_PATH = "models/ship/ship.obj";
+    public CameraInputController cameraInputController;
 
-    public CameraInputController camController;
-
-    private PerspectiveCamera camera;
-    private AssetManager assets;
+    private PerspectiveCamera perspectiveCamera;
+    private AssetManager assetManager;
     private ModelBatch modelBatch;
     private boolean loading;
+    private Array<ModelInstance> modelInstances;
+    private final String M_BLOCK_PATH = "models/m-block.obj"; // TODO: Move this to a suitable location.
 
+    public World(ColorAttribute color, DirectionalLight light, PerspectiveCamera perspectiveCamera, AssetManager assetManager) {
+        loading = true;
 
-    // GameElements
-    private Array<ModelInstance> instances = new Array<ModelInstance>();
-
-    public Array<ModelInstance> invaders = new Array<ModelInstance>();
-    private Array<ModelInstance> blocks = new Array<ModelInstance>();
-
-    private ModelInstance ship;
-    private ModelInstance space;
-
-    public World(ColorAttribute color, DirectionalLight light, PerspectiveCamera camera, AssetManager assetManager){
+        modelInstances = new Array<ModelInstance>();
         modelBatch = new ModelBatch();
+
         light.set(
                 0.8f, 0.8f, 0.8f,
                 -1f, -0.8f, -0.2f
         );
 
-        camera.position.set(7f, 7f, 7f);
-        camera.lookAt(0, 0, 0);
-        camera.near = 1f;
-        camera.far = 300f;
+        perspectiveCamera.position.set(7f, 7f, 7f);
+        perspectiveCamera.lookAt(0, 0, 0);
+        perspectiveCamera.near = 1f;
+        perspectiveCamera.far = 300f;
+        perspectiveCamera.update();
 
-        assetManager.load(SHIP_PATH, Model.class);
-        assetManager.load(BLOCK_PATH, Model.class);
-        assetManager.load(INVADER_PATH, Model.class);
-        assetManager.load(SPACE_SPHERE_PATH, Model.class);
+        assetManager.load(M_BLOCK_PATH, Model.class);
 
         set(color);
         add(light);
-        this.camera = camera;
-        this.assets = assetManager;
+        this.perspectiveCamera = perspectiveCamera;
+        this.assetManager = assetManager;
 
-        loading = true;
-
-        camController = new CameraInputController(this.camera);
-    }
-
-    private void doneLoading() {
-        ship = new ModelInstance(assets.get(SHIP_PATH, Model.class));
-        ship.transform.setToRotation(Vector3.Y, 180).trn(0, 0, 6f);
-        instances.add(ship);
-
-        Model blockModel = assets.get(BLOCK_PATH, Model.class);
-        for (float x = -5f; x <= 5f; x += 2f) {
-            ModelInstance block = new ModelInstance(blockModel);
-            block.transform.setToTranslation(x, 0, 3f);
-            instances.add(block);
-            blocks.add(block);
-        }
-
-        Model invaderModel = assets.get(INVADER_PATH, Model.class);
-        for (float x = -5f; x <= 5f; x += 2f) {
-            for (float z = -8f; z <= 0f; z += 2f) {
-                ModelInstance invader = new ModelInstance(invaderModel);
-                invader.transform.setToTranslation(x, 0, z);
-                instances.add(invader);
-                blocks.add(invader);
-            }
-        }
+        cameraInputController = new CameraInputController(this.perspectiveCamera);
     }
 
     @Override
     public void render(float delta) {
-        if (loading && assets.update())
+        if (loading && assetManager.update()) //
             doneLoading();
-        camController.update();
+        cameraInputController.update();
 
-        modelBatch.begin(camera);
-        modelBatch.render(instances, this);
-        if (space != null)
-            modelBatch.render(space);
+        modelBatch.begin(perspectiveCamera);
+        modelBatch.render(modelInstances, this);
         modelBatch.end();
     }
 
     @Override
     public void dispose() {
         modelBatch.dispose();
-        instances.clear();
-        assets.dispose();
+        modelInstances.clear();
+        assetManager.dispose();
     }
 
     @Override
@@ -120,5 +79,9 @@ public class World extends Environment implements Renderable {
     @Override
     public void resume() {
 
+    }
+
+    private void doneLoading() {
+        modelInstances.add(new ModelInstance(assetManager.get(M_BLOCK_PATH, Model.class)));
     }
 }

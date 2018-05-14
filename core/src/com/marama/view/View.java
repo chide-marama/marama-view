@@ -8,6 +8,7 @@ import com.marama.view.screens.MainMenuScreen;
 
 
 public class View extends Game implements ApplicationListener {
+	float backgroundColor = 0.8f;
 
     @Override
     public void create () {
@@ -20,14 +21,12 @@ public class View extends Game implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
-//        getScreen().getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         super.resize(width, height);
 	}
 
 	@Override
 	public void render () {
-        float bgColor = 0.8f;
-        Gdx.gl.glClearColor(bgColor, bgColor, bgColor, 1f);
+        Gdx.gl.glClearColor(backgroundColor, backgroundColor, backgroundColor, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         super.render();
 	}

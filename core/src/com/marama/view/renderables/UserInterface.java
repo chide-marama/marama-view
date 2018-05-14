@@ -48,7 +48,7 @@ public class UserInterface extends Stage implements Renderable {
             }
         });
 
-            addActor(container);
+        addActor(container);
     }
 
     @Override

@@ -12,25 +12,23 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.marama.view.renderables.UserInterface;
 import com.marama.view.renderables.World;
 
-public class GameScreen implements Screen{
+public class GameScreen implements Screen {
     private World world;
     private UserInterface userInterface;
 
-    public GameScreen(){
+    public GameScreen() {
         ColorAttribute color = new ColorAttribute(
                 ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f
         );
-        DirectionalLight light = new DirectionalLight();
+
         PerspectiveCamera camera = new PerspectiveCamera(
                 67,
                 Gdx.graphics.getWidth(),
                 Gdx.graphics.getHeight()
         );
-        AssetManager assetManager = new AssetManager();
 
-        this.world = new World(color, light, camera, assetManager);
-
-        this.userInterface =  new UserInterface(
+        this.world = new World(color, new DirectionalLight(), camera, new AssetManager());
+        this.userInterface = new UserInterface(
                 new ScreenViewport(),
                 new Skin(Gdx.files.internal("skin/uiskin.json"))
         );
@@ -40,7 +38,7 @@ public class GameScreen implements Screen{
     public void show() {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(userInterface);
-        multiplexer.addProcessor(world.camController);
+        multiplexer.addProcessor(world.cameraInputController);
         Gdx.input.setInputProcessor(multiplexer);
     }
 

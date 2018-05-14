@@ -14,11 +14,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marama.view.View;
 
 public class MainMenuScreen extends Stage implements Screen {
-
     final private View view;
     private Skin skin;
 
-    public MainMenuScreen(final View view, Viewport viewport, Skin skin){
+    public MainMenuScreen(final View view, Viewport viewport, Skin skin) {
         super(viewport);
 
         this.view = view;
@@ -32,11 +31,9 @@ public class MainMenuScreen extends Stage implements Screen {
         container.setX((viewport.getScreenWidth() / 2));
         container.setY((viewport.getScreenHeight() / 2));
 
-
-        button.addListener(new ClickListener(){
+        button.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y){
-                System.out.println("ding");
+            public void clicked(InputEvent event, float x, float y) {
                 view.setScreen(new GameScreen());
             }
         });
@@ -76,6 +73,7 @@ public class MainMenuScreen extends Stage implements Screen {
 
     @Override
     public void dispose() {
-
+        view.dispose();
+        skin.dispose();
     }
 }
