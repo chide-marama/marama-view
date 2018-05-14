@@ -1,8 +1,11 @@
 package com.marama.view.renderables;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -10,15 +13,16 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.MBlock;
+import com.marama.view.entities.MBlockInstance;
 
 public class World extends Environment implements Renderable {
     public CameraInputController cameraInputController;
+    public PerspectiveCamera perspectiveCamera;
+    public Array<ModelInstance> modelInstances;
 
-    private PerspectiveCamera perspectiveCamera;
     private AssetManager assetManager;
     private ModelBatch modelBatch;
     private boolean loading;
-    private Array<ModelInstance> modelInstances;
     private MBlock mBlock;
 
     public World(ColorAttribute color, DirectionalLight light, PerspectiveCamera perspectiveCamera, AssetManager assetManager) {
@@ -85,11 +89,13 @@ public class World extends Environment implements Renderable {
         for (float x = -10f; x <= 0f; x += 2f) {
             for (float z = -10f; z <= 0f; z += 2f) {
                 for (float y = -10f; y <= 0f; y += 2f) {
-                    ModelInstance instance = mBlock.asInstance();
+                    MBlockInstance instance = mBlock.createInstance();
                     instance.transform.setToTranslation(x, y, z);
                     modelInstances.add(instance);
                 }
             }
         }
+
+        loading = false;
     }
 }

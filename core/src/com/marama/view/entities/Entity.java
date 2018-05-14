@@ -20,7 +20,6 @@ public class Entity {
      */
     public Entity(AssetManager assetManager, String filePath) {
         this.assetManager = assetManager;
-
         this.filePath = filePath;
         this.type = Model.class;
         this.assetManager.load(filePath, type);
@@ -28,9 +27,18 @@ public class Entity {
 
     /**
      *
+     * @param fileName
      * @return
      */
-    public ModelInstance asInstance() {
-        return new ModelInstance(assetManager.get(filePath, type));
+    public Model getModel(String fileName) {
+        return assetManager.get(fileName, type);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ModelInstance createInstance() {
+        return new ModelInstance(getModel(filePath));
     }
 }
