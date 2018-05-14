@@ -3,13 +3,13 @@ package com.marama.view.renderables;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
+import com.marama.view.entities.MBlock;
 
 public class World extends Environment implements Renderable {
     public CameraInputController cameraInputController;
@@ -19,7 +19,7 @@ public class World extends Environment implements Renderable {
     private ModelBatch modelBatch;
     private boolean loading;
     private Array<ModelInstance> modelInstances;
-    private final String M_BLOCK_PATH = "models/m-block.obj"; // TODO: Move this to a suitable location.
+    private MBlock mBlock;
 
     public World(ColorAttribute color, DirectionalLight light, PerspectiveCamera perspectiveCamera, AssetManager assetManager) {
         loading = true;
@@ -38,14 +38,14 @@ public class World extends Environment implements Renderable {
         perspectiveCamera.far = 300f;
         perspectiveCamera.update();
 
-        assetManager.load(M_BLOCK_PATH, Model.class);
-
         set(color);
         add(light);
         this.perspectiveCamera = perspectiveCamera;
         this.assetManager = assetManager;
 
         cameraInputController = new CameraInputController(this.perspectiveCamera);
+
+        mBlock = new MBlock(assetManager);
     }
 
     @Override
@@ -82,6 +82,6 @@ public class World extends Environment implements Renderable {
     }
 
     private void doneLoading() {
-        modelInstances.add(new ModelInstance(assetManager.get(M_BLOCK_PATH, Model.class)));
+        modelInstances.add(mBlock.asInstance());
     }
 }
