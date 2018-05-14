@@ -82,6 +82,14 @@ public class World extends Environment implements Renderable {
     }
 
     private void doneLoading() {
-        modelInstances.add(mBlock.asInstance());
+        for (float x = -10f; x <= 0f; x += 2f) {
+            for (float z = -10f; z <= 0f; z += 2f) {
+                for (float y = -10f; y <= 0f; y += 2f) {
+                    ModelInstance instance = mBlock.asInstance();
+                    instance.transform.setToTranslation(x, y, z);
+                    modelInstances.add(instance);
+                }
+            }
+        }
     }
 }
