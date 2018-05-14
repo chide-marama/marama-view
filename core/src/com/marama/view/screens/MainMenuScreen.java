@@ -26,14 +26,11 @@ public class MainMenuScreen extends Stage implements Screen {
 
         addActor(new Table());
 
-        final TextButton button = new TextButton("Click me", skin, "default");
-        button.setWidth(50f);
-        button.setHeight(50f);
+        final TextButton button = new TextButton("Play game!", skin, "default");
         final Container<Actor> container = new Container<Actor>(button);
-        container.setWidth(300f);
-        container.setHeight(300f);
-        container.setX(100f);
-        container.setY(100f);
+
+        container.setX((viewport.getScreenWidth() / 2));
+        container.setY((viewport.getScreenHeight() / 2));
 
 
         button.addListener(new ClickListener(){
