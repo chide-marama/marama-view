@@ -6,4 +6,9 @@ public class MBlock extends Entity {
     public MBlock(AssetManager assetManager) {
         super(assetManager, "models/m-block.obj");
     }
+
+    @Override
+    public MBlockInstance createInstance() {
+        return new MBlockInstance(super.getModel("models/m-block.obj"));
+    }
 }

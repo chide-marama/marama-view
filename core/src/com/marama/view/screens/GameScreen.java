@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.marama.view.renderables.UserInterface;
 import com.marama.view.renderables.World;
+import com.marama.view.util.SelectObjectInputController;
 
 public class GameScreen implements Screen {
     private World world;
@@ -38,6 +39,7 @@ public class GameScreen implements Screen {
     public void show() {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(userInterface);
+        multiplexer.addProcessor(new SelectObjectInputController(this.world.perspectiveCamera, this.world.modelInstances));
         multiplexer.addProcessor(world.cameraInputController);
         Gdx.input.setInputProcessor(multiplexer);
     }

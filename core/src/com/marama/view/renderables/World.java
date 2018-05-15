@@ -10,15 +10,17 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.MBlock;
+import com.marama.view.entities.MBlockInstance;
 
 public class World extends Environment implements Renderable {
-    public CameraInputController cameraInputController;
 
-    private PerspectiveCamera perspectiveCamera;
+    public CameraInputController cameraInputController;
+    public PerspectiveCamera perspectiveCamera;
+    public Array<ModelInstance> modelInstances;
+
     private AssetManager assetManager;
     private ModelBatch modelBatch;
     private boolean loading;
-    private Array<ModelInstance> modelInstances;
     private MBlock mBlock;
 
     public World(ColorAttribute color, DirectionalLight light, PerspectiveCamera perspectiveCamera, AssetManager assetManager) {
@@ -85,11 +87,12 @@ public class World extends Environment implements Renderable {
         for (float x = -10f; x <= 0f; x += 2f) {
             for (float z = -10f; z <= 0f; z += 2f) {
                 for (float y = -10f; y <= 0f; y += 2f) {
-                    ModelInstance instance = mBlock.asInstance();
+                    MBlockInstance instance = mBlock.createInstance();
                     instance.transform.setToTranslation(x, y, z);
                     modelInstances.add(instance);
                 }
             }
         }
+        loading = false;
     }
 }
