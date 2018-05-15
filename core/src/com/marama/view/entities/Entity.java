@@ -14,7 +14,6 @@ public class Entity {
     private AssetManager assetManager;
 
     /**
-     *
      * @param assetManager
      * @param filePath
      */
@@ -26,7 +25,6 @@ public class Entity {
     }
 
     /**
-     *
      * @param fileName
      * @return
      */
@@ -35,7 +33,6 @@ public class Entity {
     }
 
     /**
-     *
      * @return
      */
     public ModelInstance createInstance() {

@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -22,7 +24,6 @@ public class UserInterface extends Stage implements Renderable {
         float blockSize = 80f;
         float padding = 10f;
         t.left().top();
-
 
         FileHandle[] files = Gdx.files.internal("test_Ms").list();
         for (final FileHandle file : files) {
@@ -41,7 +42,6 @@ public class UserInterface extends Stage implements Renderable {
             });
             t.row();
         }
-//        t.setFillParent(true);
         float height = (blockSize + padding) * files.length;
         t.setWidth(blockSize + (padding * 2));
         t.setHeight(height);
@@ -52,41 +52,6 @@ public class UserInterface extends Stage implements Renderable {
         bgColor.setColor(200, 20, 20, 255);
         t.setBackground(bgColor);
         addActor(t);
-
-
-//
-//        button.setWidth(50f);
-//        button.setHeight(50f);
-//        final Container<Actor> container = new Container<Actor>(button);
-//        container.setWidth(300f);
-//        container.setHeight(300f);
-//        container.setX(100f);
-//        container.setY(100f);
-
-//
-//        final Dialog dialog = new Dialog("Nee, dat is niet hoe het werkt, vriend!", skin);
-//
-//        dialog.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                dialog.hide();
-//            }
-//        });
-//        // Used to remember this inside the implicit function definition.
-//        final UserInterface self = this;
-//        button.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                dialog.show(self);
-//
-//                Timer.schedule(new Timer.Task() {
-//                    @Override
-//                    public void run() {
-//                        dialog.hide();
-//                    }
-//                }, 3);
-//            }
-//        });
 
     }
 

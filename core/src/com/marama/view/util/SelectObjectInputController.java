@@ -45,7 +45,6 @@ public class SelectObjectInputController extends InputAdapter {
     }
 
     /**
-     *
      * @param screenX
      * @param screenY
      * @param camera
@@ -62,7 +61,6 @@ public class SelectObjectInputController extends InputAdapter {
     }
 
     /**
-     *
      * @param screenX
      * @param screenY
      * @param camera

@@ -1,11 +1,8 @@
 package com.marama.view.renderables;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -16,6 +13,7 @@ import com.marama.view.entities.MBlock;
 import com.marama.view.entities.MBlockInstance;
 
 public class World extends Environment implements Renderable {
+
     public CameraInputController cameraInputController;
     public PerspectiveCamera perspectiveCamera;
     public Array<ModelInstance> modelInstances;
@@ -95,7 +93,6 @@ public class World extends Environment implements Renderable {
                 }
             }
         }
-
         loading = false;
     }
 }

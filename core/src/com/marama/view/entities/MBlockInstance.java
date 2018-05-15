@@ -9,14 +9,13 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 public class MBlockInstance extends ModelInstance {
+    private final static BoundingBox bounds = new BoundingBox();
     public final Vector3 center = new Vector3();
     public final Vector3 dimensions = new Vector3();
     public final float radius; // TODO: make boundingbox a box, not a sphere if possible
-
     private boolean selected;
     private Material defaultMaterial = new Material(ColorAttribute.createDiffuse(Color.WHITE));
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
-    private final static BoundingBox bounds = new BoundingBox();
 
     public MBlockInstance(Model model) {
         super(model);
