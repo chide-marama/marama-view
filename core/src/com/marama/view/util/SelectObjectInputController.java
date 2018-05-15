@@ -52,7 +52,7 @@ public class SelectObjectInputController extends InputAdapter {
         return false; // Continue to the next 'touchUp' listener.
     }
 
-    // TODO: Below code might have a better place somewhere else/
+    // TODO: Below code might have a better place somewhere else.
 
     /**
      * Retrieving a {@link ModelInstance} from screen coordinates.
