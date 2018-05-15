@@ -14,13 +14,13 @@ public class SplashScreen implements Screen {
     private SpriteBatch batch;
     private Texture texture;
     private Sprite sprite;
-    private float ellapsedTime;
+    private float elapsedTime;
 
     private final View view;
     private Viewport viewport;
     private Skin skin;
 
-    private final float SPLASH_DURATION = 3;
+    private final double SPLASH_DURATION = 5;
 
     public SplashScreen(final View view, Viewport viewport, Skin skin) {
         this.view = view;
@@ -30,7 +30,7 @@ public class SplashScreen implements Screen {
         this.batch = new SpriteBatch();
         this.texture = new Texture(Gdx.files.internal("MaramaLogo.png"));
         this.sprite = new Sprite(texture, 0, 0, texture.getWidth(), texture.getHeight());
-        this.ellapsedTime = 0;
+        this.elapsedTime = 0;
     }
 
     @Override
@@ -40,23 +40,30 @@ public class SplashScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        final double HALF_DUR = SPLASH_DURATION / 2;
         // TODO optimization: resize img dimensions to powers of two
         // Clear screen and reset active texture (just in case).
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
 
-        // Keep track of ellapsed time and fade out img after half-time.
-        ellapsedTime += delta;
-        if (ellapsedTime > SPLASH_DURATION / 2) {
-            sprite.setAlpha(sprite.getColor().a - 255 / (delta / (SPLASH_DURATION / 2)));
-        }
+        // Keep track of elapsed time and fade out img after half-time.
+        elapsedTime += delta;
+        double progressSinceHalf = (elapsedTime - HALF_DUR) / HALF_DUR;
+        double newAlpha = Math.max(1 - progressSinceHalf, 0); // Avoid negative values
+
+        System.out.println("Sprite alpha: " + sprite.getColor().a);
 
         // Start a drawing task.
         batch.begin();
-        batch.draw(sprite, 0, 0);
+        if (elapsedTime > SPLASH_DURATION / 2) {
+            // Set the alpha to engage a fade out animation.
+            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, (float) newAlpha);
+        }
+        batch.draw(sprite, viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
         batch.end();
 
-        if (ellapsedTime > SPLASH_DURATION)
+        // Exit after the duration has elapsed.
+        if (elapsedTime > SPLASH_DURATION)
             this.dispose();
     }
 
