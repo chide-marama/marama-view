@@ -16,7 +16,6 @@ public class SelectObjectInputController extends InputAdapter {
     private Array<ModelInstance> modelInstances;
 
     /**
-     *
      * @param perspectiveCamera
      * @param modelInstances
      */
@@ -26,7 +25,6 @@ public class SelectObjectInputController extends InputAdapter {
     }
 
     /**
-     *
      * @param screenX
      * @param screenY
      * @param pointer
@@ -40,7 +38,6 @@ public class SelectObjectInputController extends InputAdapter {
     }
 
     /**
-     *
      * @param screenX
      * @param screenY
      * @param pointer
@@ -52,7 +49,6 @@ public class SelectObjectInputController extends InputAdapter {
     }
 
     /**
-     *
      * @param screenX
      * @param screenY
      * @param pointer
