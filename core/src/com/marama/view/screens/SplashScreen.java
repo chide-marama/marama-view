@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Scaling;
@@ -15,16 +16,15 @@ import com.marama.view.View;
 
 public class SplashScreen implements Screen {
     private SpriteBatch batch;
-    private Texture texture;
-    private Sprite sprite;
-    private TextureRegion splash;
+    private Sprite splash;
+    private Image splashImage;
     private float elapsedTime;
 
     private final View view;
     private Viewport viewport;
     private Skin skin;
 
-    private final double SPLASH_DURATION = 5;
+    private final double SPLASH_DURATION = 6;
 
     public SplashScreen(final View view, Viewport viewport, Skin skin) {
         this.view = view;
@@ -32,9 +32,9 @@ public class SplashScreen implements Screen {
         this.skin = skin;
 
         this.batch = new SpriteBatch();
-        this.texture = new Texture(Gdx.files.internal("MaramaLogo.png"));
-        this.splash = new TextureRegion(texture);
-        this.sprite = new Sprite(texture, 0, 0, texture.getWidth(), texture.getHeight());
+        Texture logo = new Texture(Gdx.files.internal("MaramaLogo.png"));
+        this.splash = new Sprite(logo, 0, 0, logo.getWidth(), logo.getHeight());
+        splashImage = new Image(splash);
         this.elapsedTime = 0;
     }
 
@@ -56,8 +56,11 @@ public class SplashScreen implements Screen {
         double progressSinceHalf = (elapsedTime - HALF_DUR) / HALF_DUR;
         double newAlpha = Math.max(1 - progressSinceHalf, 0); // Avoid negative values
 
+        // Manually update the camera.
+        batch.setTransformMatrix(viewport.getCamera().view);
+        batch.setProjectionMatrix(viewport.getCamera().projection);
+
         // Start a drawing task.
-        System.out.println("viewport: " + Gdx.graphics.getWidth());
         batch.begin();
         if (elapsedTime > SPLASH_DURATION / 2) {
             // Set the alpha to engage a fade out animation.
@@ -66,7 +69,7 @@ public class SplashScreen implements Screen {
                             batch.getColor().b,
                             (float) newAlpha);
         }
-        batch.draw(sprite, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        splashImage.getDrawable().draw(batch, -viewport.getScreenWidth() / 2, -viewport.getScreenHeight() / 2, viewport.getScreenWidth(), viewport.getScreenHeight());
         batch.end();
 
         // Exit after the duration has elapsed.
@@ -76,7 +79,12 @@ public class SplashScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width, height);
+        viewport.getCamera().update();
+        System.out.println("graphics: (" + Gdx.graphics.getWidth() + ", " + Gdx.graphics.getHeight() + ")\n"
+                + "viewport: (" + viewport.getScreenWidth() + ", " + viewport.getScreenHeight() + ")\n"
+                + "viewportXY: (" + viewport.getScreenX() + ", " + viewport.getScreenY() + ")\n"
+                + "viewportWorld: (" + viewport.getWorldWidth() + ", " + viewport.getWorldHeight() + ")\n");
     }
 
     @Override
