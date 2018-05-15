@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marama.view.View;
 
@@ -14,6 +17,7 @@ public class SplashScreen implements Screen {
     private SpriteBatch batch;
     private Texture texture;
     private Sprite sprite;
+    private TextureRegion splash;
     private float elapsedTime;
 
     private final View view;
@@ -29,6 +33,7 @@ public class SplashScreen implements Screen {
 
         this.batch = new SpriteBatch();
         this.texture = new Texture(Gdx.files.internal("MaramaLogo.png"));
+        this.splash = new TextureRegion(texture);
         this.sprite = new Sprite(texture, 0, 0, texture.getWidth(), texture.getHeight());
         this.elapsedTime = 0;
     }
@@ -51,15 +56,15 @@ public class SplashScreen implements Screen {
         double progressSinceHalf = (elapsedTime - HALF_DUR) / HALF_DUR;
         double newAlpha = Math.max(1 - progressSinceHalf, 0); // Avoid negative values
 
-        System.out.println("Sprite alpha: " + sprite.getColor().a);
-
         // Start a drawing task.
         batch.begin();
         if (elapsedTime > SPLASH_DURATION / 2) {
             // Set the alpha to engage a fade out animation.
             batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, (float) newAlpha);
         }
-        batch.draw(sprite, viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
+        batch.draw(sprite, 0, 0, sprite.getWidth() / 2, sprite.getHeight() / 2);
+        //batch.draw(splash, -100, -100);
+        //batch.draw(sprite, viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
         batch.end();
 
         // Exit after the duration has elapsed.
