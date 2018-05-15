@@ -24,7 +24,6 @@ public class World extends Environment implements Renderable {
     private MBlock mBlock;
 
     /**
-     *
      * @param color
      * @param light
      * @param perspectiveCamera
@@ -58,7 +57,6 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     *
      * @param delta
      */
     @Override
@@ -83,7 +81,6 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     *
      * @param width
      * @param height
      */
@@ -112,9 +109,9 @@ public class World extends Environment implements Renderable {
      *
      */
     private void doneLoading() {
-        for (float x = -10f; x <= 0f; x += 2f) {
-            for (float z = -10f; z <= 0f; z += 2f) {
-                for (float y = -10f; y <= 0f; y += 2f) {
+        for (float x = -3f; x <= 3f; x += 2f) {
+            for (float z = -3f; z <= 3f; z += 2f) {
+                for (float y = -3f; y <= 3f; y += 2f) {
                     MBlockInstance instance = mBlock.createInstance();
                     instance.transform.setToTranslation(x, y, z);
                     modelInstances.add(instance);
