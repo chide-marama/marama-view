@@ -17,6 +17,9 @@ public class GameScreen implements Screen {
     private World world;
     private UserInterface userInterface;
 
+    /**
+     *
+     */
     public GameScreen() {
         ColorAttribute color = new ColorAttribute(
                 ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f
@@ -35,6 +38,9 @@ public class GameScreen implements Screen {
         );
     }
 
+    /**
+     *
+     */
     @Override
     public void show() {
         InputMultiplexer multiplexer = new InputMultiplexer();
@@ -44,32 +50,53 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(multiplexer);
     }
 
+    /**
+     *
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         world.render(delta);
         userInterface.render(delta);
     }
 
+    /**
+     *
+     * @param width
+     * @param height
+     */
     @Override
     public void resize(int width, int height) {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void pause() {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void resume() {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void hide() {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void dispose() {
 

@@ -15,22 +15,50 @@ public class SelectObjectInputController extends InputAdapter {
     private PerspectiveCamera perspectiveCamera;
     private Array<ModelInstance> modelInstances;
 
+    /**
+     *
+     * @param perspectiveCamera
+     * @param modelInstances
+     */
     public SelectObjectInputController(PerspectiveCamera perspectiveCamera, Array<ModelInstance> modelInstances) {
         this.perspectiveCamera = perspectiveCamera;
         this.modelInstances = modelInstances;
     }
 
+    /**
+     *
+     * @param screenX
+     * @param screenY
+     * @param pointer
+     * @param button
+     * @return
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         selectedModelInstance = (MBlockInstance) getModelInstance(screenX, screenY, perspectiveCamera);
         return selectedModelInstance != null;
     }
 
+    /**
+     *
+     * @param screenX
+     * @param screenY
+     * @param pointer
+     * @return
+     */
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return selectedModelInstance != null;
     }
 
+    /**
+     *
+     * @param screenX
+     * @param screenY
+     * @param pointer
+     * @param button
+     * @return
+     */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         MBlockInstance instance = (MBlockInstance) getModelInstance(screenX, screenY, perspectiveCamera);

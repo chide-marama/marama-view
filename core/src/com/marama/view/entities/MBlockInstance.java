@@ -17,6 +17,10 @@ public class MBlockInstance extends ModelInstance {
     private Material defaultMaterial = new Material(ColorAttribute.createDiffuse(Color.WHITE));
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
 
+    /**
+     *
+     * @param model
+     */
     public MBlockInstance(Model model) {
         super(model);
 
@@ -30,10 +34,18 @@ public class MBlockInstance extends ModelInstance {
         radius = dimensions.len() / 3f;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isSelected() {
         return selected;
     }
 
+    /**
+     *
+     * @param selected
+     */
     public void setSelected(boolean selected) {
         this.selected = selected;
 
@@ -44,6 +56,10 @@ public class MBlockInstance extends ModelInstance {
         }
     }
 
+    /**
+     *
+     * @param material
+     */
     public void setMaterial(Material material) {
         materials.get(0).clear();
         materials.get(0).set(material);

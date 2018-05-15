@@ -23,6 +23,13 @@ public class World extends Environment implements Renderable {
     private boolean loading;
     private MBlock mBlock;
 
+    /**
+     *
+     * @param color
+     * @param light
+     * @param perspectiveCamera
+     * @param assetManager
+     */
     public World(ColorAttribute color, DirectionalLight light, PerspectiveCamera perspectiveCamera, AssetManager assetManager) {
         loading = true;
 
@@ -50,6 +57,10 @@ public class World extends Environment implements Renderable {
         mBlock = new MBlock(assetManager);
     }
 
+    /**
+     *
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         if (loading && assetManager.update()) //
@@ -61,6 +72,9 @@ public class World extends Environment implements Renderable {
         modelBatch.end();
     }
 
+    /**
+     *
+     */
     @Override
     public void dispose() {
         modelBatch.dispose();
@@ -68,21 +82,35 @@ public class World extends Environment implements Renderable {
         assetManager.dispose();
     }
 
+    /**
+     *
+     * @param width
+     * @param height
+     */
     @Override
     public void resize(int width, int height) {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void pause() {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void resume() {
 
     }
 
+    /**
+     *
+     */
     private void doneLoading() {
         for (float x = -10f; x <= 0f; x += 2f) {
             for (float z = -10f; z <= 0f; z += 2f) {

@@ -13,10 +13,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.marama.view.utils.BackgroundColor;
+import com.marama.view.util.BackgroundColor;
 
 public class UserInterface extends Stage implements Renderable {
 
+    /**
+     *
+     * @param viewport
+     * @param skin
+     */
     public UserInterface(Viewport viewport, Skin skin) {
         super(viewport);
         Table t = new Table();
@@ -55,22 +60,37 @@ public class UserInterface extends Stage implements Renderable {
 
     }
 
+    /**
+     *
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         act(delta);
         draw();
     }
 
+    /**
+     *
+     * @param width
+     * @param height
+     */
     @Override
     public void resize(int width, int height) {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void pause() {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void resume() {
 
