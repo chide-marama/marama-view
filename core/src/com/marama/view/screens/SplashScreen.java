@@ -57,14 +57,16 @@ public class SplashScreen implements Screen {
         double newAlpha = Math.max(1 - progressSinceHalf, 0); // Avoid negative values
 
         // Start a drawing task.
+        System.out.println("viewport: " + Gdx.graphics.getWidth());
         batch.begin();
         if (elapsedTime > SPLASH_DURATION / 2) {
             // Set the alpha to engage a fade out animation.
-            batch.setColor(batch.getColor().r, batch.getColor().g, batch.getColor().b, (float) newAlpha);
+            batch.setColor( batch.getColor().r,
+                            batch.getColor().g,
+                            batch.getColor().b,
+                            (float) newAlpha);
         }
-        batch.draw(sprite, 0, 0, sprite.getWidth() / 2, sprite.getHeight() / 2);
-        //batch.draw(splash, -100, -100);
-        //batch.draw(sprite, viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2);
+        batch.draw(sprite, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
 
         // Exit after the duration has elapsed.
