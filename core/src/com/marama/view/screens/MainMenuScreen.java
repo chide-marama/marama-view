@@ -17,6 +17,12 @@ public class MainMenuScreen extends Stage implements Screen {
     final private View view;
     private Skin skin;
 
+    /**
+     *
+     * @param view
+     * @param viewport
+     * @param skin
+     */
     public MainMenuScreen(final View view, Viewport viewport, Skin skin) {
         super(viewport);
 
@@ -40,38 +46,61 @@ public class MainMenuScreen extends Stage implements Screen {
         this.addActor(container);
     }
 
+    /**
+     *
+     */
     @Override
-
     public void show() {
         Gdx.input.setInputProcessor(this);
     }
 
+    /**
+     *
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         act(delta);
         draw();
     }
 
+    /**
+     *
+     * @param width
+     * @param height
+     */
     @Override
     public void resize(int width, int height) {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void pause() {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void resume() {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void hide() {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void dispose() {
         view.dispose();
