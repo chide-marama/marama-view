@@ -23,7 +23,7 @@ public class SplashScreen implements Screen {
     private Viewport viewport;
     private Skin skin;
 
-    private final double SPLASH_DURATION = 6; /* Total duration for the splash screen. From start of the app to appearance of the main menu. */
+    private final double SPLASH_DURATION = 5; /* Total duration for the splash screen. From start of the app to appearance of the main menu. */
     private final double FADE_OUT_START = SPLASH_DURATION * 0.6; /* The duration is tweak-able. Try to keep it between 0.1 and 0.9 for best effect. */
 
     public SplashScreen(final View view, Viewport viewport, Skin skin) {
