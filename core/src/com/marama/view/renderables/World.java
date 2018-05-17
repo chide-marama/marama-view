@@ -9,28 +9,30 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.MBlock;
-import com.marama.view.entities.MBlockInstance;
+import com.marama.view.entities.SelectableInstance;
 
 
 /**
  * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
  */
 public class World extends Environment implements Renderable {
-    public CameraInputController cameraInputController;
-    public Array<ModelInstance> modelInstances;
-
     private boolean loading;
     private DirectionalLight directionalLight;
-    public PerspectiveCamera perspectiveCamera;
+    private Array<ModelInstance> modelInstances;
+    private PerspectiveCamera perspectiveCamera;
+    private CameraInputController cameraInputController;
     private AssetManager assetManager;
     private ModelBatch modelBatch;
     private MBlock mBlock;
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s
+     *
      * @param directionalLight
      * @param perspectiveCamera
      * @param assetManager
@@ -78,6 +80,58 @@ public class World extends Environment implements Renderable {
 
     }
 
+    public CameraInputController getCameraInputController() {
+        return cameraInputController;
+    }
+
+    /**
+     * Retrieving a {@link ModelInstance} from screen coordinates.
+     *
+     * @param screenX The x coordinate, origin is in the upper left corner
+     * @param screenY The y coordinate, origin is in the upper left corner
+     * @return The {@link ModelInstance} if it was found, otherwise null.
+     */
+    public ModelInstance getModelInstance(int screenX, int screenY) {
+        int index = getModelInstanceIndex(screenX, screenY);
+
+        if (index > -1) {
+            return modelInstances.get(index);
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieving a {@link ModelInstance} index from screen coordinates.
+     *
+     * @param screenX The x coordinate, origin is in the upper left corner.
+     * @param screenY The y coordinate, origin is in the upper left corner.
+     * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
+     */
+    private int getModelInstanceIndex(int screenX, int screenY) {
+        int result = -1;
+        float distance = -1f;
+
+        Vector3 position = new Vector3();
+        Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
+
+        for (int i = 0; i < modelInstances.size; ++i) {
+            final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
+            instance.transform.getTranslation(position);
+            position.add(instance.center);
+            float dist2 = ray.origin.dst2(position);
+
+            if (distance >= 0f && dist2 > distance) continue;
+
+            if (Intersector.intersectRaySphere(ray, position, instance.radius, null)) {
+                result = i;
+                distance = dist2;
+            }
+        }
+
+        return result;
+    }
+
     /**
      * Initializes the {@link World} with some default settings.
      */
@@ -103,10 +157,10 @@ public class World extends Environment implements Renderable {
         perspectiveCamera.far = 300f;
         perspectiveCamera.update();
 
-        // Make the camera move on input
+        // Make the camera move on input.
         cameraInputController = new CameraInputController(this.perspectiveCamera);
 
-        // Create a model for rendering
+        // Create a model for rendering.
         mBlock = new MBlock(assetManager); // TODO: Defining models for rendering should be done somewhere else.
     }
 
@@ -118,7 +172,7 @@ public class World extends Environment implements Renderable {
         for (float x = -3f; x <= 3f; x += 2f) {
             for (float z = -3f; z <= 3f; z += 2f) {
                 for (float y = -3f; y <= 3f; y += 2f) {
-                    MBlockInstance instance = mBlock.createInstance();
+                    SelectableInstance instance = mBlock.createInstance();
                     instance.transform.setToTranslation(x, y, z);
                     modelInstances.add(instance);
                 }

@@ -1,35 +1,29 @@
 package com.marama.view.util;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.utils.Array;
-import com.marama.view.entities.MBlockInstance;
+import com.marama.view.entities.SelectableInstance;
 import com.marama.view.renderables.World;
 
+/**
+ * A {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
+ */
 public class SelectObjectInputController extends InputAdapter {
-    public MBlockInstance selectedModelInstance = null;
-
-    private PerspectiveCamera perspectiveCamera;
-    private Array<ModelInstance> modelInstances;
+    private World world;
+    private SelectableInstance newSelectableInstance = null;
+    private SelectableInstance currentSelectableInstance = null;
 
     /**
-     * Creates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
+     * Instantiates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
      *
-     * @param perspectiveCamera The camera that is currently used in the renderable instance ({@link World}).
-     * @param modelInstances The array of {@link ModelInstance}'s that is currently used in the renderable instance ({@link World}).
+     * @param world The ({@link World}) instance that renders 3D models.
      */
-    public SelectObjectInputController(PerspectiveCamera perspectiveCamera, Array<ModelInstance> modelInstances) {
-        this.perspectiveCamera = perspectiveCamera;
-        this.modelInstances = modelInstances;
+    public SelectObjectInputController(World world) {
+        this.world = world;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        selectedModelInstance = (MBlockInstance) getModelInstance(screenX, screenY, perspectiveCamera);
+        newSelectableInstance = (SelectableInstance) world.getModelInstance(screenX, screenY);
         return false; // Continue to the next 'touchDown' listener.
     }
 
@@ -40,67 +34,22 @@ public class SelectObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        MBlockInstance instance = (MBlockInstance) getModelInstance(screenX, screenY, perspectiveCamera);
+        SelectableInstance instance = (SelectableInstance) world.getModelInstance(screenX, screenY);
 
-        // If a selected MBlockInstance is found and it is equal to the found instance the MBlockInstance is set to
+        // If a selected SelectableInstance is found and it is equal to the found instance the SelectableInstance is set to
         // selected.
-        if (selectedModelInstance != null && instance != null && selectedModelInstance == instance) {
-            selectedModelInstance.setSelected(!selectedModelInstance.isSelected()); // Toggle ModelInstance selection
-            selectedModelInstance = null; // Reset
+        if (newSelectableInstance != null && instance != null && newSelectableInstance == instance) {
+            newSelectableInstance.setSelected(true); // Apply the new selection.
+
+            // Deselect the previous selection
+            if (currentSelectableInstance != null) {
+                currentSelectableInstance.setSelected(false);
+            }
+
+            currentSelectableInstance = newSelectableInstance; // update new current selection.
+            newSelectableInstance = null; // Reset the new possible selection.
         }
 
         return false; // Continue to the next 'touchUp' listener.
-    }
-
-    // TODO: Below code might have a better place somewhere else.
-
-    /**
-     * Retrieving a {@link ModelInstance} from screen coordinates.
-     *
-     * @param screenX The x coordinate, origin is in the upper left corner
-     * @param screenY The y coordinate, origin is in the upper left corner
-     * @param camera  The camera that is currently used in the renderable instance ({@link World}).
-     * @return The {@link ModelInstance} if it was found, otherwise null.
-     */
-    private ModelInstance getModelInstance(int screenX, int screenY, PerspectiveCamera camera) {
-        int index = getModelInstanceIndex(screenX, screenY, camera);
-
-        if (index > -1) {
-            return modelInstances.get(index);
-        }
-
-        return null;
-    }
-
-    /**
-     * Retrieving a {@link ModelInstance} index from screen coordinates.
-     *
-     * @param screenX The x coordinate, origin is in the upper left corner.
-     * @param screenY The y coordinate, origin is in the upper left corner.
-     * @param camera  The camera that is currently used in the renderable instance ({@link World}).
-     * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
-     */
-    private int getModelInstanceIndex(int screenX, int screenY, PerspectiveCamera camera) {
-        int result = -1;
-        float distance = -1f;
-
-        Vector3 position = new Vector3();
-        Ray ray = camera.getPickRay(screenX, screenY);
-
-        for (int i = 0; i < modelInstances.size; ++i) {
-            final MBlockInstance instance = (MBlockInstance) modelInstances.get(i);
-            instance.transform.getTranslation(position);
-            position.add(instance.center);
-            float dist2 = ray.origin.dst2(position);
-
-            if (distance >= 0f && dist2 > distance) continue;
-
-            if (Intersector.intersectRaySphere(ray, position, instance.radius, null)) {
-                result = i;
-                distance = dist2;
-            }
-        }
-
-        return result;
     }
 }

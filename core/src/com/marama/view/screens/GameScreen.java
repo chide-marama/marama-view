@@ -12,7 +12,6 @@ import com.marama.view.renderables.UserInterface;
 import com.marama.view.renderables.World;
 import com.marama.view.util.SelectObjectInputController;
 
-
 /**
  * The {@link GameScreen} is a {@link Screen} that contains a 3D {@link World} and a {@link UserInterface}.
  */
@@ -35,10 +34,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        // Handle all input processors
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(userInterface);
-        multiplexer.addProcessor(new SelectObjectInputController(this.world.perspectiveCamera, this.world.modelInstances));
-        multiplexer.addProcessor(world.cameraInputController);
+        multiplexer.addProcessor(new SelectObjectInputController(this.world));
+        multiplexer.addProcessor(world.getCameraInputController());
         Gdx.input.setInputProcessor(multiplexer);
     }
 

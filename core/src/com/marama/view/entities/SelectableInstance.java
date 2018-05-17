@@ -8,20 +8,25 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-public class MBlockInstance extends ModelInstance {
+/**
+ * A {@link SelectableInstance} is a {@link ModelInstance} that adds a {@link BoundingBox}.
+ * This {@link BoundingBox} can be used for selection detection.
+ */
+public class SelectableInstance extends ModelInstance {
     private final static BoundingBox bounds = new BoundingBox();
     public final Vector3 center = new Vector3();
     public final Vector3 dimensions = new Vector3();
-    public final float radius; // TODO: make boundingbox a box, not a sphere if possible
+    public final float radius; // TODO: make boundingbox a box, not a sphere if possible and performant
     private boolean selected;
     private Material defaultMaterial = new Material(ColorAttribute.createDiffuse(Color.WHITE));
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
 
     /**
+     * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
      *
      * @param model
      */
-    public MBlockInstance(Model model) {
+    public SelectableInstance(Model model) {
         super(model);
 
         selected = false;
@@ -31,20 +36,15 @@ public class MBlockInstance extends ModelInstance {
         calculateBoundingBox(bounds);
         bounds.getCenter(center);
         bounds.getDimensions(dimensions);
-        radius = dimensions.len() / 3f;
+        radius = dimensions.len() / 2f;
     }
 
-    /**
-     *
-     * @return
-     */
     public boolean isSelected() {
         return selected;
     }
 
     /**
-     *
-     * @param selected
+     * Select or deselect the current instance and update's its {@link Material}.
      */
     public void setSelected(boolean selected) {
         this.selected = selected;
@@ -57,8 +57,9 @@ public class MBlockInstance extends ModelInstance {
     }
 
     /**
+     * Apply a new {@link Material} to the {@link SelectableInstance}.
      *
-     * @param material
+     * @param material The {@link Material} to apply.
      */
     public void setMaterial(Material material) {
         materials.get(0).clear();
