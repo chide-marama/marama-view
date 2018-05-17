@@ -6,14 +6,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marama.view.View;
 
+/**
+ * This class acts as a splash screen that shows the Marama logo on application startup.
+ */
 public class SplashScreen implements Screen {
     private SpriteBatch batch;
     private Sprite splash;
@@ -109,6 +108,6 @@ public class SplashScreen implements Screen {
     @Override
     public void dispose() {
         // Advance to the main menu.
-        view.setScreen(new MainMenuScreen(view, viewport, skin));
+        view.setScreen(new MainMenuScreen(view, skin));
     }
 }

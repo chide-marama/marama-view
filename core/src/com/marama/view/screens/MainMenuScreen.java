@@ -10,21 +10,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marama.view.View;
 
+/**
+ * This class is a {@link Stage} that defines the 2d context and acts as a {@link Screen} for rendering the main menu.
+ */
 public class MainMenuScreen extends Stage implements Screen {
     final private View view;
     private Skin skin;
 
     /**
+     * Instantiates a {@link Stage} that acts as a main menu.
      *
-     * @param view
-     * @param viewport
+     * @param view Is used for updating the screen from the main menu.
      * @param skin
      */
-    public MainMenuScreen(final View view, Viewport viewport, Skin skin) {
-        super(viewport);
+    public MainMenuScreen(final View view, Skin skin) {
+        super();
 
         this.view = view;
         this.skin = skin;
@@ -34,8 +36,8 @@ public class MainMenuScreen extends Stage implements Screen {
         final TextButton button = new TextButton("Play game!", skin, "default");
         final Container<Actor> container = new Container<Actor>(button);
 
-        container.setX((viewport.getScreenWidth() / 2));
-        container.setY((viewport.getScreenHeight() / 2));
+        container.setX(getViewport().getScreenWidth() / 2);
+        container.setY(getViewport().getScreenHeight() / 2);
 
         button.addListener(new ClickListener() {
             @Override
@@ -46,61 +48,38 @@ public class MainMenuScreen extends Stage implements Screen {
         this.addActor(container);
     }
 
-    /**
-     *
-     */
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
     }
 
-    /**
-     *
-     * @param delta
-     */
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1f);
         act(delta);
         draw();
     }
 
-    /**
-     *
-     * @param width
-     * @param height
-     */
     @Override
     public void resize(int width, int height) {
 
     }
 
-    /**
-     *
-     */
     @Override
     public void pause() {
 
     }
 
-    /**
-     *
-     */
     @Override
     public void resume() {
 
     }
 
-    /**
-     *
-     */
     @Override
     public void hide() {
 
     }
 
-    /**
-     *
-     */
     @Override
     public void dispose() {
         view.dispose();

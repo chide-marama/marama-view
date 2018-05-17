@@ -13,7 +13,7 @@ import com.marama.view.renderables.World;
 import com.marama.view.util.SelectObjectInputController;
 
 /**
- * The {@link GameScreen} is a {@link Screen} that contains a 3D {@link World} and a {@link UserInterface}.
+ * The {@link GameScreen} implements a {@link Screen} that contains a 3D {@link World} and a {@link UserInterface}.
  */
 public class GameScreen implements Screen {
     private World world;
@@ -44,6 +44,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1f);
         world.render(delta);
         userInterface.render(delta);
     }
