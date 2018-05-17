@@ -14,6 +14,9 @@
 \usepackage{titlesec}
 \usepackage{hyperref}
 
+% custom commands
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\} % Without \mbox{} all newlines will be ignored, making the first sentence appear on the same line as a paragraph title.
+
 \DeclareCaptionFormat{cancaption}{#1#2#3\par} % Normal format actually
 \DeclareCaptionLabelFormat{cancaptionlabel}{#1}
 \captionsetup[figure][number]{format=cancaption,labelformat=cancaptionlabel}
@@ -87,13 +90,16 @@
     Epics are a collection of user stories that share a goal or functionality.
 
     \subsubsection{3D Camera Controls}
-    \paragraph{\href{https://app.clickup.com/757520/761304/t/2e2ca}{\#2e2ca} As a MGD or player I want to zoom in/out on the world when pinching}
+    \paragraph{\href{https://app.clickup.com/757520/761304/t/2e2ca}{\#2e2ca} As a MGD or player I want to zoom in/out on the world when pinching}\mbox{}\\
     The camera zoom functionality is already implemented and enabled by libGDX on all supported devices (Desktop, Android).
-    \paragraph{\href{https://app.clickup.com/757520/761304/t/2e2c1}{\#2e2c1} As a MGD or player I want to rotate the camera by one-fingered swiping}
+    \paragraph{\href{https://app.clickup.com/757520/761304/t/2e2c1}{\#2e2c1} As a MGD or player I want to rotate the camera by one-fingered swiping}\mbox{}\\
     The camera rotation functionality is already implemented and enabled by libGDX on all supported devices (Desktop, Android).
 
     \subsubsection{UI}
-    \paragraph{\#3t5k feature X}
+    \paragraph{\href{https://app.clickup.com/757520/761304/t/302qb}{\#302qb} As a user I want to see the Marama logo on start-up}\mbox{}\\
+    When the program is started, independent of which built is used, the splashscreen is displayed first.
+    The splashscreen displays the marama-logo and fades out and finally transitions into the mainmenu.
+    The fade-out time and total duration are variable and can be changed by changing their respective constants in the SplashScreen.java file.
 
     \subsubsection{3D Object Controls}
     \paragraph{\#3t5k feature X}
