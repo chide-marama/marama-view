@@ -9,13 +9,13 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.marama.view.renderables.UserInterface;
 import com.marama.view.renderables.World;
+import com.marama.view.renderables.WorldUserInterface;
 import com.marama.view.util.SelectObjectInputController;
 
 public class GameScreen implements Screen {
     private World world;
-    private UserInterface userInterface;
+    private WorldUserInterface worldUserInterface;
 
     /**
      *
@@ -32,7 +32,7 @@ public class GameScreen implements Screen {
         );
 
         this.world = new World(color, new DirectionalLight(), camera, new AssetManager());
-        this.userInterface = new UserInterface(
+        this.worldUserInterface = new WorldUserInterface(
                 new ScreenViewport(),
                 new Skin(Gdx.files.internal("skin/uiskin.json"))
         );
@@ -44,7 +44,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(userInterface);
+        multiplexer.addProcessor(worldUserInterface);
         multiplexer.addProcessor(new SelectObjectInputController(this.world.perspectiveCamera, this.world.modelInstances));
         multiplexer.addProcessor(world.cameraInputController);
         Gdx.input.setInputProcessor(multiplexer);
@@ -57,7 +57,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         world.render(delta);
-        userInterface.render(delta);
+        worldUserInterface.render(delta);
     }
 
     /**
