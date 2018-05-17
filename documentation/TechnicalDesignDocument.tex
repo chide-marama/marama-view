@@ -79,6 +79,9 @@
     Coding conventions may be added (as appendix).\\
     Diagrams need textual explanation of context, interpreation and underlying design decisions and reasoning.\\
 
+    It has been decided to resizes texture assets to dimensions in the power of two.
+    This is to maintain backwards compatibility for OpenGL ES 1.0, to keep all functionality (some libGDX features are otherwise not supported) and it is a bit more memory efficient.\cite{libgdxpottex}
+
     \subsection{Epics}
     The view is made up of different epics.
     Epics are a collection of user stories that share a goal or functionality.
@@ -102,6 +105,6 @@
 
     \newpage
 
-    %\bibliography{references}
-    %\bibliographystyle{apalike} % options: apalike for apa, ieeetr for ieee
+    \bibliography{references}
+    \bibliographystyle{apalike} % options: apalike for apa, ieeetr for ieee
 \end{document}
