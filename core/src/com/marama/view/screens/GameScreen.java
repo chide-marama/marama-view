@@ -13,14 +13,14 @@ import com.marama.view.renderables.WorldUserInterface;
 import com.marama.view.util.SelectObjectInputController;
 
 /**
- * The {@link GameScreen} implements a {@link Screen} that contains a 3D {@link World} and a {@link UserInterface}.
+ * The {@link GameScreen} implements a {@link Screen} that contains a 3D {@link World} and a {@link WorldUserInterface}.
  */
 public class GameScreen implements Screen {
     private World world;
     private WorldUserInterface worldUserInterface;
 
     /**
-     * Instancing the GameScreen that contains a 3D {@link World} and a {@link UserInterface}.
+     * Instancing the GameScreen that contains a 3D {@link World} and a {@link WorldUserInterface}.
      */
     public GameScreen() {
         this.world = new World(
@@ -29,7 +29,6 @@ public class GameScreen implements Screen {
                 new AssetManager()
         );
 
-        this.world = new World(color, new DirectionalLight(), camera, new AssetManager());
         this.worldUserInterface = new WorldUserInterface(
                 new ScreenViewport(),
                 new Skin(Gdx.files.internal("skin/uiskin.json"))
@@ -41,8 +40,8 @@ public class GameScreen implements Screen {
         // Handle all input processors
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(worldUserInterface);
-        multiplexer.addProcessor(new SelectObjectInputController(this.world.perspectiveCamera, this.world.modelInstances));
-        multiplexer.addProcessor(world.cameraInputController);
+        multiplexer.addProcessor(new SelectObjectInputController(this.world));
+        multiplexer.addProcessor(world.getCameraInputController());
         Gdx.input.setInputProcessor(multiplexer);
     }
 
