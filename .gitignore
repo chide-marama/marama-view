@@ -1,6 +1,9 @@
 ## Our own added
 out/
 
+## LaTeX + BibTex
+auxil/
+
 
 ## Java
 
