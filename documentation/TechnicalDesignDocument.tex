@@ -10,6 +10,7 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{mathabx}
+\usepackage{wrapfig}
 \usepackage[margin=1.0in]{geometry} % Sets page margin, 2.0in is default.
 \usepackage{titlesec}
 \usepackage{hyperref}
@@ -56,7 +57,7 @@
     Think about which details can be left out (e.g.\ private attributes and methods).
     Always make sure diagrams are readable when printed on paper.
     Only provide a textual description of classes and methods that require additional explanation.
-    \item \begin{itemize}
+    \begin{itemize}
               \item Sequence diagrams to show interactions between objects, if the interaction is particularly complex or involves many objects.
               \item Deployment diagrams to show the hardware and middleware on which the different software components run.
               \item Database designs, such as ERD diagrams.
@@ -93,15 +94,41 @@
     This will be followed with an explanation of the different parts of this diagram for instance the LibGDX and the Screens part. \\
     \includegraphics[width=1\linewidth]{architecture-marama-view.png}
 
-    \emph{Some class diagram description} \\
+    \emph{Marama-View class diagram} \\
     \subsubsection[LibGDX]{LibGDX}
     The red part of the class diagram contains the LibGDX library.
-    As you can see, even though not every line is drawn (so the diagram is way clearer), LibGDX is used a lot.
+    As can be seen, even though not every line is drawn (so the diagram is way clearer), LibGDX is used a lot.
     Many already existing classes are extended or used.
     This is done because on one side, we shouldn't write any code or build a structure that's already been thought of or worked out.
     On the other side the LibGDX library really fits our own perspective of what the structure of the application should be.
     Due to this, using the library happens pretty naturally and doesn't require much research.
 
+    \subsubsection[MaramaViewLogic]{Marama-View logic}
+    For a game, a few elements are needed. These elements can clearly be determined by looking at the class diagram. \\
+    \begin{wrapfigure}[8]{r}{0.4\textwidth}
+        \includegraphics[width=0.4\textwidth]{marama-view-structure.jpg}
+    \end{wrapfigure}
+    The Marama-view is devided in multiple parts to enforce reusibillity and modularity.
+    These parts are drawn in the image on the right.
+    On the highest level, we define screens.
+    This is the current state of the game, and what the user can see.
+    Examples of these screens are:
+    \begin{itemize}
+        \item The splash screen
+        \item The main menu screen
+        \item The in-game screen
+    \end{itemize}
+    A screen can contain multiple renderables that have to be rendered inside this screen.
+    Renderables could be defined by layout parts, like a group of buttons, or a certain 3D area.
+    Combining these parts one could create a functional view for the user.
+    This way a screen can only contain one screen as well.
+    These renderables, mostly applicable to the 3D area, contain entities.
+    Entities could be anything, and for clarification we drew a block entity.
+    All the blocks drawn actually exist out of one entity.
+    Out of that entity, three instances are created.
+    If you want a different shape, you should add an entity, and create an instance out of that.
+    This system offers a lot of modularity since we can easily add more entities, more screens and more renderables.
+    It is a clear system that is very easy-to-use and easy-to-understand.
 
     \newpage
 
