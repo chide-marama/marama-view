@@ -6,6 +6,9 @@ auxil/
 documentation/*.pdf
 documentation/*.synctex.gz
 
+## LaTeX + BibTex
+auxil/
+
 ## Java
 *.class
 *.war
