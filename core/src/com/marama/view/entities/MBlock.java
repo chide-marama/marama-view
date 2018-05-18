@@ -1,6 +1,7 @@
 package com.marama.view.entities;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
 
 /**
@@ -17,7 +18,7 @@ public class MBlock extends Entity {
     }
 
     @Override
-    public SelectableInstance createInstance() {
+    public com.marama.view.entities.instances.SelectableInstance createInstance() {
         return new SelectableInstance(super.getModel("models/m-block.obj"));
     }
 }

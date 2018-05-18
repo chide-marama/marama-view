@@ -8,7 +8,7 @@ import com.marama.view.renderables.World;
 /**
  * A wrapper class with functionality for {@link Model} and {@link ModelInstance} creation.
  */
-public class Entity {
+public abstract class Entity {
     private String filePath;
     private Class<Model> type;
     private final AssetManager assetManager;

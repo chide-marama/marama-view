@@ -1,7 +1,7 @@
 package com.marama.view.util;
 
 import com.badlogic.gdx.InputAdapter;
-import com.marama.view.entities.SelectableInstance;
+import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
 
 /**

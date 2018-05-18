@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.MBlock;
-import com.marama.view.entities.SelectableInstance;
+import com.marama.view.entities.instances.SelectableInstance;
 
 /**
  * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s

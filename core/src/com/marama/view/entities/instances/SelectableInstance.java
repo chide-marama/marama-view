@@ -1,4 +1,4 @@
-package com.marama.view.entities;
+package com.marama.view.entities.instances;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
  * This {@link BoundingBox} can be used for selection detection.
  */
 public class SelectableInstance extends ModelInstance {
-    private final static BoundingBox bounds = new BoundingBox();
+    private final static BoundingBox boundingBox = new BoundingBox();
     public final Vector3 center = new Vector3();
     public final Vector3 dimensions = new Vector3();
     public final float radius; // TODO: make boundingbox a box, not a sphere if possible and performant
@@ -33,9 +33,9 @@ public class SelectableInstance extends ModelInstance {
         setMaterial(defaultMaterial);
 
         // bounding box
-        calculateBoundingBox(bounds);
-        bounds.getCenter(center);
-        bounds.getDimensions(dimensions);
+        calculateBoundingBox(boundingBox);
+        boundingBox.getCenter(center);
+        boundingBox.getDimensions(dimensions);
         radius = dimensions.len() / 2f;
     }
 
