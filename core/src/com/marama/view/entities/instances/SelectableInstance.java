@@ -34,8 +34,8 @@ public class SelectableInstance extends ModelInstance {
 
         // bounding box
         calculateBoundingBox(boundingBox);
-        boundingBox.getCenter(center);
-        boundingBox.getDimensions(dimensions);
+        boundingBox.getCenter(center); // Actually sets the center value
+        boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
         radius = dimensions.len() / 2f;
     }
 

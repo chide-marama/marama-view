@@ -116,13 +116,16 @@ public class World extends Environment implements Renderable {
 
         for (int i = 0; i < modelInstances.size; ++i) {
             final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
+
+            // Set the center location of the instance.
             instance.transform.getTranslation(position);
             position.add(instance.center);
-            float dist2 = ray.origin.dst2(position);
 
-            if (distance >= 0f && dist2 > distance) continue;
+            float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance position.
 
-            if (Intersector.intersectRaySphere(ray, position, instance.radius, null)) {
+            if (distance >= 0f && dist2 > distance) continue; // instance is not closer than a previous one.
+
+            if (Intersector.intersectRaySphere(ray, position, instance.radius, null)) { // Whether an intersection occurs
                 result = i;
                 distance = dist2;
             }
