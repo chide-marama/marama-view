@@ -69,6 +69,15 @@
 
     Algorithm designs.
 
+    \subsection{Project Structure}
+    LibGDX enforces a certain project structure\cite{libgdxprojstruct}.
+    The project root directory contains subdirectories for each different target system. (e.g. android, ios, desktop)
+    These directories contain specifics for each different target and also acts as entry point for that target to our product.
+    Furthermore there is the core directory which contains the actually source and business logic of our product.
+    Next up is the documentation directory which, together with a local auxil directory make up our documentation, using \LaTeX\ of course.
+    Finally there are a couple of build and property files together with the gitignore file.
+
+
     \includegraphics[width=1\linewidth]{architecture-marama-view.png}
 
     Some class diagram description
