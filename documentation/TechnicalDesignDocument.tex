@@ -56,10 +56,16 @@
     Think about which details can be left out (e.g.\ private attributes and methods).
     Always make sure diagrams are readable when printed on paper.
     Only provide a textual description of classes and methods that require additional explanation.
+    \item \begin{itemize}
+              \item Sequence diagrams to show interactions between objects, if the interaction is particularly complex or involves many objects.
+              \item Deployment diagrams to show the hardware and middleware on which the different software components run.
+              \item Database designs, such as ERD diagrams.
+              \item Descriptions of custom protocols, data formats etc.
+              \item Security measures and considerations.
+              \item Algorithm designs.
+    \end{itemize}
 
-    Sequence diagrams to show interactions between objects, if the interaction is particularly complex or involves many objects.
-
-    Deployment diagrams to show the hardware and middleware on which the different software components run.
+    \subsection[class_diagram]{Class diagram}
 
     Database designs, such as ERD diagrams.
 
@@ -71,7 +77,8 @@
 
     \subsection{Project Structure}
     LibGDX enforces a certain project structure\cite{libgdxprojstruct}.
-    The project root directory contains subdirectories for each different target system (e.g. android, ios, desktop).
+    The project root directory contains subdirectories for each different target system. (e.g. android, ios, desktop)
+    These directories contain specifics for each different target and also acts as entry point for that target to our product.
     Furthermore there is the core directory which contains the actually source and business logic of our product.
     These directories contain specifics for each different target and also acts as entry point for that target to our product.
     All builds are done by predefined Gradle tasks.
@@ -81,9 +88,20 @@
     This is because android builds require a certain project structure\cite{androidAssetLocation}.
     Finally there are a couple of build and property files together with the gitignore file.
 
+
+    In the below diagram the core functionality of the entire Marama-View is described.\\
+    This will be followed with an explanation of the different parts of this diagram for instance the LibGDX and the Screens part. \\
     \includegraphics[width=1\linewidth]{architecture-marama-view.png}
 
-    Some class diagram description
+    \emph{Some class diagram description} \\
+    \subsubsection[LibGDX]{LibGDX}
+    The red part of the class diagram contains the LibGDX library.
+    As you can see, even though not every line is drawn (so the diagram is way clearer), LibGDX is used a lot.
+    Many already existing classes are extended or used.
+    This is done because on one side, we shouldn't write any code or build a structure that's already been thought of or worked out.
+    On the other side the LibGDX library really fits our own perspective of what the structure of the application should be.
+    Due to this, using the library happens pretty naturally and doesn't require much research.
+
 
     \newpage
 
@@ -96,7 +114,7 @@
     Description of custom protocols, data formats etc.\\
     Security measures and considerations.\\
     Coding conventions may be added (as appendix).\\
-    Diagrams need textual explanation of context, interpreation and underlying design decisions and reasoning.\\
+    Diagrams need textual explanation of context, interpretation and underlying design decisions and reasoning.\\
 
     It has been decided to resizes texture assets to dimensions in the power of two.
     This is to maintain backwards compatibility for OpenGL ES 1.0, to keep all functionality (some libGDX features are otherwise not supported) and it is a bit more memory efficient.\cite{libgdxpottex}
@@ -105,20 +123,22 @@
     The view is made up of different epics.
     Epics are a collection of user stories that share a goal or functionality.
 
+    \newcommand{\clickup}[1]{https://app.clickup.com/757520/761304/t/#1}
+
     \subsubsection{3D Camera Controls}
-    \myparagraph{\href{https://app.clickup.com/757520/761304/t/2e2ca}{\#2e2ca} As a MGD or player I want to zoom in/out on the world when pinching}
+    \myparagraph{\href{\clickup{2e2ca}}{\#2e2ca} As a MGD or player I want to zoom in/out on the world when pinching}
     The camera zoom functionality is already implemented and enabled by libGDX on all supported devices (Desktop, Android).
-    \myparagraph{\href{https://app.clickup.com/757520/761304/t/2e2c1}{\#2e2c1} As a MGD or player I want to rotate the camera by one-fingered swiping}
+    \myparagraph{\href{\clickup{2e2c1}}{\#2e2c1} As a MGD or player I want to rotate the camera by one-fingered swiping}
     The camera rotation functionality is already implemented and enabled by libGDX on all supported devices (Desktop, Android).
 
     \subsubsection{UI}
-    \myparagraph{\href{https://app.clickup.com/757520/761304/t/302qb}{\#302qb} As a user I want to see the Marama logo on start-up}
+    \myparagraph{\href{\clickup{302qb}}{\#302qb} As a user I want to see the Marama logo on start-up}
     When the program is started, independent of which built is used, the splashscreen is displayed first.
     The splashscreen displays the marama-logo and fades out and finally transitions into the mainmenu.
     The fade-out time and total duration are variable and can be changed by changing their respective constants in the SplashScreen.java file.
 
     \subsubsection{3D Object Controls}
-    \myparagraph{\href{https://app.clickup.com/757520/761304/t/2e29e}{\#2e29e} As a MGD or player I want to be able to select a 3D object}
+    \myparagraph{\href{\clickup{2e29e}}{\#2e29e} As a MGD or player I want to be able to select a 3D object}
     Eventually, the user of the editor needs functionality for manipulating 3D objects.
     This means moving, rotating and deleting 3D objects in and from the editor.
     Before any manipulation can occur, the user needs to be able to select 3D objects that are rendered inside the editor.
