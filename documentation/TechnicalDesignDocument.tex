@@ -71,12 +71,15 @@
 
     \subsection{Project Structure}
     LibGDX enforces a certain project structure\cite{libgdxprojstruct}.
-    The project root directory contains subdirectories for each different target system. (e.g. android, ios, desktop)
-    These directories contain specifics for each different target and also acts as entry point for that target to our product.
+    The project root directory contains subdirectories for each different target system (e.g. android, ios, desktop).
     Furthermore there is the core directory which contains the actually source and business logic of our product.
+    These directories contain specifics for each different target and also acts as entry point for that target to our product.
+    All builds are done by predefined Gradle tasks.
+    Gradle also manages the dependencies of the project.
     Next up is the documentation directory which, together with a local auxil directory make up our documentation, using \LaTeX\ of course.
+    All project assets are stored inside the assets folder located inside the android folder
+    This is because android builds require a certain project structure\cite{androidAssetLocation}.
     Finally there are a couple of build and property files together with the gitignore file.
-
 
     \includegraphics[width=1\linewidth]{architecture-marama-view.png}
 
@@ -127,9 +130,9 @@
     A BoundingBox can be calculated from a rendered 3D Object and can be seen as a rectangular box.
     This box is able to determine whether it is intersected by a ray.
     Rays can be seen as lasers that can be fired from and to a certain location in the World.
-    The ray will be casted from the origin of the camera by the user when he/she clicks on the screen.
+    The ray will be cast from the origin of the camera by the user when he/she clicks on the screen.
     The first BoundingBox that is intersected by the ray will be the selected object.
-    Casting the rays from the camera origin and locating the first intersected BoundingBox will prevent that 3D objects in the background are selected.
+    Casting the rays from the camera origin and locating the first intersected BoundingBox will prevent that 3D objects in the background will be selected.
 
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Build Automation
