@@ -1,7 +1,7 @@
 package com.marama.view.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -13,22 +13,20 @@ import com.marama.view.View;
 /**
  * This class acts as a splash screen that shows the Marama logo on application startup.
  */
-public class SplashScreen implements Screen {
+public class SplashScreen extends ScreenAdapter {
     private SpriteBatch batch;
     private Sprite splash;
     private float elapsedTime;
 
     private final View view;
     private Viewport viewport;
-    private Skin skin;
 
-    private final double SPLASH_DURATION = 5; /* Total duration for the splash screen. From start of the app to appearance of the main menu. */
-    private final double FADE_OUT_START = SPLASH_DURATION * 0.6; /* The duration is tweak-able. Try to keep it between 0.1 and 0.9 for best effect. */
+    private final double SPLASH_DURATION = 5; // Total duration for the splash screen. From start of the app to appearance of the main menu.
+    private final double FADE_OUT_START = SPLASH_DURATION * 0.6; // The duration is tweak-able. Try to keep it between 0.1 and 0.9 for best effect.
 
-    public SplashScreen(final View view, Viewport viewport, Skin skin) {
+    public SplashScreen(final View view, Viewport viewport) {
         this.view = view;
         this.viewport = viewport;
-        this.skin = skin;
 
         this.batch = new SpriteBatch();
         Texture logo = new Texture(Gdx.files.internal("MaramaLogo.png"));
@@ -37,15 +35,9 @@ public class SplashScreen implements Screen {
     }
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
     public void render(float delta) {
-        // TODO optimization: resize img dimensions to powers of two
         // Clear screen and reset active texture (just in case).
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0.8f, 0.8f, 0.8f, 1f);
         Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
 
         // Keep track of elapsed time.
@@ -74,6 +66,17 @@ public class SplashScreen implements Screen {
             this.dispose();
     }
 
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+    }
+
+    @Override
+    public void dispose() {
+        // Advance to the main menu.
+        view.setScreen(new MainMenuScreen(view));
+    }
+
     /**
      * Helper function for Render().
      * Gives the alpha value for a linear fade-out as a function of time.
@@ -83,31 +86,5 @@ public class SplashScreen implements Screen {
     private float newAlpha(double currentTime) {
         double progressSinceBreakPoint = (currentTime - FADE_OUT_START) / (SPLASH_DURATION - FADE_OUT_START);
         return (float) Math.max(1 - progressSinceBreakPoint, 0); // Avoid negative values
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        // Advance to the main menu.
-        view.setScreen(new MainMenuScreen(view, skin));
     }
 }

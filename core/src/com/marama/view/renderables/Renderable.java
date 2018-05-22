@@ -6,20 +6,21 @@ public interface Renderable {
     /**
      * Called when the {@link View} is resized.
      *
-     * @param width the new width in pixels
+     * @param width  the new width in pixels
      * @param height the new height in pixels
      */
     void resize(int width, int height);
 
     /**
      * Called when the {@link View} renders itself.
+     *
      * @param delta The time in seconds since the last render.
      */
     void render(float delta);
 
     /**
-     *	Called when the {@link View} is paused, usually when it's not active or visible on screen. The {@link View} is also
-     * 	paused before it is destroyed.
+     * Called when the {@link View} is paused, usually when it's not active or visible on screen. The {@link View} is also
+     * paused before it is destroyed.
      */
     void pause();
 

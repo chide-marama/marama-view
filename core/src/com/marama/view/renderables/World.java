@@ -22,7 +22,7 @@ import com.marama.view.entities.instances.SelectableInstance;
 public class World extends Environment implements Renderable {
     private boolean loading;
     private DirectionalLight directionalLight;
-    private Array<ModelInstance> modelInstances;
+    private Array<ModelInstance> modelInstances; // All models that are in the World.
     private PerspectiveCamera perspectiveCamera;
     private CameraInputController cameraInputController;
     private AssetManager assetManager;
@@ -30,7 +30,7 @@ public class World extends Environment implements Renderable {
     private MBlock mBlock;
 
     /**
-     * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s
+     * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
      *
      * @param directionalLight
      * @param perspectiveCamera
@@ -48,7 +48,7 @@ public class World extends Environment implements Renderable {
 
     @Override
     public void render(float delta) {
-        if (loading && assetManager.update()) //
+        if (loading && assetManager.update()) // When the assets are done loading.
             doneLoading();
         cameraInputController.update();
 
@@ -163,7 +163,7 @@ public class World extends Environment implements Renderable {
         cameraInputController = new CameraInputController(this.perspectiveCamera);
 
         // Create a model for rendering.
-        mBlock = new MBlock(assetManager); // TODO: Defining models for rendering should be done somewhere else.
+        mBlock = new MBlock(assetManager);
     }
 
     /**

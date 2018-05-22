@@ -18,16 +18,19 @@ public class SelectableInstance extends ModelInstance {
     public final Vector3 dimensions = new Vector3();
     public final float radius; // TODO: make boundingbox a box, not a sphere if possible and performant
     private boolean selected;
-    private Material defaultMaterial = new Material(ColorAttribute.createDiffuse(Color.WHITE));
+    private Material defaultMaterial;
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
 
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
      *
-     * @param model
+     * @param model The model to create the {@link SelectableInstance} from.
+     * @param defaultMaterial
      */
-    public SelectableInstance(Model model) {
+    public SelectableInstance(Model model, Material defaultMaterial) {
         super(model);
+
+        this.defaultMaterial = defaultMaterial;
 
         selected = false;
         materials.add(new Material()); // Add a default empty material that we can clear and set.

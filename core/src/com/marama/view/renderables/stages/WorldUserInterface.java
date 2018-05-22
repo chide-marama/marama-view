@@ -1,4 +1,4 @@
-package com.marama.view.renderables;
+package com.marama.view.renderables.stages;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.marama.view.renderables.Renderable;
 
 /**
  * The class containing all the elements of the WorldUserInterface, used in the GameScreen.

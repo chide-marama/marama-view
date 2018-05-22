@@ -3,9 +3,8 @@ package com.marama.view;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.marama.view.screens.GameScreen;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marama.view.screens.SplashScreen;
 
 /**
@@ -16,8 +15,7 @@ public class View extends Game {
     public void create () {
         setScreen(new SplashScreen(
             this,
-            new ScreenViewport(),
-            new Skin(Gdx.files.internal("skin/uiskin.json"))
+            new ScreenViewport()
         ));
     }
 
