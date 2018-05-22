@@ -4,7 +4,7 @@ sourceCompatibility = '1.7'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 ext {
-	mainClassName = "com.marama.game.IOSLauncher"
+	mainClassName = "com.marama.view.IOSLauncher"
 }
 
 launchIPhoneSimulator.dependsOn build
