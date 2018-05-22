@@ -9,6 +9,8 @@ android:
     - build-tools-26.0.2
 before_install:
   - yes | sdkmanager "build-tools;27.0.3"
+install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./gradlew -x android:assemble assemble          ; fi
 
 addons:
   apt:
