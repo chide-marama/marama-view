@@ -1,3 +1,14 @@
+## Our own added
+out/
+.knownPackages
+android/android.iml___jb_tmp___
+auxil/
+documentation/*.pdf
+documentation/*.synctex.gz
+
+## LaTeX + BibTex
+auxil/
+
 ## Java
 *.class
 *.war
@@ -10,6 +21,7 @@ hs_err_pid*
 ## GWT
 /html/war/
 /html/gwt-unitCache/
+.apt_generated/
 .apt_generated/
 .gwt/
 gwt-unitCache/
@@ -29,8 +41,6 @@ www-test/
 *.iml
 /android/out/
 com_crashlytics_export_strings.xml
-out/
-auxil/
 
 ## Eclipse
 .classpath
@@ -123,8 +133,3 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/xcshareddata
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
-
-## LaTeX
-/documentation/*.synctex*
-/documentation/*.pdf
-
