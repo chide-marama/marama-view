@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
  * This {@link BoundingBox} can be used for selection detection.
  */
 public class SelectableInstance extends ModelInstance {
-    private final static BoundingBox boundingBox = new BoundingBox();
+    public final BoundingBox boundingBox = new BoundingBox();
     public final Vector3 center = new Vector3();
     public final Vector3 dimensions = new Vector3();
     public final float radius; // TODO: make boundingbox a box, not a sphere if possible and performant
@@ -30,6 +30,7 @@ public class SelectableInstance extends ModelInstance {
         super(model);
 
         selected = false;
+        materials.add(new Material()); // Add a default empty material that we can clear and set.
         setMaterial(defaultMaterial);
 
         // bounding box
