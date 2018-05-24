@@ -8,26 +8,29 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marama.view.renderables.Renderable;
+import com.marama.view.renderables.World;
 
 /**
  * The class containing all the elements of the WorldUserInterface, used in the GameScreen.
  */
 public class WorldUserInterface extends Stage implements Renderable {
 
+    private World world;
+
     /* Set a block size including and a padding so we
      * can work with these throughout the rest of the class. */
     private final float blockSize = 80f;
     private final float padding = 10f;
 
-    public WorldUserInterface(Viewport viewport, Skin skin) {
+    public WorldUserInterface(Viewport viewport, World world) {
         super(viewport);
+        this.world = world;
 
         Table table = new Table(); /* Create the table that contains the UI elements */
         table.left().top(); /* Make the table stick to the upper left corner */

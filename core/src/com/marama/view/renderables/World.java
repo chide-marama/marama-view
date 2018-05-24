@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
+import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.MBlock;
 import com.marama.view.entities.instances.SelectableInstance;
 
@@ -29,6 +30,8 @@ public class World extends Environment implements Renderable {
     private ModelBatch modelBatch;
     private MBlock mBlock;
 
+    private EntityManager entityManager;
+    private ModelInstance maramaBlock;
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
      *
@@ -42,6 +45,12 @@ public class World extends Environment implements Renderable {
         this.directionalLight = directionalLight;
         this.perspectiveCamera = perspectiveCamera;
         this.assetManager = assetManager;
+
+        this.entityManager = new EntityManager(assetManager);
+
+        String filepath = "models/m-block.obj";
+        this.entityManager.loadObj(filepath);
+        this.maramaBlock = new ModelInstance(this.entityManager.getModel(filepath));
 
         init();
     }
@@ -114,7 +123,7 @@ public class World extends Environment implements Renderable {
         Vector3 position = new Vector3();
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
 
-        for (int i = 0; i < modelInstances.size; ++i) {
+        for (int i = 0; i < modelInstances.size - 1; ++i) {
             final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
 
             // Set the center location of the instance.
@@ -180,6 +189,11 @@ public class World extends Environment implements Renderable {
                 }
             }
         }
+
+        this.maramaBlock.transform.setToScaling(3.0f, 3.0f, 3.0f);
+        modelInstances.add(this.maramaBlock);
+
+
 
         // Quit loading else this function will be called every render.
         loading = false;
