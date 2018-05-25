@@ -1,6 +1,6 @@
 # Marama View
 
-This repository represents the view layer of the Marama-editor. This project uses [libGDX](https://libgdx.badlogicgames.com/) and depends on the default [Marama-editor](https://github.com/chide-marama/marama-editor) repository written in Scala.
+This repository represents the view layer of the Marama-editor. This project uses [libGDX](https://libgdx.badlogicgames.com/) and depends on the [Marama-editor](https://github.com/chide-marama/marama-editor) repository written in Scala.
 
 TODO: describe connection to marama-editor project (technical details).
 
