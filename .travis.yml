@@ -1,0 +1,32 @@
+language: android
+os: linux
+android:
+  components:
+    - android-27
+    - build-tools-26.0.2
+before_install:
+      - yes | sdkmanager "build-tools;27.0.3"
+addons:
+  apt:
+    packages:
+      - oracle-java8-set-default
+licenses:
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+
+
+#This setup installs Android on the travis container.
+#Travis runs gradle build and check, which means
+#it'll build the application and run all unit tests
+#To skip a build put [ci skip] or [skip ci] in your commit message.
+
+#TODO OSX and Windows.
+#OSX: Either find a way to install android SDK,
+#or to stop gradle from building android.
+#Basic OSX setup:
+#os: macos
+#language: java
+#install: .gradlew assemble
+#Windows: Easiest method would be to set up a docker image with everything needed preinstalled
+#Since Travis allows the use of docker images.
