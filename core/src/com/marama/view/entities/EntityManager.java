@@ -7,7 +7,7 @@ import com.marama.view.util.MaramaEntityLoader;
 
 public class EntityManager {
     //    private ArrayList<Entity> EntityList;
-    final ObjectMap<String, Model> modelList = new ObjectMap();
+    final ObjectMap<String, Model> modelList = new ObjectMap<String, Model>();
     private AssetManager assetManager;
 
     public EntityManager(AssetManager assetManager) {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -31,7 +32,7 @@ public class World extends Environment implements Renderable {
     private MBlock mBlock;
 
     private EntityManager entityManager;
-    private ModelInstance maramaBlock;
+    private SelectableInstance maramaBlock;
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
      *
@@ -50,7 +51,7 @@ public class World extends Environment implements Renderable {
 
         String filepath = "models/m-block.obj";
         this.entityManager.loadObj(filepath);
-        this.maramaBlock = new ModelInstance(this.entityManager.getModel(filepath));
+        this.maramaBlock = new SelectableInstance(this.entityManager.getModel(filepath), new Material(ColorAttribute.createDiffuse(Color.WHITE)));
 
         init();
     }
