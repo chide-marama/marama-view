@@ -19,6 +19,7 @@ licenses:
 #This setup installs Android on the travis container.
 #Travis runs gradle build and check, which means
 #it'll build the application and run all unit tests
+#To skip a build put [ci skip] or [skip ci] in your commit message.
 
 #TODO OSX and Windows.
 #OSX: Either find a way to install android SDK,
