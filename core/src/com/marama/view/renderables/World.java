@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
@@ -14,15 +13,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.MBlock;
-import com.marama.view.entities.instances.SelectableInstance;
+import com.marama.view.entities.instances.EntityInstance;
 
 /**
- * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
+ * The {@link World} is an {@link Environment} that is able to render 3D {@link EntityInstance}'s.
  */
 public class World extends Environment implements Renderable {
     private boolean loading;
     private DirectionalLight directionalLight;
-    private Array<ModelInstance> modelInstances; // All models that are in the World.
+    private Array<EntityInstance> entityInstances; // All models that are in the World.
     private PerspectiveCamera perspectiveCamera;
     private CameraInputController cameraInputController;
     private AssetManager assetManager;
@@ -30,7 +29,7 @@ public class World extends Environment implements Renderable {
     private MBlock mBlock;
 
     /**
-     * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
+     * Instantiates a new {@link World} which is able to render 3D {@link EntityInstance}'s.
      *
      * @param directionalLight
      * @param perspectiveCamera
@@ -50,17 +49,24 @@ public class World extends Environment implements Renderable {
     public void render(float delta) {
         if (loading && assetManager.update()) // When the assets are done loading.
             doneLoading();
+
+        // Allow the camera to be controlled.
         cameraInputController.update();
 
+        // Render all the EntityInstances.
         modelBatch.begin(perspectiveCamera);
-        modelBatch.render(modelInstances, this);
+        for (final EntityInstance instance : entityInstances) {
+            if (instance.isVisible(perspectiveCamera)) { // Apply frustum culling.
+                modelBatch.render(instance, this);
+            }
+        }
         modelBatch.end();
     }
 
     @Override
     public void dispose() {
         modelBatch.dispose();
-        modelInstances.clear();
+        entityInstances.clear();
         assetManager.dispose();
     }
 
@@ -84,28 +90,28 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Retrieving a {@link ModelInstance} from screen coordinates.
+     * Retrieving a {@link EntityInstance} from screen coordinates.
      *
      * @param screenX The x coordinate, origin is in the upper left corner
      * @param screenY The y coordinate, origin is in the upper left corner
-     * @return The {@link ModelInstance} if it was found, otherwise null.
+     * @return The {@link EntityInstance} if it was found, otherwise null.
      */
-    public ModelInstance getModelInstance(int screenX, int screenY) {
+    public EntityInstance getModelInstance(int screenX, int screenY) {
         int index = getModelInstanceIndex(screenX, screenY);
 
         if (index > -1) {
-            return modelInstances.get(index);
+            return entityInstances.get(index);
         }
 
         return null;
     }
 
     /**
-     * Retrieving a {@link ModelInstance} index from screen coordinates.
+     * Retrieving a {@link EntityInstance} index from screen coordinates.
      *
      * @param screenX The x coordinate, origin is in the upper left corner.
      * @param screenY The y coordinate, origin is in the upper left corner.
-     * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
+     * @return The index of the {@link EntityInstance} if it was found, otherwise -1.
      */
     private int getModelInstanceIndex(int screenX, int screenY) {
         int result = -1;
@@ -114,8 +120,8 @@ public class World extends Environment implements Renderable {
         Vector3 position = new Vector3();
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
 
-        for (int i = 0; i < modelInstances.size; ++i) {
-            final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
+        for (int i = 0; i < entityInstances.size; ++i) {
+            final EntityInstance instance = entityInstances.get(i);
 
             // Set the center location of the instance.
             instance.transform.getTranslation(position);
@@ -142,7 +148,7 @@ public class World extends Environment implements Renderable {
         loading = true;
 
         // Instantiate properties for rendering models.
-        modelInstances = new Array<ModelInstance>();
+        entityInstances = new Array<EntityInstance>();
         modelBatch = new ModelBatch();
 
         // Set the color and direction of the light.
@@ -174,9 +180,9 @@ public class World extends Environment implements Renderable {
         for (float x = -3f; x <= 3f; x += 2f) {
             for (float z = -3f; z <= 3f; z += 2f) {
                 for (float y = -3f; y <= 3f; y += 2f) {
-                    SelectableInstance instance = mBlock.createInstance();
+                    EntityInstance instance = mBlock.createInstance();
                     instance.transform.setToTranslation(x, y, z);
-                    modelInstances.add(instance);
+                    entityInstances.add(instance);
                 }
             }
         }

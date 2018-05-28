@@ -1,7 +1,7 @@
 package com.marama.view.util;
 
 import com.badlogic.gdx.InputAdapter;
-import com.marama.view.entities.instances.SelectableInstance;
+import com.marama.view.entities.instances.EntityInstance;
 import com.marama.view.renderables.World;
 
 /**
@@ -9,8 +9,8 @@ import com.marama.view.renderables.World;
  */
 public class SelectObjectInputController extends InputAdapter {
     private World world;
-    private SelectableInstance newSelectableInstance = null;
-    private SelectableInstance currentSelectableInstance = null;
+    private EntityInstance newEntityInstance = null;
+    private EntityInstance currentEntityInstance = null;
 
     /**
      * Instantiates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
@@ -23,7 +23,7 @@ public class SelectObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        newSelectableInstance = (SelectableInstance) world.getModelInstance(screenX, screenY);
+        newEntityInstance = (EntityInstance) world.getModelInstance(screenX, screenY);
         return false; // Continue to the next 'touchDown' listener.
     }
 
@@ -34,20 +34,20 @@ public class SelectObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        SelectableInstance instance = (SelectableInstance) world.getModelInstance(screenX, screenY);
+        EntityInstance instance = world.getModelInstance(screenX, screenY);
 
-        // If a selected SelectableInstance is found and it is equal to the found instance the SelectableInstance is set to
+        // If a selected EntityInstance is found and it is equal to the found instance the EntityInstance is set to
         // selected.
-        if (newSelectableInstance != null && instance != null && newSelectableInstance == instance) {
-            newSelectableInstance.setSelected(true); // Apply the new selection.
+        if (newEntityInstance != null && instance != null && newEntityInstance == instance) {
+            newEntityInstance.setSelected(true); // Apply the new selection.
 
             // Deselect the previous selection
-            if (currentSelectableInstance != null) {
-                currentSelectableInstance.setSelected(false);
+            if (currentEntityInstance != null) {
+                currentEntityInstance.setSelected(false);
             }
 
-            currentSelectableInstance = newSelectableInstance; // update new current selection.
-            newSelectableInstance = null; // Reset the new possible selection.
+            currentEntityInstance = newEntityInstance; // update new current selection.
+            newEntityInstance = null; // Reset the new possible selection.
         }
 
         return false; // Continue to the next 'touchUp' listener.

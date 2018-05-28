@@ -1,8 +1,12 @@
 package com.marama.view.entities;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.marama.view.entities.instances.EntityInstance;
 import com.marama.view.renderables.World;
 
 /**
@@ -37,11 +41,11 @@ public abstract class Entity {
     }
 
     /**
-     * Creates a new {@link ModelInstance}.
+     * Creates a new {@link EntityInstance}.
      *
-     * @return {@link ModelInstance}
+     * @return {@link EntityInstance}
      */
-    public ModelInstance createInstance() {
-        return new ModelInstance(getModel(filePath));
+    public EntityInstance createInstance() {
+        return new EntityInstance(getModel(filePath), new Material(ColorAttribute.createDiffuse(Color.WHITE)));
     }
 }

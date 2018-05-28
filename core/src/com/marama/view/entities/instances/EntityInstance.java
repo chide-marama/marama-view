@@ -1,6 +1,7 @@
 package com.marama.view.entities.instances;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -8,11 +9,13 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import static com.badlogic.gdx.math.Matrix4.M03;
+
 /**
- * A {@link SelectableInstance} is a {@link ModelInstance} that adds a {@link BoundingBox}.
- * This {@link BoundingBox} can be used for selection detection.
+ * A {@link EntityInstance} is a {@link ModelInstance} that adds a {@link BoundingBox}.
+ * This {@link BoundingBox} can be used for selection detection or calculating if the instance is outside of the frustum.
  */
-public class SelectableInstance extends ModelInstance {
+public class EntityInstance extends ModelInstance {
     public final BoundingBox boundingBox = new BoundingBox();
     public final Vector3 center = new Vector3();
     public final Vector3 dimensions = new Vector3();
@@ -22,12 +25,12 @@ public class SelectableInstance extends ModelInstance {
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
 
     /**
-     * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
+     * Instantiate a new {@link EntityInstance} with a {@link BoundingBox}.
      *
-     * @param model The model to create the {@link SelectableInstance} from.
+     * @param model           The model to create the {@link EntityInstance} from.
      * @param defaultMaterial
      */
-    public SelectableInstance(Model model, Material defaultMaterial) {
+    public EntityInstance(Model model, Material defaultMaterial) {
         super(model);
 
         this.defaultMaterial = defaultMaterial;
@@ -61,12 +64,25 @@ public class SelectableInstance extends ModelInstance {
     }
 
     /**
-     * Apply a new {@link Material} to the {@link SelectableInstance}.
+     * Apply a new {@link Material} to the {@link EntityInstance}.
      *
      * @param material The {@link Material} to apply.
      */
     public void setMaterial(Material material) {
         materials.get(0).clear();
         materials.get(0).set(material);
+    }
+
+    /**
+     * wefwef TODO
+     *
+     * @param camera
+     * @return
+     */
+    public boolean isVisible(final PerspectiveCamera camera) {
+        Vector3 position = new Vector3();
+        transform.getTranslation(position);
+        position.add(center);
+        return camera.frustum.sphereInFrustum(position, radius);
     }
 }
