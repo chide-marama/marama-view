@@ -114,29 +114,16 @@ public class World extends Environment implements Renderable {
      * @return The index of the {@link EntityInstance} if it was found, otherwise -1.
      */
     private int getModelInstanceIndex(int screenX, int screenY) {
-        int result = -1;
-        float distance = -1f;
-
-        Vector3 position = new Vector3();
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
-
+        int result = -1;
+        float distance = -1;
         for (int i = 0; i < entityInstances.size; ++i) {
-            final EntityInstance instance = entityInstances.get(i);
-
-            // Set the center location of the instance.
-            instance.transform.getTranslation(position);
-            position.add(instance.center);
-
-            float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance position.
-
-            if (distance >= 0f && dist2 > distance) continue; // instance is not closer than a previous one.
-
-            if (Intersector.intersectRaySphere(ray, position, instance.radius, null)) { // Whether an intersection occurs
+            final float dist2 = entityInstances.get(i).intersects(ray);
+            if (dist2 >= 0f && (distance < 0f || dist2 <= distance)) {
                 result = i;
                 distance = dist2;
             }
         }
-
         return result;
     }
 
