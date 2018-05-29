@@ -23,7 +23,7 @@ public class SelectObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        newEntityInstance = (EntityInstance) world.getModelInstance(screenX, screenY);
+        newEntityInstance = world.getModelInstance(screenX, screenY);
         return false; // Continue to the next 'touchDown' listener.
     }
 
@@ -36,20 +36,25 @@ public class SelectObjectInputController extends InputAdapter {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (newEntityInstance != null) {
             EntityInstance instance = world.getModelInstance(screenX, screenY);
-            // If a selected EntityInstance is found and it is equal to the found instance the EntityInstance is set to
-            // selected.
             if (newEntityInstance == instance) {
-                newEntityInstance.switchSelect();
-                // If currentEntity and NewEntity are different, switch CurrentEntity off.
-                if (currentEntityInstance != null && newEntityInstance != currentEntityInstance) {
-                    currentEntityInstance.setSelected(false);
-                }
-                currentEntityInstance = newEntityInstance;
-
+                handleDiscreteSelection();
             }
         }
-
-
         return false; // Continue to the next 'touchUp' listener.
+    }
+    // If a selected EntityInstance is found and it is equal to the found instance the EntityInstance is set to
+    // selected.
+
+    /***
+     * Switches the state of the entityInstance based on what the current selection is.
+     */
+    private void handleDiscreteSelection(){
+        newEntityInstance.switchSelect();
+        // If currentEntity and NewEntity are different, switch CurrentEntity off.
+        if (currentEntityInstance != null && newEntityInstance != currentEntityInstance) {
+            currentEntityInstance.setSelected(false);
+        }
+        currentEntityInstance = newEntityInstance;
+
     }
 }
