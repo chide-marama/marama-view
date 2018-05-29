@@ -1,0 +1,6 @@
+{
+  "id": "2",
+  "name": "sphere",
+  "obj_location": "models/m-sphere.obj",
+  "joints": []
+}

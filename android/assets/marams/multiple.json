@@ -1,0 +1,22 @@
+{
+  "Maramafications": [
+    {
+      "id": "0",
+      "name": "block",
+      "obj_location": "models/m-block.obj",
+      "joints": []
+    },
+    {
+      "id": "1",
+      "name": "donut",
+      "obj_location": "models/m-donut.obj",
+      "joints": []
+    },
+    {
+      "id": "2",
+      "name": "sphere",
+      "obj_location": "models/m-sphere.obj",
+      "joints": []
+    }
+  ]
+}

@@ -1,33 +1,36 @@
 package com.marama.view.entities;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.marama.view.util.MaramaEntityLoader;
+import com.marama.view.entities.instances.SelectableInstance;
+import com.marama.view.util.MaramaficationLoader;
 
-public class EntityManager {
-    //    private ArrayList<Entity> EntityList;
-    final ObjectMap<String, Model> modelList = new ObjectMap<String, Model>();
-    private AssetManager assetManager;
+public class EntityManager extends AssetManager {
+    final ObjectMap<String, Maramafication> maramafications = new ObjectMap();
 
-    public EntityManager(AssetManager assetManager) {
-        this.assetManager = assetManager;
-        this.assetManager.setLoader(MaramaEntity.class, new MaramaEntityLoader(this.assetManager.getFileHandleResolver()));
+    public ObjLoader objLoader = new ObjLoader();
+
+    public EntityManager() {
+        setLoader(Maramafication.class, new MaramaficationLoader(getFileHandleResolver()));
     }
 
-    public void loadObj(String filepath) {
-        assetManager.load(filepath, Model.class);
-        assetManager.finishLoading();
-        modelList.put(filepath, (Model) assetManager.get(filepath));
+    public void load(String filepath) {
+        load(filepath, Maramafication.class);
+        finishLoading();
+        Maramafication m = get(filepath);
+        maramafications.put(m.name, m);
+        m.setModel(objLoader);
     }
 
-    public Model getModel(String filepath) {
-        return modelList.get(filepath);
+    public SelectableInstance getSelectableInstance(String name) {
+        return new SelectableInstance(getMaramaficationByName(name).getModel(), new Material(ColorAttribute.createDiffuse(Color.WHITE)));
     }
 
-//    public void getAllMaramafications(){
-//
-//        List<Model> list =  new List<Model>;
-//        assetManager.getAll(Model.class, list);
-//    }
+    public Maramafication getMaramaficationByName(String name) {
+        return maramafications.get(name);
+    }
 }
