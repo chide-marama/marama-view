@@ -60,7 +60,18 @@ public class EntityInstance extends ModelInstance {
             setMaterial(defaultMaterial);
         }
     }
+    public boolean isSelected(){
+        return selected;
+    }
 
+    public void switchSelect(){
+        this.selected = !this.selected;
+        if (selected) {
+            setMaterial(selectedMaterial);
+        } else {
+            setMaterial(defaultMaterial);
+        }
+    }
     /**
      * Apply a new {@link Material} to the {@link EntityInstance}.
      *

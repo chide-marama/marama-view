@@ -34,21 +34,21 @@ public class SelectObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        EntityInstance instance = world.getModelInstance(screenX, screenY);
+        if (newEntityInstance != null) {
+            EntityInstance instance = world.getModelInstance(screenX, screenY);
+            // If a selected EntityInstance is found and it is equal to the found instance the EntityInstance is set to
+            // selected.
+            if (newEntityInstance == instance) {
+                newEntityInstance.switchSelect();
+                // If currentEntity and NewEntity are different, switch CurrentEntity off.
+                if (currentEntityInstance != null && newEntityInstance != currentEntityInstance) {
+                    currentEntityInstance.setSelected(false);
+                }
+                currentEntityInstance = newEntityInstance;
 
-        // If a selected EntityInstance is found and it is equal to the found instance the EntityInstance is set to
-        // selected.
-        if (newEntityInstance != null && instance != null && newEntityInstance == instance) {
-            newEntityInstance.setSelected(true); // Apply the new selection.
-
-            // Deselect the previous selection
-            if (currentEntityInstance != null) {
-                currentEntityInstance.setSelected(false);
             }
-
-            currentEntityInstance = newEntityInstance; // update new current selection.
-            newEntityInstance = null; // Reset the new possible selection.
         }
+
 
         return false; // Continue to the next 'touchUp' listener.
     }
