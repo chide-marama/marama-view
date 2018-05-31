@@ -29,6 +29,10 @@ public class World extends Environment implements Renderable {
     private ModelBatch modelBatch;
     private MBlock mBlock;
 
+    public Ray getRay(int screenX, int screenY) {
+        return perspectiveCamera.getPickRay(screenX, screenY);
+    }
+
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link EntityInstance}'s.
      *
@@ -106,6 +110,15 @@ public class World extends Environment implements Renderable {
 
         return null;
     }
+    public EntityInstance getModelInstance(Ray ray) {
+        int index = getModelInstanceIndex(ray);
+
+        if (index > -1) {
+            return entityInstances.get(index);
+        }
+
+        return null;
+    }
 
     /**
      * Retrieving a {@link EntityInstance} index from screen coordinates.
@@ -114,33 +127,12 @@ public class World extends Environment implements Renderable {
      * @param screenY The y coordinate, origin is in the upper left corner.
      * @return The index of the {@link EntityInstance} if it was found, otherwise -1.
      */
-    private int getModelInstanceIndex(int screenX, int screenY) {
+    private int getModelInstanceIndex(int screenX, int screenY){
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
         int result = -1;
         float distance = -1;
         for (int i = 0; i < entityInstances.size; ++i) {
             final float dist2 = entityInstances.get(i).intersects(ray);
-            EntityInstance current = entityInstances.get(i);
-            Vector3 intersect = new Vector3();
-            Intersector.intersectRayBounds(ray, current.boundingBox, intersect);
-            int closest = -1;
-            float min = Integer.MAX_VALUE;
-            for (int j = 0; j<current.faces.size; j++){
-                Vector3 temp = current.faces.get(j);
-                float dist = temp.dst(intersect);
-                if(dist<min) {
-                    min = dist;
-                    closest = j;
-                }
-            }
-            switch(closest){
-                case 0:System.out.println("Up"); break;
-                case 1:System.out.println("Right"); break;
-                case 2:System.out.println("Front"); break;
-                case 3:System.out.println("Down"); break;
-                case 4:System.out.println("Left"); break;
-                case 5:System.out.println("Back"); break;
-            }
             if (dist2 >= 0f && (distance < 0f || dist2 <= distance)) {
                 result = i;
                 distance = dist2;
@@ -149,6 +141,40 @@ public class World extends Environment implements Renderable {
         return result;
     }
 
+    private int getModelInstanceIndex(Ray ray) {
+        int result = -1;
+        float distance = -1;
+        for (int i = 0; i < entityInstances.size; ++i) {
+            final float dist2 = entityInstances.get(i).intersects(ray);
+            if (dist2 >= 0f && (distance < 0f || dist2 <= distance)) {
+                result = i;
+                distance = dist2;
+            }
+        }
+        return result;
+    }
+
+    public int getClosestFaceIndex(Ray ray, EntityInstance entityInstance){
+
+        Vector3 intersect = new Vector3();
+        Intersector.intersectRayBounds(ray, entityInstance.boundingBox, intersect);
+        System.out.println(intersect);
+
+        int closest = -1;
+        float min = Integer.MAX_VALUE;
+        for (int j = 0; j < entityInstance.faces.size; j++) {
+            Vector3 temp = entityInstance.faces.get(j);
+            float dist = temp.dst(intersect);
+            System.out.println(dist);
+            if (dist < min && dist<0.5) {
+                min = dist;
+                closest = j;
+            }
+
+            System.out.println(closest+" "+j);
+        }
+        return closest;
+    }
     /**
      * Initializes the {@link World} with some default settings.
      */
@@ -195,7 +221,42 @@ public class World extends Environment implements Renderable {
 
         EntityInstance instance = mBlock.createInstance();
         entityInstances.add(instance);
+        EntityInstance instance2 = mBlock.createInstance();
+        instance2.transform.setToTranslation(5, 5, 0);
+        entityInstances.add(instance2);
         // Quit loading else this function will be called every render.
         loading = false;
+    }
+
+    public void addBlock(EntityInstance instance, int currentFaceIndex) {
+        EntityInstance newblock = mBlock.createInstance();
+        Vector3 position = instance.transform.getTranslation(new Vector3());
+        switch (currentFaceIndex) {
+            case 0:
+                System.out.println("Up");
+                newblock.transform.setToTranslation(new Vector3(0, 1, 0).add(position));
+                break;
+            case 1:
+                System.out.println("Right");
+                newblock.transform.setToTranslation(new Vector3(1, 0, 0).add(position));
+                break;
+            case 2:
+                System.out.println("Front");
+                newblock.transform.setToTranslation(new Vector3(0, 0, 1).add(position));
+                break;
+            case 3:
+                System.out.println("Down");
+                newblock.transform.setToTranslation(new Vector3(0, -1, 0).add(position));
+                break;
+            case 4:
+                System.out.println("Left");
+                newblock.transform.setToTranslation(new Vector3(-1, 0, 0).add(position));
+                break;
+            case 5:
+                System.out.println("Back");
+                newblock.transform.setToTranslation(new Vector3(0, 0, -1).add(position));
+                break;
+        }
+        entityInstances.add(newblock);
     }
 }
