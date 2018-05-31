@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.MBlock;
 import com.marama.view.entities.instances.SelectableInstance;
+import com.marama.view.util.Line;
 
 import java.util.Random;
 
@@ -36,6 +37,7 @@ public class World extends Environment implements Renderable {
 
     private Random r;
     private ShapeRenderer shapeRenderer;
+    private Array<Line> lines;
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
@@ -53,7 +55,6 @@ public class World extends Environment implements Renderable {
 
         r = new Random();
         shapeRenderer = new ShapeRenderer();
-
 
         init();
     }
@@ -75,12 +76,9 @@ public class World extends Environment implements Renderable {
 
         shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.RED); // x
-        shapeRenderer.line(new Vector3(0, 0, 0), new Vector3(1, 0, 0));
-        shapeRenderer.setColor(0, 1, 0, 1); // y
-        shapeRenderer.line(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-        shapeRenderer.setColor(0, 0, 1, 1); // z
-        shapeRenderer.line(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+        for (Line line : lines) {
+            line.draw(shapeRenderer);
+        }
         shapeRenderer.end();
     }
 
@@ -199,6 +197,12 @@ public class World extends Environment implements Renderable {
 
         // Create a model for rendering.
         mBlock = new MBlock(assetManager);
+
+        // Create lines.
+        lines = new Array<Line>();
+        lines.add(new Line(new Vector3(0, 0, 0), new Vector3(1, 0, 0), Color.RED)); // X
+        lines.add(new Line(new Vector3(0, 0, 0), new Vector3(0, 1, 0), Color.GREEN)); // Y
+        lines.add(new Line(new Vector3(0, 0, 0), new Vector3(0, 0, 1), Color.BLUE)); // Z
     }
 
     public void addObject() {
