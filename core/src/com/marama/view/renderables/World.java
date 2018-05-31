@@ -3,18 +3,23 @@ package com.marama.view.renderables;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.MBlock;
 import com.marama.view.entities.instances.SelectableInstance;
+
+import java.util.Random;
 
 /**
  * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
@@ -28,6 +33,9 @@ public class World extends Environment implements Renderable {
     private AssetManager assetManager;
     private ModelBatch modelBatch;
     private MBlock mBlock;
+
+    private Random r;
+    private ShapeRenderer shapeRenderer;
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
@@ -43,7 +51,16 @@ public class World extends Environment implements Renderable {
         this.perspectiveCamera = perspectiveCamera;
         this.assetManager = assetManager;
 
+        r = new Random();
+        shapeRenderer = new ShapeRenderer();
+
+
         init();
+    }
+
+
+    public int randInt(Random random, int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
     }
 
     @Override
@@ -55,6 +72,16 @@ public class World extends Environment implements Renderable {
         modelBatch.begin(perspectiveCamera);
         modelBatch.render(modelInstances, this);
         modelBatch.end();
+
+        shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED); // x
+        shapeRenderer.line(new Vector3(0, 0, 0), new Vector3(1, 0, 0));
+        shapeRenderer.setColor(0, 1, 0, 1); // y
+        shapeRenderer.line(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+        shapeRenderer.setColor(0, 0, 1, 1); // z
+        shapeRenderer.line(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+        shapeRenderer.end();
     }
 
     @Override
@@ -81,6 +108,14 @@ public class World extends Environment implements Renderable {
 
     public CameraInputController getCameraInputController() {
         return cameraInputController;
+    }
+
+    public PerspectiveCamera getPerspectiveCamera() {
+        return perspectiveCamera;
+    }
+
+    public Array<ModelInstance> getModelInstances() {
+        return modelInstances;
     }
 
     /**
@@ -166,14 +201,20 @@ public class World extends Environment implements Renderable {
         mBlock = new MBlock(assetManager);
     }
 
+    public void addObject() {
+        SelectableInstance instance = mBlock.createInstance();
+        instance.transform.setToTranslation(randInt(r, 0, 10), randInt(r, 0, 10), randInt(r, 0, 10));
+        modelInstances.add(instance);
+    }
+
     /**
      * Will be called when the {@link AssetManager} is done loading.
      */
     private void doneLoading() {
         // Create a nice 3D grid of MBlocks.
-        for (float x = -3f; x <= 3f; x += 2f) {
-            for (float z = -3f; z <= 3f; z += 2f) {
-                for (float y = -3f; y <= 3f; y += 2f) {
+        for (float x = -2f; x <= 2f; x += 2f) {
+            for (float z = -2f; z <= 2f; z += 2f) {
+                for (float y = -2f; y <= 2f; y += 2f) {
                     SelectableInstance instance = mBlock.createInstance();
                     instance.transform.setToTranslation(x, y, z);
                     modelInstances.add(instance);
