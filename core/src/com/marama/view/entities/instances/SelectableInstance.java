@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.marama.view.util.Axes;
 
 /**
  * A {@link SelectableInstance} is a {@link ModelInstance} that adds a {@link BoundingBox}.
@@ -24,7 +26,7 @@ public class SelectableInstance extends ModelInstance {
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
      *
-     * @param model The model to create the {@link SelectableInstance} from.
+     * @param model           The model to create the {@link SelectableInstance} from.
      * @param defaultMaterial
      */
     public SelectableInstance(Model model, Material defaultMaterial) {
@@ -54,9 +56,9 @@ public class SelectableInstance extends ModelInstance {
         this.selected = selected;
 
         if (selected) {
-            setMaterial(selectedMaterial);
+//            setMaterial(selectedMaterial);
         } else {
-            setMaterial(defaultMaterial);
+//            setMaterial(defaultMaterial);
         }
     }
 
@@ -68,5 +70,16 @@ public class SelectableInstance extends ModelInstance {
     public void setMaterial(Material material) {
         materials.get(0).clear();
         materials.get(0).set(material);
+    }
+
+    public void drawAxes(ShapeRenderer shapeRenderer) {
+        Axes.draw(shapeRenderer, transform.getTranslation(new Vector3()));
+    }
+
+    public void drawSkeleton(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(new Color(0.4f, 0.4f, 0.4f, 1));
+        Vector3 pos = transform.getTranslation(new Vector3());
+        Vector3 dim = boundingBox.getDimensions(new Vector3());
+        shapeRenderer.box(pos.x - 0.5f, pos.y - 0.5f, pos.z + 0.5f, dim.x, dim.y, dim.z);
     }
 }

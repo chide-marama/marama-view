@@ -3,8 +3,6 @@ package com.marama.view.renderables;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -18,9 +16,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.MBlock;
 import com.marama.view.entities.instances.SelectableInstance;
-import com.marama.view.util.Line;
-
-import java.util.Random;
+import com.marama.view.util.Axes;
 
 /**
  * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
@@ -34,10 +30,7 @@ public class World extends Environment implements Renderable {
     private AssetManager assetManager;
     private ModelBatch modelBatch;
     private MBlock mBlock;
-
-    private Random r;
-    private ShapeRenderer shapeRenderer;
-    private Array<Line> lines;
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
@@ -53,15 +46,7 @@ public class World extends Environment implements Renderable {
         this.perspectiveCamera = perspectiveCamera;
         this.assetManager = assetManager;
 
-        r = new Random();
-        shapeRenderer = new ShapeRenderer();
-
         init();
-    }
-
-
-    public int randInt(Random random, int min, int max) {
-        return random.nextInt((max - min) + 1) + min;
     }
 
     @Override
@@ -76,9 +61,17 @@ public class World extends Environment implements Renderable {
 
         shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for (Line line : lines) {
-            line.draw(shapeRenderer);
+
+        for (final ModelInstance instance : modelInstances) {
+            if (instance instanceof SelectableInstance) {
+                SelectableInstance selectableInstance = (SelectableInstance) instance;
+                if (selectableInstance.isSelected()) {
+                    selectableInstance.drawAxes(shapeRenderer);
+                    selectableInstance.drawSkeleton(shapeRenderer);
+                }
+            }
         }
+
         shapeRenderer.end();
     }
 
@@ -197,17 +190,11 @@ public class World extends Environment implements Renderable {
 
         // Create a model for rendering.
         mBlock = new MBlock(assetManager);
-
-        // Create lines.
-        lines = new Array<Line>();
-        lines.add(new Line(new Vector3(0, 0, 0), new Vector3(1, 0, 0), Color.RED)); // X
-        lines.add(new Line(new Vector3(0, 0, 0), new Vector3(0, 1, 0), Color.GREEN)); // Y
-        lines.add(new Line(new Vector3(0, 0, 0), new Vector3(0, 0, 1), Color.BLUE)); // Z
     }
 
     public void addObject() {
         SelectableInstance instance = mBlock.createInstance();
-        instance.transform.setToTranslation(randInt(r, 0, 10), randInt(r, 0, 10), randInt(r, 0, 10));
+        instance.transform.setToTranslation(10, 10, 10);
         modelInstances.add(instance);
     }
 
