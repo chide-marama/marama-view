@@ -37,7 +37,7 @@ public class addBlockInputController extends InputAdapter {
         EntityInstance instance = world.getModelInstance(screenX, screenY);
         if(instance!=null){
             currentFaceIndex = world.getClosestFaceIndex(screenX, screenY, instance);
-            world.addBlock(instance, currentFaceIndex, mBlock);
+            world.addBlock(instance, currentFaceIndex);
         }
         return false; // Continue to the next 'touchUp' listener.
     }

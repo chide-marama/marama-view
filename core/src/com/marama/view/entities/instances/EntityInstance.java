@@ -47,7 +47,9 @@ public class EntityInstance extends ModelInstance {
         calculateBoundingBox(boundingBox);
         boundingBox.getCenter(center); // Actually sets the center value
         boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
+        System.out.println("Meep: "+dimensions);
         radius = dimensions.len() / 2f;
+
 
         faces.add(new Vector3(0, 0.5f, 0), new Vector3(0.5f, 0, 0), new Vector3(0, 0, 0.5f));
         faces.add(new Vector3(0, -0.5f, 0), new Vector3(-0.5f, 0, 0), new Vector3(0, 0, -0.5f));

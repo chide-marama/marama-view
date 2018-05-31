@@ -133,15 +133,20 @@ public class World extends Environment implements Renderable {
 
         Vector3 intersect = new Vector3();
         Intersector.intersectRayBounds(ray, entityInstance.boundingBox, intersect);
+        System.out.println(intersect);
+
         int closest = -1;
         float min = Integer.MAX_VALUE;
         for (int j = 0; j < entityInstance.faces.size; j++) {
             Vector3 temp = entityInstance.faces.get(j);
             float dist = temp.dst(intersect);
-            if (dist < min) {
+            System.out.println(dist);
+            if (dist < min && dist<0.5) {
                 min = dist;
                 closest = j;
             }
+
+            System.out.println(closest+" "+j);
         }
         return closest;
     }
@@ -198,8 +203,8 @@ public class World extends Environment implements Renderable {
         loading = false;
     }
 
-    public void addBlock(EntityInstance instance, int currentFaceIndex, MBlock newmBlock) {
-        EntityInstance newblock = newmBlock.createInstance();
+    public void addBlock(EntityInstance instance, int currentFaceIndex) {
+        EntityInstance newblock = mBlock.createInstance();
         Vector3 position = instance.transform.getTranslation(new Vector3());
         switch (currentFaceIndex) {
             case 0:
