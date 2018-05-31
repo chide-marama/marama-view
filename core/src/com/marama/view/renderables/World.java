@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
@@ -119,6 +120,27 @@ public class World extends Environment implements Renderable {
         float distance = -1;
         for (int i = 0; i < entityInstances.size; ++i) {
             final float dist2 = entityInstances.get(i).intersects(ray);
+            EntityInstance current = entityInstances.get(i);
+            Vector3 intersect = new Vector3();
+            Intersector.intersectRayBounds(ray, current.boundingBox, intersect);
+            int closest = -1;
+            float min = Integer.MAX_VALUE;
+            for (int j = 0; j<current.faces.size; j++){
+                Vector3 temp = current.faces.get(j);
+                float dist = temp.dst(intersect);
+                if(dist<min) {
+                    min = dist;
+                    closest = j;
+                }
+            }
+            switch(closest){
+                case 0:System.out.println("Up"); break;
+                case 1:System.out.println("Right"); break;
+                case 2:System.out.println("Front"); break;
+                case 3:System.out.println("Down"); break;
+                case 4:System.out.println("Left"); break;
+                case 5:System.out.println("Back"); break;
+            }
             if (dist2 >= 0f && (distance < 0f || dist2 <= distance)) {
                 result = i;
                 distance = dist2;
@@ -163,17 +185,16 @@ public class World extends Environment implements Renderable {
      * Will be called when the {@link AssetManager} is done loading.
      */
     private void doneLoading() {
-        // Create a nice 3D grid of MBlocks.
-        for (float x = -3f; x <= 3f; x += 2f) {
-            for (float z = -3f; z <= 3f; z += 2f) {
-                for (float y = -3f; y <= 3f; y += 2f) {
-                    EntityInstance instance = mBlock.createInstance();
-                    instance.transform.setToTranslation(x, y, z);
-                    entityInstances.add(instance);
-                }
-            }
-        }
+//        // Create a nice 3D grid of MBlocks.
+//        for (float x = -3f; x <= 3f; x += 2f) {
+//            for (float z = -3f; z <= 3f; z += 2f) {
+//                for (float y = -3f; y <= 3f; y += 2f) {
+//                }
+//            }
+//        }
 
+        EntityInstance instance = mBlock.createInstance();
+        entityInstances.add(instance);
         // Quit loading else this function will be called every render.
         loading = false;
     }

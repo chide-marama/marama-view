@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * A {@link EntityInstance} is a {@link ModelInstance} that adds a {@link BoundingBox}.
@@ -18,6 +19,7 @@ public class EntityInstance extends ModelInstance {
     public final Vector3 center = new Vector3();
     public final Vector3 dimensions = new Vector3();
     public final float radius;
+    public Array<Vector3> faces = new Array<Vector3>();
 
     public final BoundingBox boundingBox = new BoundingBox();
     private final static Vector3 position = new Vector3();
@@ -46,6 +48,9 @@ public class EntityInstance extends ModelInstance {
         boundingBox.getCenter(center); // Actually sets the center value
         boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
         radius = dimensions.len() / 2f;
+
+        faces.add(new Vector3(0, 0.5f, 0), new Vector3(0.5f, 0, 0), new Vector3(0, 0, 0.5f));
+        faces.add(new Vector3(0, -0.5f, 0), new Vector3(-0.5f, 0, 0), new Vector3(0, 0, -0.5f));
     }
 
     /**
