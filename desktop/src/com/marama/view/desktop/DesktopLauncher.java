@@ -8,6 +8,8 @@ import com.marama.view.View;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.height = 800;
+		config.width = 1000;
 		new LwjglApplication(new View(), config);
 	}
 }

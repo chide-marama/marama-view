@@ -66,10 +66,10 @@ public class World extends Environment implements Renderable {
         for (final ModelInstance instance : modelInstances) {
             if (instance instanceof SelectableInstance) {
                 SelectableInstance selectableInstance = (SelectableInstance) instance;
-                if (selectableInstance.isSelected()) {
+//                if (selectableInstance.isSelected()) {
                     selectableInstance.drawAxes(shapeRenderer);
                     selectableInstance.drawDimensions(shapeRenderer);
-                }
+//                }
             }
         }
 
@@ -204,15 +204,19 @@ public class World extends Environment implements Renderable {
      */
     private void doneLoading() {
         // Create a nice 3D grid of MBlocks.
-        for (float x = -2f; x <= 2f; x += 2f) {
-            for (float z = -2f; z <= 2f; z += 2f) {
-                for (float y = -2f; y <= 2f; y += 2f) {
-                    SelectableInstance instance = mBlock.createInstance();
-                    instance.transform.setToTranslation(x, y, z);
-                    modelInstances.add(instance);
-                }
-            }
-        }
+//        for (float x = -2f; x <= 2f; x += 2f) {
+//            for (float z = -2f; z <= 2f; z += 2f) {
+//                for (float y = -2f; y <= 2f; y += 2f) {
+//                    SelectableInstance instance = mBlock.createInstance();
+//                    instance.transform.setToTranslation(x, y, z);
+//                    modelInstances.add(instance);
+//                }
+//            }
+//        }
+
+        SelectableInstance instance = mBlock.createInstance();
+        instance.transform.setToTranslation(0, 0, 0);
+        modelInstances.add(instance);
 
         // Quit loading else this function will be called every render.
         loading = false;
