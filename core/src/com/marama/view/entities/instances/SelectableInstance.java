@@ -25,6 +25,7 @@ public class SelectableInstance extends ModelInstance {
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
 
     private Array<Vector3> actualBounds;
+    private Axes axes = new Axes();
 
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
@@ -86,19 +87,25 @@ public class SelectableInstance extends ModelInstance {
     }
 
     public void drawAxes(ShapeRenderer shapeRenderer) {
-        Axes.draw(shapeRenderer, transform.getTranslation(new Vector3()));
+        axes.draw(shapeRenderer, transform.getTranslation(new Vector3()));
     }
 
     public void drawDimensions(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(new Color(0.4f, 0.4f, 0.4f, 1));
         Vector3 pos = transform.getTranslation(new Vector3());
         Vector3 dim = boundingBox.getDimensions(new Vector3());
+
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(new Color(0.4f, 0.4f, 0.4f, 1));
+        shapeRenderer.identity();
         shapeRenderer.box(pos.x - 0.5f, pos.y - 0.5f, pos.z + 0.5f, dim.x, dim.y, dim.z);
     }
 
     public void drawBoundingBox(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.GREEN);
         Vector3 position = transform.getTranslation(new Vector3());
+
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.identity();
 
         for (int i = 0; i < actualBounds.size - 1; i++) {
             Vector3 current = new Vector3(actualBounds.get(i)).add(position);
@@ -108,8 +115,15 @@ public class SelectableInstance extends ModelInstance {
     }
 
     public void drawRadius(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.RED);
         Vector3 position = transform.getTranslation(new Vector3());
-        shapeRenderer.cone(position.x, position.y, position.z, radius, 0, 16);
+
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.identity();
+        shapeRenderer.translate(position.x, position.y, position.z);
+
+        shapeRenderer.circle(0, 0, radius, 16);
+        shapeRenderer.rotate(0, 1, 0, 90);
+        shapeRenderer.circle(0, 0, radius, 16);
     }
 }

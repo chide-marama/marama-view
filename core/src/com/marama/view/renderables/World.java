@@ -60,7 +60,8 @@ public class World extends Environment implements Renderable {
         modelBatch.end();
 
         shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.begin();
 
         for (final ModelInstance instance : modelInstances) {
             if (instance instanceof SelectableInstance) {
