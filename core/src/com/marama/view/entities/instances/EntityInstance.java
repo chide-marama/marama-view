@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
@@ -24,6 +26,7 @@ public class EntityInstance extends ModelInstance {
     public final BoundingBox boundingBox = new BoundingBox();
     private final static Vector3 position = new Vector3();
 
+    private Array<Vector3> actualBounds;
     private boolean selected;
     private Material defaultMaterial;
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
@@ -51,8 +54,32 @@ public class EntityInstance extends ModelInstance {
 
         faces.add(new Vector3(0, 0.5f, 0), new Vector3(0.5f, 0, 0), new Vector3(0, 0, 0.5f));
         faces.add(new Vector3(0, -0.5f, 0), new Vector3(-0.5f, 0, 0), new Vector3(0, 0, -0.5f));
+
+        actualBounds = new Array<Vector3>();
+        actualBounds.add(boundingBox.getCorner000(new Vector3()));
+        actualBounds.add(boundingBox.getCorner001(new Vector3()));
+        actualBounds.add(boundingBox.getCorner011(new Vector3()));
+        actualBounds.add(boundingBox.getCorner111(new Vector3()));
+        actualBounds.add(boundingBox.getCorner010(new Vector3()));
+        actualBounds.add(boundingBox.getCorner110(new Vector3()));
+        actualBounds.add(boundingBox.getCorner100(new Vector3()));
+        actualBounds.add(boundingBox.getCorner101(new Vector3()));
     }
 
+
+    public void drawBoundingBox(ShapeRenderer shapeRenderer) {
+        Vector3 position = transform.getTranslation(new Vector3());
+
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.identity();
+
+        for (int i = 0; i < actualBounds.size - 1; i++) {
+            Vector3 current = new Vector3(actualBounds.get(i)).add(position);
+            Vector3 next = new Vector3(actualBounds.get(i + 1)).add(position);
+            shapeRenderer.line(current, next);
+        }
+    }
     /**
      * Select or deselect the current instance and update's its {@link Material}.
      */

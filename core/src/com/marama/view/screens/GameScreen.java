@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.marama.view.controllers.addBlockInputController;
 import com.marama.view.renderables.World;
 import com.marama.view.renderables.stages.WorldUserInterface;
 import com.marama.view.util.SelectObjectInputController;
