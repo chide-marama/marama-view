@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marama.view.renderables.Renderable;
+import com.marama.view.renderables.World;
 
 /**
  * The class containing all the elements of the WorldUserInterface, used in the GameScreen.
@@ -26,7 +27,7 @@ public class WorldUserInterface extends Stage implements Renderable {
     private final float blockSize = 80f;
     private final float padding = 10f;
 
-    public WorldUserInterface(Viewport viewport, Skin skin) {
+    public WorldUserInterface(final World world, Viewport viewport, Skin skin) {
         super(viewport);
 
         Table table = new Table(); /* Create the table that contains the UI elements */
@@ -48,7 +49,7 @@ public class WorldUserInterface extends Stage implements Renderable {
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println(file.name());
+                    world.addObject();
                 }
             });
             /* Create a new row and add items to from now on. */

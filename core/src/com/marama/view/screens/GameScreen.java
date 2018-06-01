@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.marama.view.controllers.addBlockInputController;
 import com.marama.view.renderables.World;
 import com.marama.view.renderables.stages.WorldUserInterface;
+import com.marama.view.util.DragObjectInputController;
 import com.marama.view.util.SelectObjectInputController;
 
 /**
@@ -31,6 +32,7 @@ public class GameScreen extends ScreenAdapter {
         );
 
         this.worldUserInterface = new WorldUserInterface(
+                this.world,
                 new ScreenViewport(),
                 new Skin(Gdx.files.internal("skin/uiskin.json"))
         );
@@ -41,6 +43,7 @@ public class GameScreen extends ScreenAdapter {
         // Handle all input processors
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(worldUserInterface);
+//        multiplexer.addProcessor(new DragObjectInputController(this.world));
         multiplexer.addProcessor(new SelectObjectInputController(this.world));
         multiplexer.addProcessor(world.getCameraInputController());
         Gdx.input.setInputProcessor(multiplexer);

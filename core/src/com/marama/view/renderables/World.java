@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
@@ -16,15 +17,16 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.Entity;
 import com.marama.view.entities.MBlock;
-import com.marama.view.entities.instances.EntityInstance;
+import com.marama.view.entities.instances.SelectableInstance;
+import com.marama.view.util.Axes;
 
 /**
- * The {@link World} is an {@link Environment} that is able to render 3D {@link EntityInstance}'s.
+ * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
  */
 public class World extends Environment implements Renderable {
     private boolean loading;
     private DirectionalLight directionalLight;
-    private Array<EntityInstance> entityInstances; // All models that are in the World.
+    private Array<ModelInstance> modelInstances; // All models that are in the World.
     private PerspectiveCamera perspectiveCamera;
     private CameraInputController cameraInputController;
     private AssetManager assetManager;
@@ -35,9 +37,10 @@ public class World extends Environment implements Renderable {
     public Ray getRay(int screenX, int screenY) {
         return perspectiveCamera.getPickRay(screenX, screenY);
     }
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     /**
-     * Instantiates a new {@link World} which is able to render 3D {@link EntityInstance}'s.
+     * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
      *
      * @param directionalLight
      * @param perspectiveCamera
@@ -83,12 +86,27 @@ public class World extends Environment implements Renderable {
         }
 
         shapeRenderer.end();
+
+        shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        for (final ModelInstance instance : modelInstances) {
+            if (instance instanceof SelectableInstance) {
+                SelectableInstance selectableInstance = (SelectableInstance) instance;
+                if (selectableInstance.isSelected()) {
+                    selectableInstance.drawAxes(shapeRenderer);
+                    selectableInstance.drawSkeleton(shapeRenderer);
+                }
+            }
+        }
+
+        shapeRenderer.end();
     }
 
     @Override
     public void dispose() {
         modelBatch.dispose();
-        entityInstances.clear();
+        modelInstances.clear();
         assetManager.dispose();
     }
 
@@ -111,14 +129,22 @@ public class World extends Environment implements Renderable {
         return cameraInputController;
     }
 
+    public PerspectiveCamera getPerspectiveCamera() {
+        return perspectiveCamera;
+    }
+
+    public Array<ModelInstance> getModelInstances() {
+        return modelInstances;
+    }
+
     /**
-     * Retrieving a {@link EntityInstance} from screen coordinates.
+     * Retrieving a {@link ModelInstance} from screen coordinates.
      *
      * @param screenX The x coordinate, origin is in the upper left corner
      * @param screenY The y coordinate, origin is in the upper left corner
-     * @return The {@link EntityInstance} if it was found, otherwise null.
+     * @return The {@link ModelInstance} if it was found, otherwise null.
      */
-    public EntityInstance getModelInstance(int screenX, int screenY) {
+    public ModelInstance getModelInstance(int screenX, int screenY) {
         int index = getModelInstanceIndex(screenX, screenY);
 
         if (index > -1) {
@@ -138,11 +164,11 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Retrieving a {@link EntityInstance} index from screen coordinates.
+     * Retrieving a {@link ModelInstance} index from screen coordinates.
      *
      * @param screenX The x coordinate, origin is in the upper left corner.
      * @param screenY The y coordinate, origin is in the upper left corner.
-     * @return The index of the {@link EntityInstance} if it was found, otherwise -1.
+     * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
      */
     private int getModelInstanceIndex(int screenX, int screenY) {
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
@@ -152,26 +178,29 @@ public class World extends Environment implements Renderable {
 
     public int getModelInstanceIndex(Ray ray){
         int result = -1;
-            float distance = -1f;
+        float distance = -1f;
 
-            Vector3 position = new Vector3();
-            for (int i = 0; i < entityInstances.size; ++i) {
-                final EntityInstance instance = entityInstances.get(i);
+        Vector3 position = new Vector3();
+        Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
 
-                // Set the center location of the instance.
-                instance.transform.getTranslation(position);
-                position.add(instance.center);
+        for (int i = 0; i < modelInstances.size; ++i) {
+            final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
 
-                float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance position.
+            // Set the center location of the instance.
+            instance.transform.getTranslation(position);
+            position.add(instance.center);
 
-                if (distance >= 0f && dist2 > distance) continue; // instance is not closer than a previous one.
+            float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance position.
 
-                if (Intersector.intersectRaySphere(ray, instance.center, instance.radius, null)) { // Whether an intersection occurs
-                    result = i;
-                    distance = dist2;
-                }
+            if (distance >= 0f && dist2 > distance) continue; // instance is not closer than a previous one.
+
+            if (Intersector.intersectRaySphere(ray, position, instance.radius, null)) { // Whether an intersection occurs
+                result = i;
+                distance = dist2;
             }
-           return result;
+        }
+
+        return result;
     }
 
     public int getClosestFaceIndex(Ray ray, EntityInstance entityInstance){
@@ -202,7 +231,7 @@ public class World extends Environment implements Renderable {
         loading = true;
 
         // Instantiate properties for rendering models.
-        entityInstances = new Array<EntityInstance>();
+        modelInstances = new Array<ModelInstance>();
         modelBatch = new ModelBatch();
 
         // Set the color and direction of the light.
@@ -226,6 +255,12 @@ public class World extends Environment implements Renderable {
         mBlock = new MBlock(assetManager);
     }
 
+    public void addObject() {
+        SelectableInstance instance = mBlock.createInstance();
+        instance.transform.setToTranslation(10, 10, 10);
+        modelInstances.add(instance);
+    }
+
     /**
      * Will be called when the {@link AssetManager} is done loading.
      */
@@ -241,6 +276,15 @@ public class World extends Environment implements Renderable {
             EntityInstance instance = mBlock.createInstance();
             instance.transform.setToTranslation(x, 2, 2);
             entityInstances.add(instance);
+        // Create a nice 3D grid of MBlocks.
+        for (float x = -2f; x <= 2f; x += 2f) {
+            for (float z = -2f; z <= 2f; z += 2f) {
+                for (float y = -2f; y <= 2f; y += 2f) {
+                    SelectableInstance instance = mBlock.createInstance();
+                    instance.transform.setToTranslation(x, y, z);
+                    modelInstances.add(instance);
+                }
+            }
         }
         EntityInstance instance = mBlock.createInstance();
         instance.transform.setToTranslation(5, 5, 0);
