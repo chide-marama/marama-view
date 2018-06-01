@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.utils.Array;
 import com.marama.view.util.Axes;
 
 /**
@@ -23,10 +24,12 @@ public class SelectableInstance extends ModelInstance {
     private Material defaultMaterial;
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
 
+    private Array<Vector3> actualBounds;
+
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
      *
-     * @param model           The model to create the {@link SelectableInstance} from.
+     * @param model The model to create the {@link SelectableInstance} from.
      * @param defaultMaterial
      */
     public SelectableInstance(Model model, Material defaultMaterial) {
@@ -43,6 +46,16 @@ public class SelectableInstance extends ModelInstance {
         boundingBox.getCenter(center); // Actually sets the center value
         boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
         radius = dimensions.len() / 2f;
+
+        actualBounds = new Array<Vector3>();
+        actualBounds.add(boundingBox.getCorner000(new Vector3()));
+        actualBounds.add(boundingBox.getCorner001(new Vector3()));
+        actualBounds.add(boundingBox.getCorner011(new Vector3()));
+        actualBounds.add(boundingBox.getCorner111(new Vector3()));
+        actualBounds.add(boundingBox.getCorner010(new Vector3()));
+        actualBounds.add(boundingBox.getCorner110(new Vector3()));
+        actualBounds.add(boundingBox.getCorner100(new Vector3()));
+        actualBounds.add(boundingBox.getCorner101(new Vector3()));
     }
 
     public boolean isSelected() {
@@ -76,10 +89,27 @@ public class SelectableInstance extends ModelInstance {
         Axes.draw(shapeRenderer, transform.getTranslation(new Vector3()));
     }
 
-    public void drawSkeleton(ShapeRenderer shapeRenderer) {
+    public void drawDimensions(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(new Color(0.4f, 0.4f, 0.4f, 1));
         Vector3 pos = transform.getTranslation(new Vector3());
         Vector3 dim = boundingBox.getDimensions(new Vector3());
         shapeRenderer.box(pos.x - 0.5f, pos.y - 0.5f, pos.z + 0.5f, dim.x, dim.y, dim.z);
+    }
+
+    public void drawBoundingBox(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(Color.GREEN);
+        Vector3 position = transform.getTranslation(new Vector3());
+
+        for (int i = 0; i < actualBounds.size - 1; i++) {
+            Vector3 current = new Vector3(actualBounds.get(i)).add(position);
+            Vector3 next = new Vector3(actualBounds.get(i + 1)).add(position);
+            shapeRenderer.line(current, next);
+        }
+    }
+
+    public void drawRadius(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(Color.RED);
+        Vector3 position = transform.getTranslation(new Vector3());
+        shapeRenderer.cone(position.x, position.y, position.z, radius, 0, 16);
     }
 }

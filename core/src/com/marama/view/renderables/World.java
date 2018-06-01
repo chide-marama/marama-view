@@ -67,7 +67,7 @@ public class World extends Environment implements Renderable {
                 SelectableInstance selectableInstance = (SelectableInstance) instance;
                 if (selectableInstance.isSelected()) {
                     selectableInstance.drawAxes(shapeRenderer);
-                    selectableInstance.drawSkeleton(shapeRenderer);
+                    selectableInstance.drawDimensions(shapeRenderer);
                 }
             }
         }
