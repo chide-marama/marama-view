@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.utils.Array;
-
 import java.util.ArrayList;
 
 public class Axes {
@@ -20,9 +18,9 @@ public class Axes {
     private ArrayList<Vector3> boundsY = new ArrayList<Vector3>();
     private ArrayList<Vector3> boundsZ = new ArrayList<Vector3>();
 
-    private BoundingBox boundingBoxX;
-    private BoundingBox boundingBoxY;
-    private BoundingBox boundingBoxZ;
+    public BoundingBox boundingBoxX;
+    public BoundingBox boundingBoxY;
+    public BoundingBox boundingBoxZ;
 
     public Axes() {
         boundingBoxX = calculateBoundingBoxX();
@@ -74,9 +72,7 @@ public class Axes {
         shapeRenderer.translate(target.x, target.y, target.z);
         shapeRenderer.cone(0, 0, 0, coneHeight, coneLength, coneSegments);
 
-        drawBoundingBox(shapeRenderer, origin, boundsX);
-        drawBoundingBox(shapeRenderer, origin, boundsY);
-        drawBoundingBox(shapeRenderer, origin, boundsZ);
+        drawBoundingBoxes(shapeRenderer, origin);
     }
 
     private BoundingBox calculateBoundingBoxX() {
@@ -96,7 +92,7 @@ public class Axes {
 
         // Center around axis.
         for (int i = 0; i < bounds.size(); i++) {
-            bounds.get(i).add(new Vector3(0, -0.05f, -0.05f));
+            bounds.get(i).add(new Vector3(0, -(bbHeight/2), -(bbHeight/2)));
         }
 
         BoundingBox boundingBox = new BoundingBox();
@@ -124,7 +120,7 @@ public class Axes {
 
         // Center around axis.
         for (int i = 0; i < bounds.size(); i++) {
-            bounds.get(i).add(new Vector3(-0.05f, -0.05f, 0));
+            bounds.get(i).add(new Vector3(-(bbHeight/2), -(bbHeight/2), 0));
         }
 
         BoundingBox boundingBox = new BoundingBox();
@@ -152,7 +148,7 @@ public class Axes {
 
         // Center around axis.
         for (int i = 0; i < bounds.size(); i++) {
-            bounds.get(i).add(new Vector3(-0.05f, 0, -0.05f));
+            bounds.get(i).add(new Vector3(-(bbHeight/2), 0, -(bbHeight/2)));
         }
 
         BoundingBox boundingBox = new BoundingBox();
@@ -163,15 +159,9 @@ public class Axes {
         return boundingBox;
     }
 
-    private void drawBoundingBox(ShapeRenderer shapeRenderer, Vector3 origin, ArrayList<Vector3> bounds) {
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.PURPLE);
-        shapeRenderer.identity();
-
-        for (int i = 0; i < bounds.size() - 1; i++) {
-            Vector3 current = new Vector3(bounds.get(i)).add(origin);
-            Vector3 next = new Vector3(bounds.get(i + 1)).add(origin);
-            shapeRenderer.line(current, next);
-        }
+    private void drawBoundingBoxes(ShapeRenderer shapeRenderer, Vector3 origin) {
+        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxX);
+//        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxY);
+//        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxZ);
     }
 }

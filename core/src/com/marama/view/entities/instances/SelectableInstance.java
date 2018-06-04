@@ -24,8 +24,7 @@ public class SelectableInstance extends ModelInstance {
     private Material defaultMaterial;
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
 
-    private Array<Vector3> actualBounds;
-    private Axes axes = new Axes();
+    public Axes axes = new Axes();
 
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
@@ -47,16 +46,6 @@ public class SelectableInstance extends ModelInstance {
         boundingBox.getCenter(center); // Actually sets the center value
         boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
         radius = dimensions.len() / 2f;
-
-        actualBounds = new Array<Vector3>();
-        actualBounds.add(boundingBox.getCorner000(new Vector3()));
-        actualBounds.add(boundingBox.getCorner001(new Vector3()));
-        actualBounds.add(boundingBox.getCorner011(new Vector3()));
-        actualBounds.add(boundingBox.getCorner111(new Vector3()));
-        actualBounds.add(boundingBox.getCorner010(new Vector3()));
-        actualBounds.add(boundingBox.getCorner110(new Vector3()));
-        actualBounds.add(boundingBox.getCorner100(new Vector3()));
-        actualBounds.add(boundingBox.getCorner101(new Vector3()));
     }
 
     public boolean isSelected() {
@@ -98,20 +87,6 @@ public class SelectableInstance extends ModelInstance {
         shapeRenderer.setColor(new Color(0.4f, 0.4f, 0.4f, 1));
         shapeRenderer.identity();
         shapeRenderer.box(pos.x - 0.5f, pos.y - 0.5f, pos.z + 0.5f, dim.x, dim.y, dim.z);
-    }
-
-    public void drawBoundingBox(ShapeRenderer shapeRenderer) {
-        Vector3 position = transform.getTranslation(new Vector3());
-
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.identity();
-
-        for (int i = 0; i < actualBounds.size - 1; i++) {
-            Vector3 current = new Vector3(actualBounds.get(i)).add(position);
-            Vector3 next = new Vector3(actualBounds.get(i + 1)).add(position);
-            shapeRenderer.line(current, next);
-        }
     }
 
     public void drawRadius(ShapeRenderer shapeRenderer) {

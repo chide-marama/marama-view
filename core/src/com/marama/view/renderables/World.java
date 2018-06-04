@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import com.marama.view.entities.MBlock;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.util.Axes;
+import com.marama.view.util.BoundingBoxHelper;
 
 /**
  * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
@@ -180,7 +181,7 @@ public class World extends Environment implements Renderable {
         set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 
         // Default camera settings.
-        perspectiveCamera.position.set(7f, 7f, 7f);
+        perspectiveCamera.position.set(2f, 2f, 2f);
         perspectiveCamera.lookAt(0, 0, 0);
         perspectiveCamera.near = 1f;
         perspectiveCamera.far = 300f;
