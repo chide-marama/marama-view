@@ -3,13 +3,11 @@ package com.marama.view.util;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
 
-enum ActiveAxis { X, Y, Z }
 
 public class DragObjectInputController extends InputAdapter {
     private World world;
@@ -18,9 +16,10 @@ public class DragObjectInputController extends InputAdapter {
     private ActiveAxis activeAxis = null;
 
     private Vector3 moved = new Vector3();
-    private Vector3 instanceStart = new Vector3();
+    private Vector3 currentInstancePosition = new Vector3();
     private Vector3 intersectionPoint = new Vector3();
-    private Matrix4 boundingBoxTranslation = new Matrix4();
+
+    private Vector3 distanceClickedFromInstance = new Vector3();
 
     public DragObjectInputController(World world) {
         this.world = world;
@@ -29,46 +28,71 @@ public class DragObjectInputController extends InputAdapter {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Ray ray = world.getPerspectiveCamera().getPickRay(screenX, screenY);
+        SelectableInstance instance = null;
 
         for (int i = 0; i < world.getModelInstances().size; ++i) {
             ModelInstance modelInstance = world.getModelInstances().get(i);
             if (modelInstance instanceof SelectableInstance) {
-                SelectableInstance instance = (SelectableInstance) modelInstance;
-                boolean intersectionOccurred = false;
+                instance = (SelectableInstance) modelInstance;
 
                 // X axis
                 if (Intersector.intersectRayBounds(ray, instance.axes.boundingBoxX, intersectionPoint)) {
                     activeAxis = ActiveAxis.X;
-                    intersectionOccurred = true;
+                    break;
                 }
 
-                // TODO: Y and Z
+                // Y axis
+                if (Intersector.intersectRayBounds(ray, instance.axes.boundingBoxY, intersectionPoint)) {
+                    activeAxis = ActiveAxis.Y;
+                    break;
+                }
 
-                if (intersectionOccurred) {
-                    selectableInstance = instance;
-                    instance.transform.getTranslation(instanceStart); // Set the current position of the instance
+                // Z axis
+                if (Intersector.intersectRayBounds(ray, instance.axes.boundingBoxZ, intersectionPoint)) {
+                    activeAxis = ActiveAxis.Z;
+                    break;
                 }
             }
         }
 
-        return super.touchDown(screenX, screenY, pointer, button);
+        if (instance != null) {
+            selectableInstance = instance; // Keep track of the found instance.
+            instance.transform.getTranslation(currentInstancePosition); // Set the current position of the instance.
+            distanceClickedFromInstance = intersectionPoint.sub(currentInstancePosition);
+        }
+
+        return false; // Continue to the next 'touchDown' listener.
     }
 
     @Override
-    public boolean touchDragged (int screenX, int screenY, int pointer) {
-        Ray ray = world.getPerspectiveCamera().getPickRay(screenX, screenY); // Keep casting a ray to update the instance position.
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        // Keep casting a ray to update the instance position.
+        Ray ray = world.getPerspectiveCamera().getPickRay(screenX, screenY);
+        // Distance where y is 0 (at the center of the World).
         float distance = (-ray.origin.y / ray.direction.y);
+        // The position of the ray at the distance.
+        moved.set(ray.direction).scl(distance).add(ray.origin);
+        // Subtract the difference from where was clicked.
+        moved.sub(distanceClickedFromInstance);
 
-
+        // Apply the movement to certain axes.
         if (selectableInstance != null && activeAxis != null) {
-            if (activeAxis == ActiveAxis.X) {
-                distance += (intersectionPoint.x - instanceStart.x);
-                moved.set(ray.direction).scl(distance).add(ray.origin);
-                selectableInstance.transform.setTranslation(new Vector3(moved.x, 0, 0));
+            switch (activeAxis) {
+                case X:
+                    currentInstancePosition.x = moved.x;
+                    break;
+                case Y:
+                    currentInstancePosition.y = moved.z * -1;
+                    break;
+                case Z:
+                    currentInstancePosition.z = moved.z;
+                    break;
             }
+
+            selectableInstance.transform.setTranslation(currentInstancePosition);
         }
 
-        return true;
+        return false; // Continue to the next 'touchDragged' listener.
     }
 
     @Override
@@ -78,33 +102,24 @@ public class DragObjectInputController extends InputAdapter {
             this.resetValues();
         }
 
-        return super.touchUp(screenX, screenY, pointer, button);
+        return false; // Continue to the next 'touchUp' listener.
     }
 
     private void updateBoundingBoxes() {
         // TODO: update instance bounding box
+        // ...
 
-        // Axes
-        if (activeAxis == ActiveAxis.X) {
-            boundingBoxTranslation.translate(new Vector3(moved.x, 0, 0).sub(instanceStart));
-        }
-
-        if (activeAxis == ActiveAxis.Y) {
-            // TODO: Y
-        }
-
-        if (activeAxis == ActiveAxis.Z) {
-            // TODO: Z
-        }
-
-        selectableInstance.axes.boundingBoxX.mul(boundingBoxTranslation);
-        selectableInstance.axes.boundingBoxY.mul(boundingBoxTranslation);
-        selectableInstance.axes.boundingBoxZ.mul(boundingBoxTranslation);
+        selectableInstance.axes.calculateBoundingBoxes(currentInstancePosition);
     }
 
     private void resetValues() {
-        boundingBoxTranslation.idt();
         selectableInstance = null;
         activeAxis = null;
+    }
+
+    private enum ActiveAxis {
+        X,
+        Y,
+        Z
     }
 }

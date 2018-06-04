@@ -18,17 +18,24 @@ public class Axes {
     private ArrayList<Vector3> boundsY = new ArrayList<Vector3>();
     private ArrayList<Vector3> boundsZ = new ArrayList<Vector3>();
 
+    private Vector3 origin;
+
     public BoundingBox boundingBoxX;
     public BoundingBox boundingBoxY;
     public BoundingBox boundingBoxZ;
 
-    public Axes() {
+    public Axes(Vector3 origin) {
+        this.calculateBoundingBoxes(origin);
+    }
+
+    public void calculateBoundingBoxes(Vector3 origin) {
+        this.origin = origin;
         boundingBoxX = calculateBoundingBoxX();
         boundingBoxY = calculateBoundingBoxY();
         boundingBoxZ = calculateBoundingBoxZ();
     }
 
-    public void draw(ShapeRenderer shapeRenderer, Vector3 origin) {
+    public void draw(ShapeRenderer shapeRenderer) {
         Vector3 target;
 
         // X Line
@@ -72,7 +79,7 @@ public class Axes {
         shapeRenderer.translate(target.x, target.y, target.z);
         shapeRenderer.cone(0, 0, 0, coneHeight, coneLength, coneSegments);
 
-        drawBoundingBoxes(shapeRenderer, origin);
+//        drawBoundingBoxes(shapeRenderer);
     }
 
     private BoundingBox calculateBoundingBoxX() {
@@ -90,9 +97,9 @@ public class Axes {
         bounds.add(new Vector3(bbWidth, bbHeight, bbHeight));
         bounds.add(new Vector3(bbWidth, 0, bbHeight));
 
-        // Center around axis.
+
         for (int i = 0; i < bounds.size(); i++) {
-            bounds.get(i).add(new Vector3(0, -(bbHeight/2), -(bbHeight/2)));
+            bounds.get(i).add(new Vector3(0, -(bbHeight/2), -(bbHeight/2))).add(origin); // Center around axis and origin.
         }
 
         BoundingBox boundingBox = new BoundingBox();
@@ -107,34 +114,6 @@ public class Axes {
         ArrayList<Vector3> bounds = new ArrayList<Vector3>();
 
         // Small square start.
-        bounds.add(new Vector3(0, 0, bbHeight));
-        bounds.add(new Vector3(bbHeight, 0, bbHeight));
-        bounds.add(new Vector3(bbHeight, bbHeight, bbHeight));
-        bounds.add(new Vector3(0, bbHeight, bbHeight));
-
-        // Small square end.
-        bounds.add(new Vector3(0, 0, bbWidth));
-        bounds.add(new Vector3(bbHeight, 0, bbWidth));
-        bounds.add(new Vector3(bbHeight, bbHeight, bbWidth));
-        bounds.add(new Vector3(0, bbHeight, bbWidth));
-
-        // Center around axis.
-        for (int i = 0; i < bounds.size(); i++) {
-            bounds.get(i).add(new Vector3(-(bbHeight/2), -(bbHeight/2), 0));
-        }
-
-        BoundingBox boundingBox = new BoundingBox();
-        boundingBox.set(bounds);
-
-        boundsY = bounds;
-
-        return boundingBox;
-    }
-
-    private BoundingBox calculateBoundingBoxZ() {
-        ArrayList<Vector3> bounds = new ArrayList<Vector3>();
-
-        // Small square start.
         bounds.add(new Vector3(0, bbHeight, 0));
         bounds.add(new Vector3(bbHeight, bbHeight, 0));
         bounds.add(new Vector3(bbHeight, bbHeight, bbHeight));
@@ -146,9 +125,8 @@ public class Axes {
         bounds.add(new Vector3(bbHeight, bbWidth, bbHeight));
         bounds.add(new Vector3(0, bbWidth, bbHeight));
 
-        // Center around axis.
         for (int i = 0; i < bounds.size(); i++) {
-            bounds.get(i).add(new Vector3(-(bbHeight/2), 0, -(bbHeight/2)));
+            bounds.get(i).add(new Vector3(-(bbHeight/2), 0, -(bbHeight/2))).add(origin); // Center around axis and origin.
         }
 
         BoundingBox boundingBox = new BoundingBox();
@@ -159,7 +137,34 @@ public class Axes {
         return boundingBox;
     }
 
-    private void drawBoundingBoxes(ShapeRenderer shapeRenderer, Vector3 origin) {
+    private BoundingBox calculateBoundingBoxZ() {
+        ArrayList<Vector3> bounds = new ArrayList<Vector3>();
+
+        // Small square start.
+        bounds.add(new Vector3(0, 0, bbHeight));
+        bounds.add(new Vector3(bbHeight, 0, bbHeight));
+        bounds.add(new Vector3(bbHeight, bbHeight, bbHeight));
+        bounds.add(new Vector3(0, bbHeight, bbHeight));
+
+        // Small square end.
+        bounds.add(new Vector3(0, 0, bbWidth));
+        bounds.add(new Vector3(bbHeight, 0, bbWidth));
+        bounds.add(new Vector3(bbHeight, bbHeight, bbWidth));
+        bounds.add(new Vector3(0, bbHeight, bbWidth));
+
+        for (int i = 0; i < bounds.size(); i++) {
+            bounds.get(i).add(new Vector3(-(bbHeight/2), -(bbHeight/2), 0)).add(origin); // Center around axis and origin.
+        }
+
+        BoundingBox boundingBox = new BoundingBox();
+        boundingBox.set(bounds);
+
+        boundsY = bounds;
+
+        return boundingBox;
+    }
+
+    private void drawBoundingBoxes(ShapeRenderer shapeRenderer) {
         BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxX);
         BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxY);
         BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxZ);

@@ -24,7 +24,7 @@ public class SelectableInstance extends ModelInstance {
     private Material defaultMaterial;
     private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
 
-    public Axes axes = new Axes();
+    public Axes axes;
 
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
@@ -46,6 +46,8 @@ public class SelectableInstance extends ModelInstance {
         boundingBox.getCenter(center); // Actually sets the center value
         boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
         radius = dimensions.len() / 2f;
+
+        axes = new Axes(transform.getTranslation(new Vector3()));
     }
 
     public boolean isSelected() {
@@ -76,7 +78,7 @@ public class SelectableInstance extends ModelInstance {
     }
 
     public void drawAxes(ShapeRenderer shapeRenderer) {
-        axes.draw(shapeRenderer, transform.getTranslation(new Vector3()));
+        axes.draw(shapeRenderer);
     }
 
     public void drawDimensions(ShapeRenderer shapeRenderer) {
