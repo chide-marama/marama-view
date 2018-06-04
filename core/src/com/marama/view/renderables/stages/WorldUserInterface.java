@@ -1,7 +1,5 @@
 package com.marama.view.renderables.stages;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,7 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.marama.view.entities.EntityManagerSingleton;
+import com.marama.view.entities.Maramafication;
 import com.marama.view.renderables.Renderable;
 import com.marama.view.renderables.World;
 
@@ -20,8 +21,8 @@ import com.marama.view.renderables.World;
  * The class containing all the elements of the WorldUserInterface, used in the GameScreen.
  */
 public class WorldUserInterface extends Stage implements Renderable {
-
     private World world;
+    private EntityManagerSingleton entityManager;
 
     /* Set a block size including and a padding so we
      * can work with these throughout the rest of the class. */
@@ -31,15 +32,26 @@ public class WorldUserInterface extends Stage implements Renderable {
     public WorldUserInterface(Viewport viewport, World world) {
         super(viewport);
         this.world = world;
+        this.entityManager = EntityManagerSingleton.getInstance();
 
-        Table table = new Table(); /* Create the table that contains the UI elements */
-        table.left().top(); /* Make the table stick to the upper left corner */
+        Table table = new Table(); // Create the table that contains the UI elements
+        table.left().top(); // Make the table stick to the upper left corner
 
-        FileHandle[] files = Gdx.files.internal("test_Ms").list(); /* Get the files of the test_Ms directory */
-        for (final FileHandle file : files) {
-            Texture texture = new Texture(file.path());
+        // Get all maramafications from the EntityManager
+        ObjectMap<String, Maramafication> maramaficationsObjectMap = entityManager.getMaramafications();
+
+        // Loop through the different maramafications in the object map
+        for (ObjectMap.Entries<String, Maramafication> maramaficationsIterator =
+             maramaficationsObjectMap.entries(); maramaficationsIterator.hasNext(); ) {
+
+            // Get the next maramafication
+            ObjectMap.Entry maramaficationEntry = maramaficationsIterator.next();
+            final Maramafication maramafication = (Maramafication) maramaficationEntry.value;
+
+            // Get the texture from image and create a button out of it
+            Texture texture = new Texture(maramafication.getImageLocation());
             Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
-            ImageButton button = new ImageButton(drawable); /* Creating an ImageButton from the image in the directory.*/
+            ImageButton button = new ImageButton(drawable);
 
             /* Set the size of the button and add it to the table. */
             /* This adds the button to the current row */
@@ -51,7 +63,7 @@ public class WorldUserInterface extends Stage implements Renderable {
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println(file.name());
+                    System.out.println(maramafication.getName());
                 }
             });
             /* Create a new row and add items to from now on. */
@@ -60,14 +72,14 @@ public class WorldUserInterface extends Stage implements Renderable {
 
         /* Determine what the height and width of the table should be with all the items of the directory.
          * Also set the table with these calculated values. */
-        float height = (blockSize + padding) * files.length;
+        float height = (blockSize + padding) * maramaficationsObjectMap.size;
         table.setWidth(blockSize + (padding * 2));
         table.setHeight(height);
         table.setPosition(0f, viewport.getScreenHeight() - height);
 
         /* Set the background color of the table using a pixmap. */
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(200f, 0f, 255f, 0.5f);
+        pixmap.setColor(5f, 5f, 5f, 1f);
         pixmap.fill();
         table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pixmap))));
 

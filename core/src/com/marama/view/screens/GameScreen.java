@@ -18,7 +18,6 @@ public class GameScreen extends ScreenAdapter {
     private World world;
     private WorldUserInterface worldUserInterface;
 
-
     /**
      * Instancing the GameScreen that contains a 3D {@link World} and a {@link WorldUserInterface}.
      */

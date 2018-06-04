@@ -1,5 +1,6 @@
 package com.marama.view.renderables;
 
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -13,8 +14,10 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
-import com.marama.view.entities.EntityManager;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.marama.view.entities.EntityManagerSingleton;
 import com.marama.view.entities.Maramafication;
+import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
 
 /**
@@ -28,12 +31,9 @@ public class World extends Environment implements Renderable {
     private ModelBatch modelBatch; // The unit that can render the modelInstances
     private CameraInputController cameraInputController;
 
-    private EntityManager entityManager; // The unit that can hold all the models
-    private Array<ModelInstance> modelInstances; // All models that are in the World.
-    private Maramafication maramafication;
+    private EntityManagerSingleton entityManager; // The unit that can hold all the models
+    private Array<ModelInstance> modelInstances;
 
-    private SelectableInstance maramaBlock;
-    private SelectableInstance maramaBlock2;
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
      *
@@ -46,7 +46,7 @@ public class World extends Environment implements Renderable {
 
         this.directionalLight = directionalLight;
         this.perspectiveCamera = perspectiveCamera;
-        this.entityManager = new EntityManager();
+        this.entityManager = EntityManagerSingleton.getInstance();
 
         init();
     }
@@ -65,7 +65,7 @@ public class World extends Environment implements Renderable {
     @Override
     public void dispose() {
         modelBatch.dispose();
-        modelInstances.clear();
+        entityManager.clear();
         entityManager.dispose();
     }
 
@@ -167,41 +167,45 @@ public class World extends Environment implements Renderable {
         // Make the camera move on input.
         cameraInputController = new CameraInputController(this.perspectiveCamera);
 
-        String name = "sphere";
-        entityManager.load("marams/" + name + ".json");
-        this.maramaBlock = entityManager.getSelectableInstance(name);
-
-        String name2 = "block";
-        entityManager.load("marams/" + name2 + ".json");
-        this.maramaBlock2 = entityManager.getSelectableInstance(name2);
-
-        modelInstances.add(this.maramaBlock);
-        modelInstances.add(this.maramaBlock2);
+        // Add the three maramafications via the json file to the EntityManager.
+        entityManager.loadMaramafication("marams/sphere.json");
+        entityManager.loadMaramafication("marams/block.json");
+        entityManager.loadMaramafication("marams/donut.json");
     }
 
     /**
-     * Will be called when the {@link EntityManager} is done loading.
+     * Will be called when the {@link EntityManagerSingleton} is done loading.
      */
     private void doneLoading() {
-        // Create a nice 3D grid of MBlocks.
-//        for (float x = -3f; x <= 3f; x += 2f) {
-//            for (float z = -3f; z <= 3f; z += 2f) {
-//                for (float y = -3f; y <= 3f; y += 2f) {
-//                    SelectableInstance instance = maramafication.createInstance();
-//                    instance.transform.setToTranslation(x, y, z);
-//                    modelInstances.add(instance);
-//                }
-//            }
-//        }
+//        this.maramaBlock.transform.setToScaling(3.0f, 3.0f, 3.0f);
+//        modelInstances.add(this.maramaBlock);
+//
+//        this.maramaBlock2.transform.setToScaling(3.0f, 3.0f, 3.0f);
+//        this.maramaBlock2.transform.setToTranslation(6f, 0f, 0f);
+//        modelInstances.add(this.maramaBlock2);
+//
+//        this.maramaBlock2.transform.setToScaling(3.0f, 3.0f, 3.0f);
+//        this.maramaBlock2.transform.setToTranslation(4f, 0f, 0f);
+//        modelInstances.add(this.maramaBlock3);
 
-        this.maramaBlock.transform.setToScaling(3.0f, 3.0f, 3.0f);
-        modelInstances.add(this.maramaBlock);
+        ObjectMap<String, Maramafication> maramaficationsObjectMap = entityManager.getMaramafications();
+        float pos = 0f;
+        for (ObjectMap.Entries<String, Maramafication> maramaficationsIterator =
+             maramaficationsObjectMap.entries(); maramaficationsIterator.hasNext(); ) {
 
-        this.maramaBlock2.transform.setToScaling(3.0f, 3.0f, 3.0f);
-        this.maramaBlock2.transform.setToTranslation(6f, 0f, 0f);
-        modelInstances.add(this.maramaBlock2);
-
-
+            // Get the next maramafication
+            ObjectMap.Entry maramaficationEntry = maramaficationsIterator.next();
+            final Maramafication maramafication = (Maramafication) maramaficationEntry.value;
+            try {
+                SelectableInstance currentSelectableInstance = maramafication.createInstance();
+                currentSelectableInstance.transform.setToScaling(3.0f, 3.0f, 3.0f);
+                currentSelectableInstance.transform.setToTranslation(pos, 0f, 0f);
+                modelInstances.add(currentSelectableInstance);
+                pos += 3f;
+            } catch (ModelNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 
         // Quit loading else this function will be called every render.
         loading = false;
