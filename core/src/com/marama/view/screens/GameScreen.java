@@ -44,7 +44,7 @@ public class GameScreen extends ScreenAdapter {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(worldUserInterface);
 //        multiplexer.addProcessor(new DragObjectInputController(this.world));
-        multiplexer.addProcessor(new SelectObjectInputController(this.world));
+        multiplexer.addProcessor(new addBlockInputController(this.world));
         multiplexer.addProcessor(world.getCameraInputController());
         Gdx.input.setInputProcessor(multiplexer);
     }

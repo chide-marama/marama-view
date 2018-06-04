@@ -1,7 +1,7 @@
 package com.marama.view.util;
 
 import com.badlogic.gdx.InputAdapter;
-import com.marama.view.entities.instances.EntityInstance;
+import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
 
 /**
@@ -9,8 +9,8 @@ import com.marama.view.renderables.World;
  */
 public class SelectObjectInputController extends InputAdapter {
     private World world;
-    private EntityInstance newEntityInstance = null;
-    private EntityInstance currentEntityInstance = null;
+    private SelectableInstance newSelectableInstance = null;
+    private SelectableInstance currentSelectableInstance = null;
 
     /**
      * Instantiates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
@@ -23,7 +23,7 @@ public class SelectObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        newEntityInstance = world.getModelInstance(screenX, screenY);
+        newSelectableInstance = (SelectableInstance)world.getModelInstance(screenX, screenY);
         return false; // Continue to the next 'touchDown' listener.
     }
 
@@ -34,27 +34,27 @@ public class SelectObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (newEntityInstance != null) {
-            EntityInstance instance = world.getModelInstance(screenX, screenY);
-            if (newEntityInstance == instance) {
+        if (newSelectableInstance != null) {
+            SelectableInstance instance = (SelectableInstance)world.getModelInstance(screenX, screenY);
+            if (newSelectableInstance == instance) {
                 handleDiscreteSelection();
             }
         }
         return false; // Continue to the next 'touchUp' listener.
     }
-    // If a selected EntityInstance is found and it is equal to the found instance the EntityInstance is set to
+    // If a selected SelectableInstance is found and it is equal to the found instance the SelectableInstance is set to
     // selected.
 
     /***
      * Switches the state of the entityInstance based on what the current selection is.
      */
     private void handleDiscreteSelection(){
-        newEntityInstance.switchSelect();
+        newSelectableInstance.switchSelect();
         // If currentEntity and NewEntity are different, switch CurrentEntity off.
-        if (currentEntityInstance != null && newEntityInstance != currentEntityInstance) {
-            currentEntityInstance.setSelected(false);
+        if (currentSelectableInstance != null && newSelectableInstance != currentSelectableInstance) {
+            currentSelectableInstance.setSelected(false);
         }
-        currentEntityInstance = newEntityInstance;
+        currentSelectableInstance = newSelectableInstance;
 
     }
 }

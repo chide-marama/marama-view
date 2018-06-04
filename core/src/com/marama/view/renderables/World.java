@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -37,7 +38,6 @@ public class World extends Environment implements Renderable {
     public Ray getRay(int screenX, int screenY) {
         return perspectiveCamera.getPickRay(screenX, screenY);
     }
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
@@ -64,38 +64,21 @@ public class World extends Environment implements Renderable {
         // Allow the camera to be controlled.
         cameraInputController.update();
 
-        // Render all the EntityInstances.
+        // Render all the SelectableInstances.
         modelBatch.begin(perspectiveCamera);
-        for (final EntityInstance instance : entityInstances) {
-            if (instance.isVisible(perspectiveCamera)) { // Apply frustum culling.
+        for (final ModelInstance instance: modelInstances) {
                 modelBatch.render(instance, this);
-            }
         }
         modelBatch.end();
         shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.begin();
 
-        for (final EntityInstance instance : entityInstances) {
-            if (instance instanceof EntityInstance) {
-                EntityInstance selectableInstance = (EntityInstance) instance;
-                if (!selectableInstance.isSelected()) {
-                    selectableInstance.drawBoundingBox(shapeRenderer);
-                }
-            }
-        }
-
-        shapeRenderer.end();
-
-        shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
         for (final ModelInstance instance : modelInstances) {
             if (instance instanceof SelectableInstance) {
-                SelectableInstance selectableInstance = (SelectableInstance) instance;
-                if (selectableInstance.isSelected()) {
-                    selectableInstance.drawAxes(shapeRenderer);
-                    selectableInstance.drawSkeleton(shapeRenderer);
+                SelectableInstance modelInstance = (SelectableInstance) instance;
+                if (!modelInstance.isSelected()) {
+                    modelInstance.drawBoundingBox(shapeRenderer);
                 }
             }
         }
@@ -148,16 +131,16 @@ public class World extends Environment implements Renderable {
         int index = getModelInstanceIndex(screenX, screenY);
 
         if (index > -1) {
-            return entityInstances.get(index);
+            return modelInstances.get(index);
         }
 
         return null;
     }
-    public EntityInstance getModelInstance(Ray ray) {
+    public ModelInstance getModelInstance(Ray ray) {
         int index = getModelInstanceIndex(ray);
 
         if (index > -1) {
-            return entityInstances.get(index);
+            return modelInstances.get(index);
         }
 
         return null;
@@ -181,7 +164,7 @@ public class World extends Environment implements Renderable {
         float distance = -1f;
 
         Vector3 position = new Vector3();
-        Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
+        //Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
 
         for (int i = 0; i < modelInstances.size; ++i) {
             final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
@@ -203,15 +186,28 @@ public class World extends Environment implements Renderable {
         return result;
     }
 
-    public int getClosestFaceIndex(Ray ray, EntityInstance entityInstance){
+    /**
+     * Uses raycasting to find the closest intersection point with an object.
+     * It normalises the intersection point to make it so the point is
+     * relative to the modelInstance.
+     * Then it compares the intersection point to the location of the faces
+     * and gets the closest one.
+     * @param ray The pick ray you want to intersect with the object, the origin
+     * @param modelInstance The object whose face you want to detect
+     * @return
+     */
+    public int getClosestFaceIndex(Ray ray, SelectableInstance modelInstance){
         Vector3 intersect = new Vector3();
-        Intersector.intersectRayBounds(ray, entityInstance.boundingBox, intersect);
-        System.out.println(intersect);
+        Vector3 position = new Vector3();
+        modelInstance.transform.getTranslation(position);
+        position.add(modelInstance.center);
+        Intersector.intersectRaySphere(ray, position, modelInstance.radius, intersect);
+        intersect.sub(position);
 
         int closest = -1;
         float min = Integer.MAX_VALUE;
-        for (int j = 0; j < entityInstance.faces.size; j++) {
-            Vector3 temp = entityInstance.faces.get(j);
+        for (int j = 0; j < modelInstance.faces.size; j++) {
+            Vector3 temp = modelInstance.faces.get(j);
             float dist = temp.dst(intersect);
             if (dist < min ) {
                 min = dist;
@@ -220,7 +216,6 @@ public class World extends Environment implements Renderable {
 
         }
 
-        System.out.println(closest);
         return closest;
     }
     /**
@@ -273,31 +268,22 @@ public class World extends Environment implements Renderable {
 //            }
 //        }
         for(float x = -5f; x<=5f; x+=2f){
-            EntityInstance instance = mBlock.createInstance();
+            SelectableInstance instance = mBlock.createInstance();
             instance.transform.setToTranslation(x, 2, 2);
-            entityInstances.add(instance);
-        // Create a nice 3D grid of MBlocks.
-        for (float x = -2f; x <= 2f; x += 2f) {
-            for (float z = -2f; z <= 2f; z += 2f) {
-                for (float y = -2f; y <= 2f; y += 2f) {
-                    SelectableInstance instance = mBlock.createInstance();
-                    instance.transform.setToTranslation(x, y, z);
-                    modelInstances.add(instance);
-                }
-            }
-        }
-        EntityInstance instance = mBlock.createInstance();
+            modelInstances.add(instance);
+      }
+        SelectableInstance instance = mBlock.createInstance();
         instance.transform.setToTranslation(5, 5, 0);
-        entityInstances.add(instance);
-//        EntityInstance instance2 = mBlock.createInstance();
+        modelInstances.add(instance);
+//        SelectableInstance instance2 = mBlock.createInstance();
 //        instance2.transform.setToTranslation(5, 5, 0);
-//        entityInstances.add(instance2);
+//        modelInstances.add(instance2);
         // Quit loading else this function will be called every render.
         loading = false;
     }
 
-    public void addBlock(EntityInstance instance, int currentFaceIndex) {
-        EntityInstance newblock = mBlock.createInstance();
+    public void addBlock(SelectableInstance instance, int currentFaceIndex) {
+        SelectableInstance newblock = mBlock.createInstance();
         Vector3 position = instance.transform.getTranslation(new Vector3());
         switch (currentFaceIndex) {
             case 0:
@@ -325,6 +311,6 @@ public class World extends Environment implements Renderable {
                 newblock.transform.setToTranslation(new Vector3(0, 0, -1).add(position));
                 break;
         }
-        entityInstances.add(newblock);
+        modelInstances.add(newblock);
     }
 }

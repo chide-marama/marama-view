@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.marama.view.entities.instances.EntityInstance;
+import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
 
 /**
@@ -41,11 +41,11 @@ public abstract class Entity {
     }
 
     /**
-     * Creates a new {@link EntityInstance}.
+     * Creates a new {@link SelectableInstance}.
      *
-     * @return {@link EntityInstance}
+     * @return {@link SelectableInstance}
      */
-    public EntityInstance createInstance() {
-        return new EntityInstance(getModel(filePath), new Material(ColorAttribute.createDiffuse(Color.WHITE)));
+    public SelectableInstance createInstance() {
+        return new SelectableInstance(getModel(filePath), new Material(ColorAttribute.createDiffuse(Color.WHITE)));
     }
 }
