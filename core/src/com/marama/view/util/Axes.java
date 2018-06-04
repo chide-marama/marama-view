@@ -161,7 +161,7 @@ public class Axes {
 
     private void drawBoundingBoxes(ShapeRenderer shapeRenderer, Vector3 origin) {
         BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxX);
-//        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxY);
-//        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxZ);
+        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxY);
+        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxZ);
     }
 }

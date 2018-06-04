@@ -181,7 +181,7 @@ public class World extends Environment implements Renderable {
         set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 
         // Default camera settings.
-        perspectiveCamera.position.set(2f, 2f, 2f);
+        perspectiveCamera.position.set(5f, 5f, 5f);
         perspectiveCamera.lookAt(0, 0, 0);
         perspectiveCamera.near = 1f;
         perspectiveCamera.far = 300f;
