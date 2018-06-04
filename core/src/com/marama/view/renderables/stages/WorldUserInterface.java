@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.marama.view.entities.EntityManagerSingleton;
+import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.renderables.Renderable;
 import com.marama.view.renderables.World;
@@ -22,7 +22,7 @@ import com.marama.view.renderables.World;
  */
 public class WorldUserInterface extends Stage implements Renderable {
     private World world;
-    private EntityManagerSingleton entityManager;
+    private EntityManager entityManager;
 
     /* Set a block size including and a padding so we
      * can work with these throughout the rest of the class. */
@@ -32,7 +32,7 @@ public class WorldUserInterface extends Stage implements Renderable {
     public WorldUserInterface(Viewport viewport, World world) {
         super(viewport);
         this.world = world;
-        this.entityManager = EntityManagerSingleton.getInstance();
+        this.entityManager = EntityManager.getInstance();
 
         Table table = new Table(); // Create the table that contains the UI elements
         table.left().top(); // Make the table stick to the upper left corner

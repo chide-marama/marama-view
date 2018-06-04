@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.marama.view.entities.EntityManagerSingleton;
+import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
@@ -31,7 +31,7 @@ public class World extends Environment implements Renderable {
     private ModelBatch modelBatch; // The unit that can render the modelInstances
     private CameraInputController cameraInputController;
 
-    private EntityManagerSingleton entityManager; // The unit that can hold all the models
+    private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
     private Array<ModelInstance> modelInstances;
 
     /**
@@ -46,7 +46,7 @@ public class World extends Environment implements Renderable {
 
         this.directionalLight = directionalLight;
         this.perspectiveCamera = perspectiveCamera;
-        this.entityManager = EntityManagerSingleton.getInstance();
+        this.entityManager = EntityManager.getInstance();
 
         init();
     }
@@ -174,20 +174,9 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Will be called when the {@link EntityManagerSingleton} is done loading.
+     * Will be called when the {@link EntityManager} is done loading.
      */
     private void doneLoading() {
-//        this.maramaBlock.transform.setToScaling(3.0f, 3.0f, 3.0f);
-//        modelInstances.add(this.maramaBlock);
-//
-//        this.maramaBlock2.transform.setToScaling(3.0f, 3.0f, 3.0f);
-//        this.maramaBlock2.transform.setToTranslation(6f, 0f, 0f);
-//        modelInstances.add(this.maramaBlock2);
-//
-//        this.maramaBlock2.transform.setToScaling(3.0f, 3.0f, 3.0f);
-//        this.maramaBlock2.transform.setToTranslation(4f, 0f, 0f);
-//        modelInstances.add(this.maramaBlock3);
-
         ObjectMap<String, Maramafication> maramaficationsObjectMap = entityManager.getMaramafications();
         float pos = 0f;
         for (ObjectMap.Entries<String, Maramafication> maramaficationsIterator =

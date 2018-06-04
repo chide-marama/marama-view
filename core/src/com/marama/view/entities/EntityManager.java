@@ -11,22 +11,24 @@ import com.sun.media.jfxmedia.logging.Logger;
 /**
  * The EntityManager singleton class, extending from {@link AssetManager}.
  */
-public class EntityManagerSingleton extends AssetManager {
-    private static EntityManagerSingleton instance = new EntityManagerSingleton();
+public class EntityManager extends AssetManager {
+    private static EntityManager instance = new EntityManager();
 
     // Since in AssetManager there is no good way to get all assets of a certain type, we have to remember our maramafications here.
     final ObjectMap<String, Maramafication> maramafications = new ObjectMap();
-
     public ObjLoader objLoader = new ObjLoader();
 
     /**
-     * An instance of {@link AssetManager}, but it's also able to load maramafications.
+     * An instance of {@link AssetManager} that is also able to load maramafications.
      */
-    private EntityManagerSingleton() {
+    private EntityManager() {
         setLoader(Maramafication.class, new MaramaficationLoader(getFileHandleResolver()));
     }
 
-    static public EntityManagerSingleton getInstance() {
+    /**
+     * @return The one instance of the current singleton.
+     */
+    static public EntityManager getInstance() {
         return instance;
     }
 
