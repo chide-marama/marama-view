@@ -35,7 +35,7 @@ public class Axes {
         boundingBoxZ = calculateBoundingBoxZ();
     }
 
-    public void draw(ShapeRenderer shapeRenderer) {
+    public void draw(ShapeRenderer shapeRenderer, Vector3 origin) {
         Vector3 target;
 
         // X Line
@@ -79,7 +79,7 @@ public class Axes {
         shapeRenderer.translate(target.x, target.y, target.z);
         shapeRenderer.cone(0, 0, 0, coneHeight, coneLength, coneSegments);
 
-        drawBoundingBoxes(shapeRenderer);
+//        drawBoundingBoxes(shapeRenderer);
     }
 
     private BoundingBox calculateBoundingBoxX() {

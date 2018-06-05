@@ -36,6 +36,7 @@ public class World extends Environment implements Renderable {
 
     private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
     private Array<ModelInstance> modelInstances;
+    private ShapeRenderer shapeRenderer;
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
@@ -50,36 +51,41 @@ public class World extends Environment implements Renderable {
         this.directionalLight = directionalLight;
         this.perspectiveCamera = perspectiveCamera;
         this.entityManager = EntityManager.getInstance();
+        this.shapeRenderer = new ShapeRenderer();
 
         init();
     }
 
     @Override
     public void render(float delta) {
-        if (loading && entityManager.update()) // When the assets are done loading.
+        // When the assets are done loading.
+        if (loading && entityManager.update()) {
             doneLoading();
+        }
+
         cameraInputController.update();
 
         modelBatch.begin(perspectiveCamera);
         modelBatch.render(modelInstances, this);
         modelBatch.end();
 
-        // TODO: clean this up Wilbert, it is not nice.
-//        shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
-//        shapeRenderer.setAutoShapeType(true);
-//        shapeRenderer.begin();
-//
-//        for (final ModelInstance instance : modelInstances) {
-//            if (instance instanceof SelectableInstance) {
-//                SelectableInstance selectableInstance = (SelectableInstance) instance;
-////                if (selectableInstance.isSelected()) {
-//                    selectableInstance.drawAxes(shapeRenderer);
-//                    selectableInstance.drawDimensions(shapeRenderer);
-////                }
-//            }
-//        }
-//
-//        shapeRenderer.end();
+        shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.begin();
+
+        for (final ModelInstance instance : modelInstances) {
+            if (instance instanceof SelectableInstance) {
+                SelectableInstance selectableInstance = (SelectableInstance) instance;
+                if (selectableInstance.isSelected()) {
+                    selectableInstance.drawAxes(shapeRenderer);
+                    selectableInstance.drawDimensions(shapeRenderer);
+                    BoundingBoxHelper.draw(shapeRenderer, selectableInstance.getCurrentPosition(), selectableInstance.boundingBox);
+                    selectableInstance.drawRadius(shapeRenderer);
+                }
+            }
+        }
+
+        shapeRenderer.end();
     }
 
     @Override

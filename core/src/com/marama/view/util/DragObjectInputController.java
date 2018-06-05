@@ -90,6 +90,7 @@ public class DragObjectInputController extends InputAdapter {
             }
 
             selectableInstance.transform.setTranslation(currentInstancePosition);
+            return true; // Block the next 'touchDragged' listener.
         }
 
         return false; // Continue to the next 'touchDragged' listener.

@@ -22,7 +22,6 @@ public class SelectableInstance extends ModelInstance {
     public final float radius; // TODO: make boundingbox a box, not a sphere if possible and performant
     private boolean selected;
     private Material defaultMaterial;
-    private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
 
     public Axes axes;
 
@@ -54,11 +53,16 @@ public class SelectableInstance extends ModelInstance {
         return selected;
     }
 
-    /**
-     * Select or deselect the current instance.
-     */
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public void toggleSelected() {
+        this.selected = !this.selected;
+    }
+
+    public Vector3 getCurrentPosition() {
+        return transform.getTranslation(new Vector3());
     }
 
     /**
@@ -72,7 +76,7 @@ public class SelectableInstance extends ModelInstance {
     }
 
     public void drawAxes(ShapeRenderer shapeRenderer) {
-        axes.draw(shapeRenderer);
+        axes.draw(shapeRenderer, transform.getTranslation(new Vector3()));
     }
 
     public void drawDimensions(ShapeRenderer shapeRenderer) {
@@ -82,7 +86,7 @@ public class SelectableInstance extends ModelInstance {
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(new Color(0.4f, 0.4f, 0.4f, 1));
         shapeRenderer.identity();
-        shapeRenderer.box(pos.x - 0.5f, pos.y - 0.5f, pos.z + 0.5f, dim.x, dim.y, dim.z);
+        shapeRenderer.box(pos.x - (dim.x / 2), pos.y - (dim.y / 2), pos.z + (dim.z / 2), dim.x, dim.y, dim.z);
     }
 
     public void drawRadius(ShapeRenderer shapeRenderer) {
