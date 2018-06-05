@@ -1,0 +1,25 @@
+{
+  "Maramafications": [
+    {
+      "id": "d2806948-0a11-4cd2-b035-3239bab456ae",
+      "name": "block",
+      "obj_location": "models/m-block.obj",
+      "image_location": "maram_images/block.png",
+      "joints": []
+    },
+    {
+      "id": "72351a8b-bbe0-4513-bd9d-3f997151488a",
+      "name": "donut",
+      "obj_location": "models/m-donut.obj",
+      "image_location": "maram_images/donut.png",
+      "joints": []
+    },
+    {
+      "id": "98b2cade-5538-4939-94a0-d46224189bdd",
+      "name": "sphere",
+      "obj_location": "models/m-sphere.obj",
+      "image_location": "maram_images/sphere.png",
+      "joints": []
+    }
+  ]
+}

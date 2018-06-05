@@ -1,0 +1,7 @@
+{
+  "id": "98b2cade-5538-4939-94a0-d46224189bdd",
+  "name": "sphere",
+  "obj_location": "models/m-sphere.obj",
+  "image_location": "maram_images/sphere.png",
+  "joints": []
+}
