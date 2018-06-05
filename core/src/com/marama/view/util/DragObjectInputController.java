@@ -3,6 +3,8 @@ package com.marama.view.util;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.instances.SelectableInstance;
@@ -15,7 +17,6 @@ public class DragObjectInputController extends InputAdapter {
     private SelectableInstance selectableInstance = null;
     private ActiveAxis activeAxis = null;
 
-    private Vector3 moved = new Vector3();
     private Vector3 currentInstancePosition = new Vector3();
     private Vector3 intersectionPoint = new Vector3();
 
@@ -71,25 +72,26 @@ public class DragObjectInputController extends InputAdapter {
         // Distance where y is 0 (at the center of the World).
         float distance = (-ray.origin.y / ray.direction.y);
         // The position of the ray at the distance.
-        moved.set(ray.direction).scl(distance).add(ray.origin);
-        // Subtract the difference from where was clicked.
-        moved.sub(distanceClickedFromInstance);
+        Vector3 pickVector = new Vector3(ray.direction.scl(distance).add(ray.origin));
 
+        // Subtract the difference from where was clicked.
+        pickVector.sub(distanceClickedFromInstance);
+
+        Vector3 translationVector = new Vector3(0, 0, 0);
         // Apply the movement to certain axes.
         if (selectableInstance != null && activeAxis != null) {
             switch (activeAxis) {
                 case X:
-                    currentInstancePosition.x = moved.x;
+                    translationVector.x = pickVector.x;
                     break;
                 case Y:
-                    currentInstancePosition.y = moved.z * -1;
+                    translationVector.y = pickVector.y;
                     break;
                 case Z:
-                    currentInstancePosition.z = moved.z;
+                    translationVector.z = pickVector.z;
                     break;
             }
-
-            selectableInstance.transform.setTranslation(currentInstancePosition);
+            selectableInstance.transform.setTranslation(translationVector);
         }
 
         return false; // Continue to the next 'touchDragged' listener.
