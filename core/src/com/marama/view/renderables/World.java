@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Select;
 import com.marama.view.entities.Entity;
 import com.marama.view.entities.MBlock;
 import com.marama.view.entities.instances.SelectableInstance;
@@ -250,10 +251,11 @@ public class World extends Environment implements Renderable {
         mBlock = new MBlock(assetManager);
     }
 
-    public void addObject() {
+    public SelectableInstance addObject() {
         SelectableInstance instance = mBlock.createInstance();
         instance.transform.setToTranslation(10, 10, 10);
         modelInstances.add(instance);
+        return instance;
     }
 
     /**
@@ -282,35 +284,49 @@ public class World extends Environment implements Renderable {
         loading = false;
     }
 
-    public void addBlock(SelectableInstance instance, int currentFaceIndex) {
+    /**
+     * Adds a new model to one of the faces of your current instance.
+     * @param instance The model you want to add another block to.
+     * @param instanceFace The face of the object you want to add a block to.
+     */
+    public void addBlocktoFace(SelectableInstance instance, int instanceFace) {
         SelectableInstance newblock = mBlock.createInstance();
         Vector3 position = instance.transform.getTranslation(new Vector3());
-        switch (currentFaceIndex) {
+        switch (instanceFace) {
             case 0:
-                System.out.println("Up");
                 newblock.transform.setToTranslation(new Vector3(0, 1, 0).add(position));
                 break;
             case 1:
-                System.out.println("Right");
                 newblock.transform.setToTranslation(new Vector3(1, 0, 0).add(position));
                 break;
             case 2:
-                System.out.println("Front");
                 newblock.transform.setToTranslation(new Vector3(0, 0, 1).add(position));
                 break;
             case 3:
-                System.out.println("Down");
                 newblock.transform.setToTranslation(new Vector3(0, -1, 0).add(position));
                 break;
             case 4:
-                System.out.println("Left");
                 newblock.transform.setToTranslation(new Vector3(-1, 0, 0).add(position));
                 break;
             case 5:
-                System.out.println("Back");
                 newblock.transform.setToTranslation(new Vector3(0, 0, -1).add(position));
                 break;
         }
         modelInstances.add(newblock);
+    }
+
+    /**
+     * Only works for
+     * @param originInstance
+     * @param targetInstance
+     * @param originFace
+     * @param targetFace
+     */
+    public void addFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace){
+        Vector3 position = originInstance.transform.getTranslation(new Vector3());
+        position.add(originFace).add(targetFace);
+        targetInstance.transform.setToTranslation(position);
+
+
     }
 }

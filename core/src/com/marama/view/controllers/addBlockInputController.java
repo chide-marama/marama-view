@@ -36,11 +36,21 @@ public class addBlockInputController extends InputAdapter {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Ray ray = world.getRay(screenX, screenY);
         ModelInstance instance = world.getModelInstance(ray);
+        ModelInstance targetInstance = world.addObject();//Get from add object to world.
         if(instance!=null){
             currentFaceIndex = world.getClosestFaceIndex(ray, (SelectableInstance)instance);
-            world.addBlock((SelectableInstance)instance, currentFaceIndex);
+            targetFaceIndex = getFaceIndex(currentFaceIndex, targetInstance);
+            //world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex);
+            world.addFacetoFaceBasic((SelectableInstance) instance, (SelectableInstance) targetInstance, ((SelectableInstance) instance).faces.get(currentFaceIndex), ((SelectableInstance) targetInstance).faces.get((currentFaceIndex+3)%5));
         }
         return false; // Continue to the next 'touchUp' listener.
+    }
+
+    //TODO:
+    private int getFaceIndex(int currentFaceIndex, ModelInstance targetInstance) {
+
+        return 1;
+
     }
 
 }
