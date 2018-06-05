@@ -3,6 +3,8 @@ package com.marama.view.util;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.instances.SelectableInstance;
@@ -15,7 +17,6 @@ public class DragObjectInputController extends InputAdapter {
     private SelectableInstance selectableInstance = null;
     private ActiveAxis activeAxis = null;
 
-    private Vector3 moved = new Vector3();
     private Vector3 currentInstancePosition = new Vector3();
     private Vector3 intersectionPoint = new Vector3();
 
@@ -71,7 +72,7 @@ public class DragObjectInputController extends InputAdapter {
         // Distance where y is 0 (at the center of the World).
         float distance = (-ray.origin.y / ray.direction.y);
         // The position of the ray at the distance.
-        moved.set(ray.direction).scl(distance).add(ray.origin);
+        Vector3 moved = new Vector3(ray.direction.scl(distance).add(ray.origin));
         // Subtract the difference from where was clicked.
         moved.sub(distanceClickedFromInstance);
 
@@ -88,7 +89,7 @@ public class DragObjectInputController extends InputAdapter {
                     currentInstancePosition.z = moved.z;
                     break;
             }
-
+            
             selectableInstance.transform.setTranslation(currentInstancePosition);
             return true; // Block the next 'touchDragged' listener.
         }
