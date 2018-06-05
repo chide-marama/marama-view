@@ -6,7 +6,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.marama.view.renderables.World;
 import com.marama.view.renderables.stages.WorldUserInterface;
@@ -31,9 +30,8 @@ public class GameScreen extends ScreenAdapter {
         );
 
         this.worldUserInterface = new WorldUserInterface(
-                this.world,
                 new ScreenViewport(),
-                new Skin(Gdx.files.internal("skin/uiskin.json"))
+                this.world
         );
     }
 
@@ -42,9 +40,9 @@ public class GameScreen extends ScreenAdapter {
         // Handle all input processors
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(worldUserInterface);
-        multiplexer.addProcessor(new DragObjectInputController(this.world));
-//        multiplexer.addProcessor(new SelectObjectInputController(this.world));
-//        multiplexer.addProcessor(world.getCameraInputController());
+//        multiplexer.addProcessor(new DragObjectInputController(this.world));
+        multiplexer.addProcessor(new SelectObjectInputController(this.world));
+        multiplexer.addProcessor(world.getCameraInputController());
         Gdx.input.setInputProcessor(multiplexer);
     }
 

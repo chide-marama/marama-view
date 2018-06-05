@@ -1,5 +1,6 @@
 package com.marama.view.renderables;
 
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -14,7 +15,10 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
-import com.marama.view.entities.MBlock;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.marama.view.entities.EntityManager;
+import com.marama.view.entities.Maramafication;
+import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.util.Axes;
 import com.marama.view.util.BoundingBoxHelper;
@@ -24,14 +28,14 @@ import com.marama.view.util.BoundingBoxHelper;
  */
 public class World extends Environment implements Renderable {
     private boolean loading;
+
     private DirectionalLight directionalLight;
-    private Array<ModelInstance> modelInstances; // All models that are in the World.
     private PerspectiveCamera perspectiveCamera;
+    private ModelBatch modelBatch; // The unit that can render the modelInstances
     private CameraInputController cameraInputController;
-    private AssetManager assetManager;
-    private ModelBatch modelBatch;
-    private MBlock mBlock;
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
+
+    private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
+    private Array<ModelInstance> modelInstances;
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
@@ -45,14 +49,14 @@ public class World extends Environment implements Renderable {
 
         this.directionalLight = directionalLight;
         this.perspectiveCamera = perspectiveCamera;
-        this.assetManager = assetManager;
+        this.entityManager = EntityManager.getInstance();
 
         init();
     }
 
     @Override
     public void render(float delta) {
-        if (loading && assetManager.update()) // When the assets are done loading.
+        if (loading && entityManager.update()) // When the assets are done loading.
             doneLoading();
         cameraInputController.update();
 
@@ -60,28 +64,29 @@ public class World extends Environment implements Renderable {
         modelBatch.render(modelInstances, this);
         modelBatch.end();
 
-        shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
-        shapeRenderer.setAutoShapeType(true);
-        shapeRenderer.begin();
-
-        for (final ModelInstance instance : modelInstances) {
-            if (instance instanceof SelectableInstance) {
-                SelectableInstance selectableInstance = (SelectableInstance) instance;
-//                if (selectableInstance.isSelected()) {
-                    selectableInstance.drawAxes(shapeRenderer);
-                    selectableInstance.drawDimensions(shapeRenderer);
-//                }
-            }
-        }
-
-        shapeRenderer.end();
+        // TODO: clean this up Wilbert, it is not nice.
+//        shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
+//        shapeRenderer.setAutoShapeType(true);
+//        shapeRenderer.begin();
+//
+//        for (final ModelInstance instance : modelInstances) {
+//            if (instance instanceof SelectableInstance) {
+//                SelectableInstance selectableInstance = (SelectableInstance) instance;
+////                if (selectableInstance.isSelected()) {
+//                    selectableInstance.drawAxes(shapeRenderer);
+//                    selectableInstance.drawDimensions(shapeRenderer);
+////                }
+//            }
+//        }
+//
+//        shapeRenderer.end();
     }
 
     @Override
     public void dispose() {
         modelBatch.dispose();
-        modelInstances.clear();
-        assetManager.dispose();
+        entityManager.clear();
+        entityManager.dispose();
     }
 
     @Override
@@ -106,7 +111,7 @@ public class World extends Environment implements Renderable {
     public PerspectiveCamera getPerspectiveCamera() {
         return perspectiveCamera;
     }
-
+    
     public Array<ModelInstance> getModelInstances() {
         return modelInstances;
     }
@@ -142,7 +147,7 @@ public class World extends Environment implements Renderable {
         Vector3 position = new Vector3();
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
 
-        for (int i = 0; i < modelInstances.size; ++i) {
+        for (int i = 0; i < modelInstances.size - 1; ++i) {
             final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
 
             // Set the center location of the instance.
@@ -190,34 +195,41 @@ public class World extends Environment implements Renderable {
         // Make the camera move on input.
         cameraInputController = new CameraInputController(this.perspectiveCamera);
 
-        // Create a model for rendering.
-        mBlock = new MBlock(assetManager);
+        // Add the three maramafications via the json file to the EntityManager.
+        entityManager.loadMaramafication("marams/sphere.json");
+        entityManager.loadMaramafication("marams/block.json");
+        entityManager.loadMaramafication("marams/donut.json");
     }
 
-    public void addObject() {
-        SelectableInstance instance = mBlock.createInstance();
-        instance.transform.setToTranslation(10, 10, 10);
-        modelInstances.add(instance);
-    }
+    // TODO: clean this up
+//    public void addObject() {
+//        SelectableInstance instance = mBlock.createInstance();
+//        instance.transform.setToTranslation(10, 10, 10);
+//        modelInstances.add(instance);
+//    }
 
     /**
-     * Will be called when the {@link AssetManager} is done loading.
+     * Will be called when the {@link EntityManager} is done loading.
      */
     private void doneLoading() {
-        // Create a nice 3D grid of MBlocks.
-//        for (float x = -2f; x <= 2f; x += 2f) {
-//            for (float z = -2f; z <= 2f; z += 2f) {
-//                for (float y = -2f; y <= 2f; y += 2f) {
-//                    SelectableInstance instance = mBlock.createInstance();
-//                    instance.transform.setToTranslation(x, y, z);
-//                    modelInstances.add(instance);
-//                }
-//            }
-//        }
+        ObjectMap<String, Maramafication> maramaficationsObjectMap = entityManager.getMaramafications();
+        float pos = 0f;
+        for (ObjectMap.Entries<String, Maramafication> maramaficationsIterator =
+             maramaficationsObjectMap.entries(); maramaficationsIterator.hasNext(); ) {
 
-        SelectableInstance instance = mBlock.createInstance();
-        instance.transform.setToTranslation(0, 0, 0);
-        modelInstances.add(instance);
+            // Get the next maramafication
+            ObjectMap.Entry maramaficationEntry = maramaficationsIterator.next();
+            final Maramafication maramafication = (Maramafication) maramaficationEntry.value;
+            try {
+                SelectableInstance currentSelectableInstance = maramafication.createInstance();
+                currentSelectableInstance.transform.setToScaling(3.0f, 3.0f, 3.0f);
+                currentSelectableInstance.transform.setToTranslation(pos, 0f, 0f);
+                modelInstances.add(currentSelectableInstance);
+                pos += 3f;
+            } catch (ModelNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 
         // Quit loading else this function will be called every render.
         loading = false;

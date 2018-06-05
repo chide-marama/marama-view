@@ -35,7 +35,7 @@ public class SelectObjectInputController extends InputAdapter {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         SelectableInstance instance = (SelectableInstance) world.getModelInstance(screenX, screenY);
-
+        System.out.println(instance);
         // If a selected SelectableInstance is found and it is equal to the found instance the SelectableInstance is set to
         // selected.
         if (newSelectableInstance != null && instance != null && newSelectableInstance == instance) {

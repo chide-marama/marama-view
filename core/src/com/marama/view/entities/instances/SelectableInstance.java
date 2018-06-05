@@ -55,16 +55,10 @@ public class SelectableInstance extends ModelInstance {
     }
 
     /**
-     * Select or deselect the current instance and update's its {@link Material}.
+     * Select or deselect the current instance.
      */
     public void setSelected(boolean selected) {
         this.selected = selected;
-
-        if (selected) {
-//            setMaterial(selectedMaterial);
-        } else {
-//            setMaterial(defaultMaterial);
-        }
     }
 
     /**
