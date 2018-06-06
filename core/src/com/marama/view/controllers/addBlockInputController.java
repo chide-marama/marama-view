@@ -38,7 +38,7 @@ public class addBlockInputController extends InputAdapter {
         SelectableInstance instance = (SelectableInstance) world.getModelInstance(ray);
 
         if (instance != null) {
-            SelectableInstance targetInstance = entityManager.createSelectableInstance(instance.name); // Get from add object to world.
+            SelectableInstance targetInstance = entityManager.createSelectableInstance(world.getNextMarama()); // Get from add object to world.
             currentFaceIndex = world.getClosestFaceIndex(ray, instance);
             targetFaceIndex = getFaceIndex(currentFaceIndex, targetInstance);
             //world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex, "donut");

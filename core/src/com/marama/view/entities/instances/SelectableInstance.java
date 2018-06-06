@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 import com.marama.view.util.Axes;
+import com.marama.view.util.BoundingBoxHelper;
 
 /**
  * A {@link SelectableInstance} is a {@link ModelInstance} that adds a {@link BoundingBox}.
@@ -48,9 +49,7 @@ public class SelectableInstance extends ModelInstance {
         boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
         radius = dimensions.len() / 2f;
 
-
-        faces.add(new Vector3(0, 0.5f, 0), new Vector3(0.5f, 0, 0), new Vector3(0, 0, 0.5f));
-        faces.add(new Vector3(0, -0.5f, 0), new Vector3(-0.5f, 0, 0), new Vector3(0, 0, -0.5f));
+        faces = calculateFacesfromBounding();
 
         axes = new Axes(getPosition());
     }
@@ -72,6 +71,18 @@ public class SelectableInstance extends ModelInstance {
      */
     public Vector3 getPosition() {
         return transform.getTranslation(new Vector3());
+    }
+
+    /***
+     * Should only be used on cubes or objects with similar faces.
+     */
+    private Array<Vector3> calculateFacesfromBounding(){
+        Array<Vector3> faces = new Array<Vector3>();
+        Vector3 bounds=new Vector3();
+        boundingBox.getDimensions(bounds);
+        faces.add(new Vector3(0, bounds.y/2, 0), new Vector3(bounds.x/2, 0, 0), new Vector3(0, 0, bounds.z/2));
+        faces.add(new Vector3(0, -bounds.y/2, 0), new Vector3(-bounds.x/2, 0, 0), new Vector3(0, 0, -bounds.z/2));
+        return faces;
     }
 
     public void updatePosition() {

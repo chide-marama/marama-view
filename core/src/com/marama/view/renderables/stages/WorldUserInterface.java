@@ -102,7 +102,7 @@ public class WorldUserInterface extends Stage implements Renderable {
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    world.addObject(maramafication.getName());
+                    world.setMarama(maramafication.getName());
                 }
             });
 
