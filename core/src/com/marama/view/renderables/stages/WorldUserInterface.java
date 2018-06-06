@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -29,8 +30,7 @@ public class WorldUserInterface extends Stage implements Renderable {
     private final float blockSize = 80f;
     private final float padding = 10f;
 
-    public WorldUserInterface(Viewport viewport, World world) {
-    public WorldUserInterface(final World world, Viewport viewport, Skin skin) {
+    public WorldUserInterface(final World world, Viewport viewport) {
         super(viewport);
         this.world = world;
         this.entityManager = EntityManager.getInstance();

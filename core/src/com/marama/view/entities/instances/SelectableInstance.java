@@ -19,6 +19,7 @@ public class SelectableInstance extends ModelInstance {
     public final BoundingBox boundingBox = new BoundingBox();
     public final Vector3 center = new Vector3();
     public final Vector3 dimensions = new Vector3();
+    public String name;
     public Array<Vector3> faces = new Array<Vector3>();
     public final float radius; // TODO: make boundingbox a box, not a sphere if possible and performant
     private boolean selected;
@@ -32,11 +33,11 @@ public class SelectableInstance extends ModelInstance {
      * @param model           The model to create the {@link SelectableInstance} from.
      * @param defaultMaterial The default material that should cover the model upon creation.
      */
-    public SelectableInstance(Model model, Material defaultMaterial) {
+    public SelectableInstance(Model model, Material defaultMaterial, String name) {
         super(model);
 
         this.defaultMaterial = defaultMaterial;
-
+        this.name = name;
         selected = false;
         materials.add(new Material()); // Add a default empty material that we can clear and set.
         setMaterial(defaultMaterial);

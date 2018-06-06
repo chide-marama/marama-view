@@ -38,9 +38,7 @@ public class World extends Environment implements Renderable {
     private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
     private Array<ModelInstance> modelInstances;
     private AssetManager assetManager;
-    private ModelBatch modelBatch;
-    private MBlock mBlock;
-    private ShapeRenderer shapeRenderer;
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     public Ray getRay(int screenX, int screenY) {
         return perspectiveCamera.getPickRay(screenX, screenY);
@@ -260,7 +258,7 @@ public class World extends Environment implements Renderable {
     }
 
     public SelectableInstance addObject() {
-        SelectableInstance instance = mBlock.createInstance();
+        SelectableInstance instance = entityManager.createSelectableInstance("block");
         instance.transform.setToTranslation(10, 10, 10);
         modelInstances.add(instance);
         return instance;
@@ -298,8 +296,8 @@ public class World extends Environment implements Renderable {
      * @param instance The model you want to add another block to.
      * @param instanceFace The face of the object you want to add a block to.
      */
-    public void addBlocktoFace(SelectableInstance instance, int instanceFace) {
-        SelectableInstance newblock = mBlock.createInstance();
+    public void addBlocktoFace(SelectableInstance instance, int instanceFace, String name) {
+        SelectableInstance newblock = entityManager.createSelectableInstance(name);
         Vector3 position = instance.transform.getTranslation(new Vector3());
 
         switch (instanceFace) {
@@ -334,9 +332,10 @@ public class World extends Environment implements Renderable {
      */
     public void addFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace){
         Vector3 position = originInstance.transform.getTranslation(new Vector3());
-        position.add(originFace).add(targetFace);
+        position.add(originFace).sub(targetFace);
         targetInstance.transform.setToTranslation(position);
 
+        modelInstances.add(targetInstance);
 
     }
 }

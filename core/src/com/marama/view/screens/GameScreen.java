@@ -32,8 +32,7 @@ public class GameScreen extends ScreenAdapter {
 
         this.worldUserInterface = new WorldUserInterface(
                 this.world,
-                new ScreenViewport(),
-                this.world
+                new ScreenViewport()
         );
     }
 

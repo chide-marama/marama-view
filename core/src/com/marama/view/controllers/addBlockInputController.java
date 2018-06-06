@@ -3,13 +3,13 @@ package com.marama.view.controllers;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.collision.Ray;
-import com.marama.view.entities.MBlock;
+import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
 
 public class addBlockInputController extends InputAdapter {
     private World world;
-    MBlock mBlock;
+    private EntityManager entityManager = EntityManager.getInstance();
     private int currentFaceIndex;
     private int targetFaceIndex;
 
@@ -35,13 +35,13 @@ public class addBlockInputController extends InputAdapter {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Ray ray = world.getRay(screenX, screenY);
-        ModelInstance instance = world.getModelInstance(ray);
-        ModelInstance targetInstance = world.addObject();//Get from add object to world.
+        SelectableInstance instance = (SelectableInstance)world.getModelInstance(ray);
+        SelectableInstance targetInstance = entityManager.createSelectableInstance(instance.name);//Get from add object to world.
         if(instance!=null){
-            currentFaceIndex = world.getClosestFaceIndex(ray, (SelectableInstance)instance);
+            currentFaceIndex = world.getClosestFaceIndex(ray, instance);
             targetFaceIndex = getFaceIndex(currentFaceIndex, targetInstance);
-            world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex);
-            //world.addFacetoFaceBasic((SelectableInstance) instance, (SelectableInstance) targetInstance, ((SelectableInstance) instance).faces.get(currentFaceIndex), ((SelectableInstance) targetInstance).faces.get((currentFaceIndex+3)%5));
+            //world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex, "donut");
+            world.addFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex+3)%5));
         }
         return false; // Continue to the next 'touchUp' listener.
     }

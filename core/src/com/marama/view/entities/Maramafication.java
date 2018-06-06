@@ -49,7 +49,7 @@ public class Maramafication {
         if (model == null) {
             throw new ModelNotFoundException();
         }
-        return new SelectableInstance(model, material);
+        return new SelectableInstance(model, material, name);
     }
 
     public void setModelFileHandle(FileHandle fileHandle) {
