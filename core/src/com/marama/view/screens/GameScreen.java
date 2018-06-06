@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.marama.view.controllers.addBlockInputController;
 import com.marama.view.renderables.World;
 import com.marama.view.renderables.stages.WorldUserInterface;
 import com.marama.view.controllers.DragObjectInputController;
@@ -23,16 +24,9 @@ public class GameScreen extends ScreenAdapter {
      * Instancing the GameScreen that contains a 3D {@link World} and a {@link WorldUserInterface}.
      */
     public GameScreen() {
-        this.world = new World(
-                new DirectionalLight(),
-                new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()),
-                new AssetManager()
-        );
-
-        this.worldUserInterface = new WorldUserInterface(
-                new ScreenViewport(),
-                this.world
-        );
+        this.world = new World(new DirectionalLight(),
+                new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), new AssetManager());
+        this.worldUserInterface = new WorldUserInterface(this.world);
     }
 
     @Override
@@ -42,7 +36,7 @@ public class GameScreen extends ScreenAdapter {
         multiplexer.addProcessor(worldUserInterface);
         multiplexer.addProcessor(new SelectObjectInputController(this.world));
         multiplexer.addProcessor(new DragObjectInputController(this.world));
-        multiplexer.addProcessor(new addBlockInputController(this.world));
+//        multiplexer.addProcessor(new addBlockInputController(this.world));
         multiplexer.addProcessor(world.getCameraInputController());
         Gdx.input.setInputProcessor(multiplexer);
     }
