@@ -23,6 +23,10 @@ public class GameScreen extends ScreenAdapter {
     private WorldUserInterface worldUserInterface;
     private InputMultiplexer inputMultiplexer;
 
+    private SelectObjectInputController selectObjectInputController;
+    private DragObjectInputController dragObjectInputController;
+    private addBlockInputController addBlockInputController;
+
     /**
      * Instancing the GameScreen that contains a 3D {@link World} and a {@link WorldUserInterface}.
      */
@@ -32,6 +36,10 @@ public class GameScreen extends ScreenAdapter {
         this.world = new World(new DirectionalLight(),
                 new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), new AssetManager());
         this.worldUserInterface = new WorldUserInterface(this, this.world, new Skin(Gdx.files.internal("skin/uiskin.json")));
+
+        selectObjectInputController = new SelectObjectInputController(this.world);
+        dragObjectInputController = new DragObjectInputController(this.world);
+        addBlockInputController = new addBlockInputController(this.world);
     }
 
     @Override
@@ -48,26 +56,31 @@ public class GameScreen extends ScreenAdapter {
 
     public void updateTool(int index) {
         inputMultiplexer.clear();
-        inputMultiplexer.addProcessor(worldUserInterface);
-
         worldUserInterface.setActiveTool(index);
 
+        // The user interface has the highest priority.
+        inputMultiplexer.addProcessor(worldUserInterface);
+
+        // Add the tool controllers in between.
         switch (index) {
             // Select tool
             case 0:
-                inputMultiplexer.addProcessor(new SelectObjectInputController(this.world));
-                inputMultiplexer.addProcessor(world.getCameraInputController());
+                inputMultiplexer.addProcessor(selectObjectInputController);
                 break;
             // Move tool
             case 1:
-                inputMultiplexer.addProcessor(new DragObjectInputController(this.world));
+                inputMultiplexer.addProcessor(dragObjectInputController);
                 break;
             // Add tool
             case 2:
-                inputMultiplexer.addProcessor(new addBlockInputController(this.world));
+                inputMultiplexer.addProcessor(addBlockInputController);
                 break;
         }
 
+        // Always add the camera controller but make it a last priority.
+        inputMultiplexer.addProcessor(world.getCameraInputController());
+
+        // Apply the input multiplexer.
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
 }
