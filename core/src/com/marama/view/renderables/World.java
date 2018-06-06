@@ -22,7 +22,7 @@ import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
-import com.marama.view.util.Axes;
+import java.util.Random;
 
 /**
  * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
@@ -37,12 +37,9 @@ public class World extends Environment implements Renderable {
 
     private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
     private Array<ModelInstance> modelInstances;
-    private AssetManager assetManager;
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private ShapeRenderer shapeRenderer;
 
-    public Ray getRay(int screenX, int screenY) {
-        return perspectiveCamera.getPickRay(screenX, screenY);
-    }
+    private Random random = new Random();
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
@@ -57,16 +54,18 @@ public class World extends Environment implements Renderable {
         this.directionalLight = directionalLight;
         this.perspectiveCamera = perspectiveCamera;
         this.entityManager = EntityManager.getInstance();
+        this.shapeRenderer = new ShapeRenderer();
 
         init();
     }
 
     @Override
     public void render(float delta) {
-        if (loading && entityManager.update()) // When the assets are done loading.
+        // When the assets are done loading.
+        if (loading && entityManager.update()) {
             doneLoading();
+        }
 
-        // Allow the camera to be controlled.
         cameraInputController.update();
 
         // Render all the SelectableInstances.
@@ -75,19 +74,20 @@ public class World extends Environment implements Renderable {
                 modelBatch.render(instance, this);
         }
         modelBatch.end();
+        
+        // Render shapes.
         shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.begin();
-
         for (final ModelInstance instance : modelInstances) {
             if (instance instanceof SelectableInstance) {
-                SelectableInstance modelInstance = (SelectableInstance) instance;
-                if (!modelInstance.isSelected()) {
-                    modelInstance.drawBoundingBox(shapeRenderer);
+                SelectableInstance selectableInstance = (SelectableInstance) instance;
+                if (selectableInstance.isSelected()) {
+                    selectableInstance.drawAxes(shapeRenderer);
+                    selectableInstance.drawDimensions(shapeRenderer);
                 }
             }
         }
-
         shapeRenderer.end();
     }
 
@@ -120,7 +120,7 @@ public class World extends Environment implements Renderable {
     public PerspectiveCamera getPerspectiveCamera() {
         return perspectiveCamera;
     }
-
+    
     public Array<ModelInstance> getModelInstances() {
         return modelInstances;
     }
@@ -141,6 +141,7 @@ public class World extends Environment implements Renderable {
 
         return null;
     }
+    
     public ModelInstance getModelInstance(Ray ray) {
         int index = getModelInstanceIndex(ray);
 
@@ -171,14 +172,14 @@ public class World extends Environment implements Renderable {
         Vector3 position = new Vector3();
         //Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
 
-        for (int i = 0; i < modelInstances.size - 1; ++i) {
+        for (int i = 0; i < modelInstances.size; ++i) {
             final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
 
             // Set the center location of the instance.
             instance.transform.getTranslation(position);
             position.add(instance.center);
 
-            float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance position.
+            float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance cachedPosition.
 
             if (distance >= 0f && dist2 > distance) continue; // instance is not closer than a previous one.
 
@@ -223,6 +224,7 @@ public class World extends Environment implements Renderable {
 
         return closest;
     }
+    
     /**
      * Initializes the {@link World} with some default settings.
      */
@@ -242,7 +244,7 @@ public class World extends Environment implements Renderable {
         set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 
         // Default camera settings.
-        perspectiveCamera.position.set(7f, 7f, 7f);
+        perspectiveCamera.position.set(5f, 5f, 5f);
         perspectiveCamera.lookAt(0, 0, 0);
         perspectiveCamera.near = 1f;
         perspectiveCamera.far = 300f;
@@ -253,15 +255,24 @@ public class World extends Environment implements Renderable {
 
         // Add the three maramafications via the json file to the EntityManager.
         entityManager.loadMaramafication("marams/sphere.json");
-        entityManager.loadMaramafication("marams/block.json");
         entityManager.loadMaramafication("marams/donut.json");
+        entityManager.loadMaramafication("marams/block.json");
+
     }
 
-    public SelectableInstance addObject() {
-        SelectableInstance instance = entityManager.createSelectableInstance("block");
-        instance.transform.setToTranslation(10, 10, 10);
-        modelInstances.add(instance);
-        return instance;
+    private int randInt(Random random, int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
+    }
+
+
+    public void addObject(String name) {
+//        try {
+//            SelectableInstance instance = entityManager.getMaramaficationByName(name).createInstance();
+//            instance.transform.translate(new Vector3(randInt(random, -5, 5), randInt(random, -5, 5), randInt(random, -5, 5)));
+//            modelInstances.add(instance);
+//        } catch(ModelNotFoundException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -278,8 +289,8 @@ public class World extends Environment implements Renderable {
             final Maramafication maramafication = (Maramafication) maramaficationEntry.value;
             try {
                 SelectableInstance currentSelectableInstance = maramafication.createInstance();
-                currentSelectableInstance.transform.setToScaling(3.0f, 3.0f, 3.0f);
-                currentSelectableInstance.transform.setToTranslation(pos, 0f, 0f);
+                currentSelectableInstance.transform.translate(pos, 0f, 0f);
+                currentSelectableInstance.updatePosition();
                 modelInstances.add(currentSelectableInstance);
                 pos += 3f;
             } catch (ModelNotFoundException e) {

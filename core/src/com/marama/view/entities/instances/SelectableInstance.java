@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
@@ -19,13 +19,14 @@ public class SelectableInstance extends ModelInstance {
     public final BoundingBox boundingBox = new BoundingBox();
     public final Vector3 center = new Vector3();
     public final Vector3 dimensions = new Vector3();
+    public final float radius;
+    public Axes axes;
+
+    private boolean selected;
+    private Vector3 oldPosition = new Vector3();
+
     public String name;
     public Array<Vector3> faces = new Array<Vector3>();
-    public final float radius; // TODO: make boundingbox a box, not a sphere if possible and performant
-    private boolean selected;
-    private Material defaultMaterial;
-    private Material selectedMaterial = new Material(ColorAttribute.createDiffuse(Color.PINK));
-    private Array<Vector3> actualBounds;
 
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
@@ -36,8 +37,6 @@ public class SelectableInstance extends ModelInstance {
     public SelectableInstance(Model model, Material defaultMaterial, String name) {
         super(model);
 
-        this.defaultMaterial = defaultMaterial;
-        this.name = name;
         selected = false;
         materials.add(new Material()); // Add a default empty material that we can clear and set.
         setMaterial(defaultMaterial);
@@ -52,47 +51,37 @@ public class SelectableInstance extends ModelInstance {
         faces.add(new Vector3(0, 0.5f, 0), new Vector3(0.5f, 0, 0), new Vector3(0, 0, 0.5f));
         faces.add(new Vector3(0, -0.5f, 0), new Vector3(-0.5f, 0, 0), new Vector3(0, 0, -0.5f));
 
-        actualBounds = new Array<Vector3>();
-        actualBounds.add(boundingBox.getCorner000(new Vector3()));
-        actualBounds.add(boundingBox.getCorner001(new Vector3()));
-        actualBounds.add(boundingBox.getCorner011(new Vector3()));
-        actualBounds.add(boundingBox.getCorner111(new Vector3()));
-        actualBounds.add(boundingBox.getCorner010(new Vector3()));
-        actualBounds.add(boundingBox.getCorner110(new Vector3()));
-        actualBounds.add(boundingBox.getCorner100(new Vector3()));
-        actualBounds.add(boundingBox.getCorner101(new Vector3()));
+        axes = new Axes(getPosition());
     }
 
     public boolean isSelected() {
         return selected;
     }
 
-    /**
-     * Select or deselect the current instance and update's its {@link Material}.
-     */
     public void setSelected(boolean selected) {
         this.selected = selected;
-
-        if (selected) {
-            setMaterial(selectedMaterial);
-        } else {
-            setMaterial(defaultMaterial);
-        }
     }
 
+    public void toggleSelected() {
+        this.selected = !this.selected;
+    }
 
     /**
-     * Switches the material and selected state of the instance.
+     * @return The current position if the {@link SelectableInstance}.
      */
-    public void switchSelect(){
-        selected = !selected;
-        if (selected) {
-            setMaterial(selectedMaterial);
-        } else {
-            setMaterial(defaultMaterial);
-        }
+    public Vector3 getPosition() {
+        return transform.getTranslation(new Vector3());
     }
 
+    public void updatePosition() {
+        // Update the bounding box
+        boundingBox.mul(new Matrix4().setTranslation(getPosition().sub(oldPosition)));
+        // Update the axes bounding boxes
+        axes.calculateBoundingBoxes(getPosition());
+
+        // update the oldPosition
+        oldPosition = getPosition();
+    }
 
     /**
      * Apply a new {@link Material} to the {@link SelectableInstance}.
@@ -104,27 +93,45 @@ public class SelectableInstance extends ModelInstance {
         materials.get(0).set(material);
     }
 
+    /**
+     * Draws the axes on top of this {@link SelectableInstance}.
+     *
+     * @param shapeRenderer
+     */
     public void drawAxes(ShapeRenderer shapeRenderer) {
-        Axes.draw(shapeRenderer, transform.getTranslation(new Vector3()));
+        axes.draw(shapeRenderer, getPosition());
     }
 
-    public void drawSkeleton(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(new Color(0.4f, 0.4f, 0.4f, 1));
+    /**
+     * Draws a box around the {@link SelectableInstance}.
+     *
+     * @param shapeRenderer
+     */
+    public void drawDimensions(ShapeRenderer shapeRenderer) {
         Vector3 pos = transform.getTranslation(new Vector3());
         Vector3 dim = boundingBox.getDimensions(new Vector3());
-        shapeRenderer.box(pos.x - 0.5f, pos.y - 0.5f, pos.z + 0.5f, dim.x, dim.y, dim.z);
-    }
-    public void drawBoundingBox(ShapeRenderer shapeRenderer) {
-        Vector3 position = transform.getTranslation(new Vector3());
 
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.setColor(new Color(0.4f, 0.4f, 0.4f, 1));
         shapeRenderer.identity();
+        shapeRenderer.box(pos.x - (dim.x / 2), pos.y - (dim.y / 2), pos.z + (dim.z / 2), dim.x, dim.y, dim.z);
+    }
 
-        for (int i = 0; i < actualBounds.size - 1; i++) {
-            Vector3 current = new Vector3(actualBounds.get(i)).add(position);
-            Vector3 next = new Vector3(actualBounds.get(i + 1)).add(position);
-            shapeRenderer.line(current, next);
-        }
+    /**
+     * Draws the radius based on the dimensions.
+     *
+     * @param shapeRenderer
+     */
+    public void drawRadius(ShapeRenderer shapeRenderer) {
+        Vector3 position = getPosition();
+
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.identity();
+        shapeRenderer.translate(position.x, position.y, position.z);
+
+        shapeRenderer.circle(0, 0, radius, 16);
+        shapeRenderer.rotate(0, 1, 0, 90);
+        shapeRenderer.circle(0, 0, radius, 16);
     }
 }

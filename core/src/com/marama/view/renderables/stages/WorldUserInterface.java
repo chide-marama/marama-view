@@ -22,7 +22,7 @@ import com.marama.view.renderables.World;
  * The class containing all the elements of the WorldUserInterface, used in the GameScreen.
  */
 public class WorldUserInterface extends Stage implements Renderable {
-    private World world;
+    private final World world;
     private EntityManager entityManager;
 
     /* Set a block size including and a padding so we
@@ -30,7 +30,7 @@ public class WorldUserInterface extends Stage implements Renderable {
     private final float blockSize = 80f;
     private final float padding = 10f;
 
-    public WorldUserInterface(final World world, Viewport viewport) {
+    public WorldUserInterface(Viewport viewport, final World world) {
         super(viewport);
         this.world = world;
         this.entityManager = EntityManager.getInstance();
@@ -64,7 +64,7 @@ public class WorldUserInterface extends Stage implements Renderable {
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println(maramafication.getName());
+                    world.addObject(maramafication.getName());
                 }
             });
             /* Create a new row and add items to from now on. */
