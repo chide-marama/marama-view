@@ -7,11 +7,10 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.marama.view.controllers.addBlockInputController;
 import com.marama.view.renderables.World;
 import com.marama.view.renderables.stages.WorldUserInterface;
-import com.marama.view.util.DragObjectInputController;
-import com.marama.view.util.SelectObjectInputController;
+import com.marama.view.controllers.DragObjectInputController;
+import com.marama.view.controllers.SelectObjectInputController;
 
 /**
  * The {@link GameScreen} extends a {@link ScreenAdapter} that contains a 3D {@link World} and a {@link WorldUserInterface}.
