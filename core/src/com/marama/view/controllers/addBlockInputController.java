@@ -1,14 +1,16 @@
 package com.marama.view.controllers;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
+import com.marama.view.screens.GameScreen;
 
 public class addBlockInputController extends InputAdapter {
-    private World world;
+    private GameScreen gameScreen;
     private EntityManager entityManager = EntityManager.getInstance();
     private int currentFaceIndex;
     private int targetFaceIndex;
@@ -16,10 +18,10 @@ public class addBlockInputController extends InputAdapter {
     /**
      * Instantiates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
      *
-     * @param world The ({@link World}) instance that renders 3D models.
+     * @param gameScreen The ({@link GameScreen}) instance that renders 3D models.
      */
-    public addBlockInputController(World world) {
-        this.world = world;
+    public addBlockInputController(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
     }
 
     @Override
@@ -34,15 +36,15 @@ public class addBlockInputController extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Ray ray = world.getPerspectiveCamera().getPickRay(screenX, screenY);
-        SelectableInstance instance = (SelectableInstance) world.getModelInstance(ray);
+        Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
+        SelectableInstance instance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
 
         if (instance != null) {
-            SelectableInstance targetInstance = entityManager.createSelectableInstance(world.getNextMarama()); // Get from add object to world.
-            currentFaceIndex = world.getClosestFaceIndex(ray, instance);
+            SelectableInstance targetInstance = entityManager.createSelectableInstance(gameScreen.getActiveMarama()); // Get from add object to world.
+            currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, instance);
             targetFaceIndex = getFaceIndex(currentFaceIndex, targetInstance);
             //world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex, "donut");
-            world.addFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
+            gameScreen.world.addFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
         }
 
         return false; // Continue to the next 'touchUp' listener.

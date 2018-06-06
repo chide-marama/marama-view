@@ -6,9 +6,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.marama.view.controllers.addBlockInputController;
 import com.marama.view.renderables.World;
 import com.marama.view.renderables.stages.WorldUserInterface;
@@ -19,14 +17,15 @@ import com.marama.view.controllers.SelectObjectInputController;
  * The {@link GameScreen} extends a {@link ScreenAdapter} that contains a 3D {@link World} and a {@link WorldUserInterface}.
  */
 public class GameScreen extends ScreenAdapter {
-    private World world;
-    private WorldUserInterface worldUserInterface;
+    public final World world;
+    public final WorldUserInterface worldUserInterface;
     private InputMultiplexer inputMultiplexer;
 
     private SelectObjectInputController selectObjectInputController;
     private DragObjectInputController dragObjectInputController;
     private addBlockInputController addBlockInputController;
 
+    private String activeMarama;
     private int activeTool;
 
     /**
@@ -39,19 +38,35 @@ public class GameScreen extends ScreenAdapter {
                 new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), new AssetManager());
         this.worldUserInterface = new WorldUserInterface(this, this.world, new Skin(Gdx.files.internal("skin/uiskin.json")));
 
-        selectObjectInputController = new SelectObjectInputController(this.world);
-        dragObjectInputController = new DragObjectInputController(this.world);
-        addBlockInputController = new addBlockInputController(this.world);
+        selectObjectInputController = new SelectObjectInputController(this);
+        dragObjectInputController = new DragObjectInputController(this);
+        addBlockInputController = new addBlockInputController(this);
+    }
+
+    public String getActiveMarama() {
+        return activeMarama;
+    }
+
+    public void setActiveMarama(String activeMarama) {
+        this.activeMarama = activeMarama;
+        worldUserInterface.update();
     }
 
     public int getActiveTool() {
         return activeTool;
     }
 
+    public void setTool(int index) {
+        this.activeTool = index;
+        this.initializeInputControllers();
+    }
+
     @Override
     public void show() {
+        this.activeMarama = "block";
+        this.setActiveMarama(this.activeMarama);
         this.activeTool = 0;
-        this.updateTool(activeTool);
+        this.setTool(activeTool);
     }
 
     @Override
@@ -61,14 +76,10 @@ public class GameScreen extends ScreenAdapter {
         worldUserInterface.render(delta);
     }
 
-    public void updateTool(int index) {
-        this.activeTool = index;
-        this.initializeInputControllers();
-    }
-
     public void initializeInputControllers() {
         inputMultiplexer.clear();
-        worldUserInterface.setActiveTool(activeTool);
+
+        worldUserInterface.update();
 
         // The user interface has the highest priority.
         inputMultiplexer.addProcessor(worldUserInterface);

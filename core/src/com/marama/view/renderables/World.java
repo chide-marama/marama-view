@@ -40,7 +40,6 @@ public class World extends Environment implements Renderable {
     private Array<ModelInstance> modelInstances;
     private ShapeRenderer shapeRenderer;
 
-    private String nextMarama = "block";
     private Random random = new Random();
 
     /**
@@ -289,15 +288,6 @@ public class World extends Environment implements Renderable {
         } catch(ModelNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    public java.lang.String getNextMarama() {
-        return nextMarama;
-    }
-
-    public void setMarama(String name){
-        nextMarama = name;
-
     }
 
     /**
