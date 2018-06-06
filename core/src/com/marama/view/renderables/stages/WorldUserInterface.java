@@ -1,7 +1,10 @@
 package com.marama.view.renderables.stages;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,24 +18,36 @@ import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.renderables.Renderable;
 import com.marama.view.renderables.World;
+import com.marama.view.screens.GameScreen;
 
 /**
  * The class containing all the elements of the WorldUserInterface, used in the GameScreen.
  */
 public class WorldUserInterface extends Stage implements Renderable {
+    private final GameScreen gameScreen;
     private final World world;
     private final Skin skin;
+
+    private int activeTool = 0;
 
     /* Set a block size including and a padding so we
      * can work with these throughout the rest of the class. */
     private final float blockSize = 100f;
     private final float padding = 10f;
 
-    public WorldUserInterface(final World world, Skin skin) {
+    public WorldUserInterface(final GameScreen gameScreen, final World world, Skin skin) {
         this.world = world;
         this.skin = skin;
+        this.gameScreen = gameScreen;
 
         addActor(this.maramaList());
+        addActor(this.tools());
+    }
+
+    public void setActiveTool(int activeTool) {
+        this.activeTool = activeTool;
+
+        this.getActors().get(1).remove();
         addActor(this.tools());
     }
 
@@ -129,6 +144,20 @@ public class WorldUserInterface extends Stage implements Renderable {
 
         for (int i = 0; i < tools.size; i++) {
             TextButton tool = tools.get(i);
+
+            if (activeTool == i) {
+                TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(tool.getStyle());
+                style.fontColor = Color.LIGHT_GRAY;
+                tool.setStyle(style);
+            }
+
+            final int index = i;
+            tool.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    gameScreen.updateTool(index);
+                }
+            });
 
             Cell cell = toolsPanel.add(tool);
             cell.width(panelWidth - (padding * 2));
