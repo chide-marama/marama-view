@@ -37,6 +37,7 @@ public class SelectableInstance extends ModelInstance {
     public SelectableInstance(Model model, Material defaultMaterial, String name) {
         super(model);
 
+        this.name = name;
         selected = false;
         materials.add(new Material()); // Add a default empty material that we can clear and set.
         setMaterial(defaultMaterial);

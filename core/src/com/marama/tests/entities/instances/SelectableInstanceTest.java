@@ -10,8 +10,8 @@ public class SelectableInstanceTest {
 
     @Test
     public void shouldUpdateMaterialWhenSelectableInstanceIsSelected() {
-        SelectableInstance selectableInstance1 = new SelectableInstance(new Model(), new Material(), null);
-        SelectableInstance selectableInstance2 = new SelectableInstance(new Model(), new Material(), null);
+        SelectableInstance selectableInstance1 = new SelectableInstance(new Model(), new Material(), "block");
+        SelectableInstance selectableInstance2 = new SelectableInstance(new Model(), new Material(), "block");
         selectableInstance1.setSelected(true);
 
         // Materials should differ from each other.
