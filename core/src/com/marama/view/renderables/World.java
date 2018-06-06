@@ -292,24 +292,25 @@ public class World extends Environment implements Renderable {
     public void addBlocktoFace(SelectableInstance instance, int instanceFace) {
         SelectableInstance newblock = mBlock.createInstance();
         Vector3 position = instance.transform.getTranslation(new Vector3());
+
         switch (instanceFace) {
             case 0:
-                newblock.transform.setToTranslation(new Vector3(0, 1, 0).add(position));
+                newblock.transform.setToTranslation(new Vector3(0, (newblock.radius+instance.radius)/2, 0).add(position));
                 break;
             case 1:
-                newblock.transform.setToTranslation(new Vector3(1, 0, 0).add(position));
+                newblock.transform.setToTranslation(new Vector3((newblock.radius+instance.radius)/2, 0, 0).add(position));
                 break;
             case 2:
-                newblock.transform.setToTranslation(new Vector3(0, 0, 1).add(position));
+                newblock.transform.setToTranslation(new Vector3(0, 0, (newblock.radius+instance.radius)/2).add(position));
                 break;
             case 3:
-                newblock.transform.setToTranslation(new Vector3(0, -1, 0).add(position));
+                newblock.transform.setToTranslation(new Vector3(0, -(newblock.radius+instance.radius)/2, 0).add(position));
                 break;
             case 4:
-                newblock.transform.setToTranslation(new Vector3(-1, 0, 0).add(position));
+                newblock.transform.setToTranslation(new Vector3(-(newblock.radius+instance.radius)/2, 0, 0).add(position));
                 break;
             case 5:
-                newblock.transform.setToTranslation(new Vector3(0, 0, -1).add(position));
+                newblock.transform.setToTranslation(new Vector3(0, 0, -(newblock.radius+instance.radius)/2).add(position));
                 break;
         }
         modelInstances.add(newblock);
