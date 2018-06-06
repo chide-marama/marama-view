@@ -20,7 +20,7 @@ import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
-import com.marama.view.util.BoundingBoxHelper;
+import java.util.Random;
 
 /**
  * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
@@ -36,6 +36,8 @@ public class World extends Environment implements Renderable {
     private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
     private Array<ModelInstance> modelInstances;
     private ShapeRenderer shapeRenderer;
+
+    private Random random = new Random();
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
@@ -205,12 +207,20 @@ public class World extends Environment implements Renderable {
 
     }
 
-    // TODO: clean this up
-//    public void addObject() {
-//        SelectableInstance instance = mBlock.createInstance();
-//        instance.transform.setToTranslation(10, 10, 10);
-//        modelInstances.add(instance);
-//    }
+    private int randInt(Random random, int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
+    }
+
+
+    public void addObject(String name) {
+        try {
+            SelectableInstance instance = entityManager.getMaramaficationByName(name).createInstance();
+            instance.transform.translate(new Vector3(randInt(random, -5, 5), randInt(random, -5, 5), randInt(random, -5, 5)));
+            modelInstances.add(instance);
+        } catch(ModelNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Will be called when the {@link EntityManager} is done loading.
