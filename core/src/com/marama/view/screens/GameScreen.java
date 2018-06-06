@@ -6,7 +6,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.marama.view.controllers.addBlockInputController;
 import com.marama.view.renderables.World;
@@ -34,7 +33,7 @@ public class GameScreen extends ScreenAdapter {
         this.worldUserInterface = new WorldUserInterface(
                 this.world,
                 new ScreenViewport(),
-                new Skin(Gdx.files.internal("skin/uiskin.json"))
+                this.world
         );
     }
 

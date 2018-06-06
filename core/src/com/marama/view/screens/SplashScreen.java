@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marama.view.View;
 
@@ -21,7 +20,7 @@ public class SplashScreen extends ScreenAdapter {
     private final View view;
     private Viewport viewport;
 
-    private final double SPLASH_DURATION = 5; // Total duration for the splash screen. From start of the app to appearance of the main menu.
+    private final double SPLASH_DURATION = 0.01; // Total duration for the splash screen. From start of the app to appearance of the main menu.
     private final double FADE_OUT_START = SPLASH_DURATION * 0.6; // The duration is tweak-able. Try to keep it between 0.1 and 0.9 for best effect.
 
     public SplashScreen(final View view, Viewport viewport) {
