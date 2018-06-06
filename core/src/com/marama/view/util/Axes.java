@@ -14,12 +14,6 @@ public class Axes {
     private float bbHeight = 0.1f;
     private float bbWidth = length + coneLength;
 
-    private ArrayList<Vector3> boundsX = new ArrayList<Vector3>();
-    private ArrayList<Vector3> boundsY = new ArrayList<Vector3>();
-    private ArrayList<Vector3> boundsZ = new ArrayList<Vector3>();
-
-    private Vector3 origin;
-
     public BoundingBox boundingBoxX;
     public BoundingBox boundingBoxY;
     public BoundingBox boundingBoxZ;
@@ -28,13 +22,23 @@ public class Axes {
         this.calculateBoundingBoxes(origin);
     }
 
+    /**
+     * Calculate the bounding boxes of the three axes based on a location.
+     *
+     * @param origin The location.
+     */
     public void calculateBoundingBoxes(Vector3 origin) {
-        this.origin = origin;
-        boundingBoxX = calculateBoundingBoxX();
-        boundingBoxY = calculateBoundingBoxY();
-        boundingBoxZ = calculateBoundingBoxZ();
+        boundingBoxX = calculateBoundingBoxX(origin);
+        boundingBoxY = calculateBoundingBoxY(origin);
+        boundingBoxZ = calculateBoundingBoxZ(origin);
     }
 
+    /**
+     * Draw the axes including its tips/cones.
+     *
+     * @param shapeRenderer The {@link ShapeRenderer}'s drawing context.
+     * @param origin The location where drawing starts.
+     */
     public void draw(ShapeRenderer shapeRenderer, Vector3 origin) {
         Vector3 target;
 
@@ -78,11 +82,14 @@ public class Axes {
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.translate(target.x, target.y, target.z);
         shapeRenderer.cone(0, 0, 0, coneHeight, coneLength, coneSegments);
-
-//        drawBoundingBoxes(shapeRenderer);
     }
 
-    private BoundingBox calculateBoundingBoxX() {
+    /**
+     * Calculate the x-axis {@link BoundingBox}.
+     *
+     * @return {@link BoundingBox}
+     */
+    private BoundingBox calculateBoundingBoxX(Vector3 origin) {
         ArrayList<Vector3> bounds = new ArrayList<Vector3>();
 
         // Small square start.
@@ -105,12 +112,15 @@ public class Axes {
         BoundingBox boundingBox = new BoundingBox();
         boundingBox.set(bounds);
 
-        boundsX = bounds;
-
         return boundingBox;
     }
 
-    private BoundingBox calculateBoundingBoxY() {
+    /**
+     * Calculate the y-axis {@link BoundingBox}.
+     *
+     * @return {@link BoundingBox}
+     */
+    private BoundingBox calculateBoundingBoxY(Vector3 origin) {
         ArrayList<Vector3> bounds = new ArrayList<Vector3>();
 
         // Small square start.
@@ -132,12 +142,15 @@ public class Axes {
         BoundingBox boundingBox = new BoundingBox();
         boundingBox.set(bounds);
 
-        boundsZ = bounds;
-
         return boundingBox;
     }
 
-    private BoundingBox calculateBoundingBoxZ() {
+    /**
+     * Calculate the z-axis {@link BoundingBox}.
+     *
+     * @return {@link BoundingBox}
+     */
+    private BoundingBox calculateBoundingBoxZ(Vector3 origin) {
         ArrayList<Vector3> bounds = new ArrayList<Vector3>();
 
         // Small square start.
@@ -159,14 +172,17 @@ public class Axes {
         BoundingBox boundingBox = new BoundingBox();
         boundingBox.set(bounds);
 
-        boundsY = bounds;
-
         return boundingBox;
     }
 
+    /**
+     * Draws the bounding boxes for debugging purposes.
+     *
+     * @param shapeRenderer The {@link ShapeRenderer}'s drawing context.
+     */
     private void drawBoundingBoxes(ShapeRenderer shapeRenderer) {
-        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxX);
-        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxY);
-        BoundingBoxHelper.draw(shapeRenderer, origin, boundingBoxZ);
+        BoundingBoxHelper.draw(shapeRenderer, boundingBoxX);
+        BoundingBoxHelper.draw(shapeRenderer, boundingBoxY);
+        BoundingBoxHelper.draw(shapeRenderer, boundingBoxZ);
     }
 }

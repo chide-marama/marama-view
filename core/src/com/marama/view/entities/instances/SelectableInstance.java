@@ -4,11 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.utils.Array;
 import com.marama.view.util.Axes;
 
 /**
@@ -19,22 +18,20 @@ public class SelectableInstance extends ModelInstance {
     public final BoundingBox boundingBox = new BoundingBox();
     public final Vector3 center = new Vector3();
     public final Vector3 dimensions = new Vector3();
-    public final float radius; // TODO: make boundingbox a box, not a sphere if possible and performant
-    private boolean selected;
-    private Material defaultMaterial;
-
+    public final float radius;
     public Axes axes;
+
+    private boolean selected;
+    private Vector3 oldPosition = new Vector3();
 
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
      *
-     * @param model The model to create the {@link SelectableInstance} from.
+     * @param model           The model to create the {@link SelectableInstance} from.
      * @param defaultMaterial
      */
     public SelectableInstance(Model model, Material defaultMaterial) {
         super(model);
-
-        this.defaultMaterial = defaultMaterial;
 
         selected = false;
         materials.add(new Material()); // Add a default empty material that we can clear and set.
@@ -46,7 +43,7 @@ public class SelectableInstance extends ModelInstance {
         boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
         radius = dimensions.len() / 2f;
 
-        axes = new Axes(transform.getTranslation(new Vector3()));
+        axes = new Axes(getPosition());
     }
 
     public boolean isSelected() {
@@ -61,8 +58,21 @@ public class SelectableInstance extends ModelInstance {
         this.selected = !this.selected;
     }
 
-    public Vector3 getCurrentPosition() {
+    /**
+     * @return The current position if the {@link SelectableInstance}.
+     */
+    public Vector3 getPosition() {
         return transform.getTranslation(new Vector3());
+    }
+
+    public void updatePosition() {
+        // Update the bounding box
+        boundingBox.mul(new Matrix4().setTranslation(getPosition().sub(oldPosition)));
+        // Update the axes bounding boxes
+        axes.calculateBoundingBoxes(getPosition());
+
+        // update the oldPosition
+        oldPosition = getPosition();
     }
 
     /**
@@ -75,10 +85,20 @@ public class SelectableInstance extends ModelInstance {
         materials.get(0).set(material);
     }
 
+    /**
+     * Draws the axes on top of this {@link SelectableInstance}.
+     *
+     * @param shapeRenderer
+     */
     public void drawAxes(ShapeRenderer shapeRenderer) {
-        axes.draw(shapeRenderer, transform.getTranslation(new Vector3()));
+        axes.draw(shapeRenderer, getPosition());
     }
 
+    /**
+     * Draws a box around the {@link SelectableInstance}.
+     *
+     * @param shapeRenderer
+     */
     public void drawDimensions(ShapeRenderer shapeRenderer) {
         Vector3 pos = transform.getTranslation(new Vector3());
         Vector3 dim = boundingBox.getDimensions(new Vector3());
@@ -89,8 +109,13 @@ public class SelectableInstance extends ModelInstance {
         shapeRenderer.box(pos.x - (dim.x / 2), pos.y - (dim.y / 2), pos.z + (dim.z / 2), dim.x, dim.y, dim.z);
     }
 
+    /**
+     * Draws the radius based on the dimensions.
+     *
+     * @param shapeRenderer
+     */
     public void drawRadius(ShapeRenderer shapeRenderer) {
-        Vector3 position = transform.getTranslation(new Vector3());
+        Vector3 position = getPosition();
 
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);

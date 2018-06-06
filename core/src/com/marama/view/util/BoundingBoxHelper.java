@@ -8,6 +8,12 @@ import com.badlogic.gdx.utils.Array;
 
 
 public abstract class BoundingBoxHelper {
+
+    /**
+     * Return the vertices of a {@link BoundingBox} as an {@link Array}
+     *
+     * @param boundingBox The {@link BoundingBox} to generate the array from.
+     */
     public static Array<Vector3> vertices(BoundingBox boundingBox) {
         Array<Vector3> bounds = new Array<Vector3>();
         bounds.add(boundingBox.getCorner000(new Vector3()));
@@ -21,7 +27,13 @@ public abstract class BoundingBoxHelper {
         return bounds;
     }
 
-    public static void draw(ShapeRenderer shapeRenderer, Vector3 origin, BoundingBox boundingBox) {
+    /**
+     * Draws the vertices of a boundingbox.
+     *
+     * @param shapeRenderer The {@link ShapeRenderer}'s context to draw in.
+     * @param boundingBox The {@link BoundingBox} to draw.
+     */
+    public static void draw(ShapeRenderer shapeRenderer, BoundingBox boundingBox) {
         Vector3 vertex1 = boundingBox.getCorner000(new Vector3());
         Vector3 vertex2 = boundingBox.getCorner001(new Vector3());
         Vector3 vertex3 = boundingBox.getCorner010(new Vector3());

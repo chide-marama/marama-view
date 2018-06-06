@@ -20,7 +20,6 @@ import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
-import com.marama.view.util.Axes;
 import com.marama.view.util.BoundingBoxHelper;
 
 /**
@@ -79,8 +78,6 @@ public class World extends Environment implements Renderable {
                 if (selectableInstance.isSelected()) {
                     selectableInstance.drawAxes(shapeRenderer);
                     selectableInstance.drawDimensions(shapeRenderer);
-                    BoundingBoxHelper.draw(shapeRenderer, selectableInstance.getCurrentPosition(), selectableInstance.boundingBox);
-                    selectableInstance.drawRadius(shapeRenderer);
                 }
             }
         }
@@ -153,14 +150,14 @@ public class World extends Environment implements Renderable {
         Vector3 position = new Vector3();
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
 
-        for (int i = 0; i < modelInstances.size - 1; ++i) {
+        for (int i = 0; i < modelInstances.size; ++i) {
             final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
 
             // Set the center location of the instance.
             instance.transform.getTranslation(position);
             position.add(instance.center);
 
-            float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance position.
+            float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance cachedPosition.
 
             if (distance >= 0f && dist2 > distance) continue; // instance is not closer than a previous one.
 
@@ -203,8 +200,9 @@ public class World extends Environment implements Renderable {
 
         // Add the three maramafications via the json file to the EntityManager.
         entityManager.loadMaramafication("marams/sphere.json");
-        entityManager.loadMaramafication("marams/block.json");
         entityManager.loadMaramafication("marams/donut.json");
+        entityManager.loadMaramafication("marams/block.json");
+
     }
 
     // TODO: clean this up
@@ -228,8 +226,8 @@ public class World extends Environment implements Renderable {
             final Maramafication maramafication = (Maramafication) maramaficationEntry.value;
             try {
                 SelectableInstance currentSelectableInstance = maramafication.createInstance();
-                currentSelectableInstance.transform.setToScaling(3.0f, 3.0f, 3.0f);
-                currentSelectableInstance.transform.setToTranslation(pos, 0f, 0f);
+                currentSelectableInstance.transform.translate(pos, 0f, 0f);
+                currentSelectableInstance.updatePosition();
                 modelInstances.add(currentSelectableInstance);
                 pos += 3f;
             } catch (ModelNotFoundException e) {
