@@ -42,7 +42,7 @@ public class addBlockInputController extends InputAdapter {
             currentFaceIndex = world.getClosestFaceIndex(ray, instance);
             targetFaceIndex = getFaceIndex(currentFaceIndex, targetInstance);
             //world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex, "donut");
-            world.addFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 5));
+            world.addFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
         }
 
         return false; // Continue to the next 'touchUp' listener.
