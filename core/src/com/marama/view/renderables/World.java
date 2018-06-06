@@ -5,7 +5,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
@@ -22,6 +20,7 @@ import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
+import com.marama.view.screens.GameScreen;
 
 import java.util.Random;
 
@@ -31,6 +30,7 @@ import java.util.Random;
 public class World extends Environment implements Renderable {
     private boolean loading;
 
+    private GameScreen gameScreen;
     private DirectionalLight directionalLight;
     private PerspectiveCamera perspectiveCamera;
     private ModelBatch modelBatch; // The unit that can render the modelInstances
@@ -50,9 +50,10 @@ public class World extends Environment implements Renderable {
      * @param perspectiveCamera
      * @param assetManager
      */
-    public World(DirectionalLight directionalLight, PerspectiveCamera perspectiveCamera, AssetManager assetManager) {
+    public World(GameScreen gameScreen, DirectionalLight directionalLight, PerspectiveCamera perspectiveCamera, AssetManager assetManager) {
         super();
 
+        this.gameScreen = gameScreen;
         this.directionalLight = directionalLight;
         this.perspectiveCamera = perspectiveCamera;
         this.entityManager = EntityManager.getInstance();
@@ -85,8 +86,13 @@ public class World extends Environment implements Renderable {
             if (instance instanceof SelectableInstance) {
                 SelectableInstance selectableInstance = (SelectableInstance) instance;
                 if (selectableInstance.isSelected()) {
-                    selectableInstance.drawAxes(shapeRenderer);
-                    selectableInstance.drawDimensions(shapeRenderer);
+                    if (gameScreen.getActiveTool() == 0) {
+                        selectableInstance.drawDimensions(shapeRenderer);
+                    }
+
+                    if (gameScreen.getActiveTool() == 1) {
+                        selectableInstance.drawAxes(shapeRenderer);
+                    }
                 }
             }
         }

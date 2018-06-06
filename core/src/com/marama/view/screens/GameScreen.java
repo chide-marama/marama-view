@@ -27,13 +27,15 @@ public class GameScreen extends ScreenAdapter {
     private DragObjectInputController dragObjectInputController;
     private addBlockInputController addBlockInputController;
 
+    private int activeTool;
+
     /**
      * Instancing the GameScreen that contains a 3D {@link World} and a {@link WorldUserInterface}.
      */
     public GameScreen() {
         inputMultiplexer = new InputMultiplexer();
 
-        this.world = new World(new DirectionalLight(),
+        this.world = new World(this, new DirectionalLight(),
                 new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), new AssetManager());
         this.worldUserInterface = new WorldUserInterface(this, this.world, new Skin(Gdx.files.internal("skin/uiskin.json")));
 
@@ -42,9 +44,14 @@ public class GameScreen extends ScreenAdapter {
         addBlockInputController = new addBlockInputController(this.world);
     }
 
+    public int getActiveTool() {
+        return activeTool;
+    }
+
     @Override
     public void show() {
-        this.updateTool(0);
+        this.activeTool = 0;
+        this.updateTool(activeTool);
     }
 
     @Override
@@ -55,14 +62,19 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void updateTool(int index) {
+        this.activeTool = index;
+        this.initializeInputControllers();
+    }
+
+    public void initializeInputControllers() {
         inputMultiplexer.clear();
-        worldUserInterface.setActiveTool(index);
+        worldUserInterface.setActiveTool(activeTool);
 
         // The user interface has the highest priority.
         inputMultiplexer.addProcessor(worldUserInterface);
 
         // Add the tool controllers in between.
-        switch (index) {
+        switch (activeTool) {
             // Select tool
             case 0:
                 inputMultiplexer.addProcessor(selectObjectInputController);
