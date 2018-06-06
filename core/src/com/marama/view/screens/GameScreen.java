@@ -10,8 +10,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.marama.view.controllers.addBlockInputController;
 import com.marama.view.renderables.World;
 import com.marama.view.renderables.stages.WorldUserInterface;
-import com.marama.view.util.DragObjectInputController;
-import com.marama.view.util.SelectObjectInputController;
+import com.marama.view.controllers.DragObjectInputController;
+import com.marama.view.controllers.SelectObjectInputController;
 
 /**
  * The {@link GameScreen} extends a {@link ScreenAdapter} that contains a 3D {@link World} and a {@link WorldUserInterface}.
@@ -24,16 +24,9 @@ public class GameScreen extends ScreenAdapter {
      * Instancing the GameScreen that contains a 3D {@link World} and a {@link WorldUserInterface}.
      */
     public GameScreen() {
-        this.world = new World(
-                new DirectionalLight(),
-                new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()),
-                new AssetManager()
-        );
-
-        this.worldUserInterface = new WorldUserInterface(
-                new ScreenViewport(),
-                this.world
-        );
+        this.world = new World(new DirectionalLight(),
+                new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), new AssetManager());
+        this.worldUserInterface = new WorldUserInterface(this.world);
     }
 
     @Override

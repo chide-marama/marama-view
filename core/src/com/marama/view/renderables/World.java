@@ -22,6 +22,7 @@ import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
+
 import java.util.Random;
 
 /**
@@ -70,11 +71,11 @@ public class World extends Environment implements Renderable {
 
         // Render all the SelectableInstances.
         modelBatch.begin(perspectiveCamera);
-        for (final ModelInstance instance: modelInstances) {
-                modelBatch.render(instance, this);
+        for (final ModelInstance instance : modelInstances) {
+            modelBatch.render(instance, this);
         }
         modelBatch.end();
-        
+
         // Render shapes.
         shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
         shapeRenderer.setAutoShapeType(true);
@@ -120,7 +121,7 @@ public class World extends Environment implements Renderable {
     public PerspectiveCamera getPerspectiveCamera() {
         return perspectiveCamera;
     }
-    
+
     public Array<ModelInstance> getModelInstances() {
         return modelInstances;
     }
@@ -141,7 +142,7 @@ public class World extends Environment implements Renderable {
 
         return null;
     }
-    
+
     public ModelInstance getModelInstance(Ray ray) {
         int index = getModelInstanceIndex(ray);
 
@@ -165,7 +166,12 @@ public class World extends Environment implements Renderable {
     }
 
 
-    public int getModelInstanceIndex(Ray ray){
+    /**
+     * Retrieving a {@link ModelInstance} index from a {@link Ray}.
+     *
+     * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
+     */
+    public int getModelInstanceIndex(Ray ray) {
         int result = -1;
         float distance = -1f;
 
@@ -198,11 +204,12 @@ public class World extends Environment implements Renderable {
      * relative to the modelInstance.
      * Then it compares the intersection point to the location of the faces
      * and gets the closest one.
-     * @param ray The pick ray you want to intersect with the object, the origin
+     *
+     * @param ray           The pick ray you want to intersect with the object, the origin
      * @param modelInstance The object whose face you want to detect
      * @return
      */
-    public int getClosestFaceIndex(Ray ray, SelectableInstance modelInstance){
+    public int getClosestFaceIndex(Ray ray, SelectableInstance modelInstance) {
         Vector3 intersect = new Vector3();
         Vector3 position = new Vector3();
         modelInstance.transform.getTranslation(position);
@@ -215,7 +222,7 @@ public class World extends Environment implements Renderable {
         for (int j = 0; j < modelInstance.faces.size; j++) {
             Vector3 temp = modelInstance.faces.get(j);
             float dist = temp.dst(intersect);
-            if (dist < min ) {
+            if (dist < min) {
                 min = dist;
                 closest = j;
             }
@@ -224,7 +231,7 @@ public class World extends Environment implements Renderable {
 
         return closest;
     }
-    
+
     /**
      * Initializes the {@link World} with some default settings.
      */
@@ -266,13 +273,15 @@ public class World extends Environment implements Renderable {
 
 
     public void addObject(String name) {
-//        try {
-//            SelectableInstance instance = entityManager.getMaramaficationByName(name).createInstance();
-//            instance.transform.translate(new Vector3(randInt(random, -5, 5), randInt(random, -5, 5), randInt(random, -5, 5)));
-//            modelInstances.add(instance);
-//        } catch(ModelNotFoundException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            SelectableInstance instance = entityManager.getMaramaficationByName(name).createInstance();
+            // TODO: Don't make this position random.
+            Vector3 instancePosition = new Vector3(randInt(random, -5, 5), randInt(random, -5, 5), randInt(random, -5, 5));
+            instance.transform.translate(instancePosition);
+            modelInstances.add(instance);
+        } catch(ModelNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -304,7 +313,8 @@ public class World extends Environment implements Renderable {
 
     /**
      * Adds a new model to one of the faces of your current instance.
-     * @param instance The model you want to add another block to.
+     *
+     * @param instance     The model you want to add another block to.
      * @param instanceFace The face of the object you want to add a block to.
      */
     public void addBlocktoFace(SelectableInstance instance, int instanceFace, String name) {
@@ -313,22 +323,22 @@ public class World extends Environment implements Renderable {
 
         switch (instanceFace) {
             case 0:
-                newblock.transform.setToTranslation(new Vector3(0, (newblock.radius+instance.radius)/2, 0).add(position));
+                newblock.transform.setToTranslation(new Vector3(0, (newblock.radius + instance.radius) / 2, 0).add(position));
                 break;
             case 1:
-                newblock.transform.setToTranslation(new Vector3((newblock.radius+instance.radius)/2, 0, 0).add(position));
+                newblock.transform.setToTranslation(new Vector3((newblock.radius + instance.radius) / 2, 0, 0).add(position));
                 break;
             case 2:
-                newblock.transform.setToTranslation(new Vector3(0, 0, (newblock.radius+instance.radius)/2).add(position));
+                newblock.transform.setToTranslation(new Vector3(0, 0, (newblock.radius + instance.radius) / 2).add(position));
                 break;
             case 3:
-                newblock.transform.setToTranslation(new Vector3(0, -(newblock.radius+instance.radius)/2, 0).add(position));
+                newblock.transform.setToTranslation(new Vector3(0, -(newblock.radius + instance.radius) / 2, 0).add(position));
                 break;
             case 4:
-                newblock.transform.setToTranslation(new Vector3(-(newblock.radius+instance.radius)/2, 0, 0).add(position));
+                newblock.transform.setToTranslation(new Vector3(-(newblock.radius + instance.radius) / 2, 0, 0).add(position));
                 break;
             case 5:
-                newblock.transform.setToTranslation(new Vector3(0, 0, -(newblock.radius+instance.radius)/2).add(position));
+                newblock.transform.setToTranslation(new Vector3(0, 0, -(newblock.radius + instance.radius) / 2).add(position));
                 break;
         }
         modelInstances.add(newblock);
@@ -336,12 +346,13 @@ public class World extends Environment implements Renderable {
 
     /**
      * Only works for
+     *
      * @param originInstance
      * @param targetInstance
      * @param originFace
      * @param targetFace
      */
-    public void addFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace){
+    public void addFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
         Vector3 position = originInstance.transform.getTranslation(new Vector3());
         position.add(originFace).sub(targetFace);
         targetInstance.transform.setToTranslation(position);

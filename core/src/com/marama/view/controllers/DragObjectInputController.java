@@ -1,4 +1,4 @@
-package com.marama.view.util;
+package com.marama.view.controllers;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
