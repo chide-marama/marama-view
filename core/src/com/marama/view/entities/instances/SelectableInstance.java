@@ -25,6 +25,7 @@ public class SelectableInstance extends ModelInstance {
     public Axes axes;
 
     private boolean selected = false;
+    private Material defaultMaterial;
     private Vector3 oldPosition = new Vector3();
 
     public String name;
@@ -42,6 +43,7 @@ public class SelectableInstance extends ModelInstance {
         this.name = name;
 
         materials.add(new Material()); // Add a default empty material that we can clear and set.
+        this.defaultMaterial = defaultMaterial;
         setMaterial(defaultMaterial);
 
         // bounding box
@@ -104,6 +106,10 @@ public class SelectableInstance extends ModelInstance {
     public void setMaterial(Material material) {
         materials.get(0).clear();
         materials.get(0).set(material);
+    }
+
+    public void resetMaterial(){
+        setMaterial(defaultMaterial);
     }
 
     /**

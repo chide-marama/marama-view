@@ -342,5 +342,17 @@ public class World extends Environment implements Renderable {
         position.add(originFace).sub(targetFace);
         targetInstance.setPosition(position);
         modelInstances.add(targetInstance);
+
     }
+
+    public void moveFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
+        Vector3 position = originInstance.transform.getTranslation(new Vector3());
+        position.add(originFace).sub(targetFace);
+        targetInstance.transform.setToTranslation(position);
+    }
+
+    public void deleteObject(SelectableInstance selectableInstance) {
+        modelInstances.removeValue(selectableInstance, true);
+    }
+
 }

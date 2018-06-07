@@ -7,11 +7,12 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.marama.view.controllers.addBlockInputController;
-import com.marama.view.renderables.World;
-import com.marama.view.renderables.stages.WorldUserInterface;
+import com.marama.view.controllers.AddBlockInputController;
+import com.marama.view.controllers.DeleteObjectInputController;
 import com.marama.view.controllers.DragObjectInputController;
 import com.marama.view.controllers.SelectObjectInputController;
+import com.marama.view.renderables.World;
+import com.marama.view.renderables.stages.WorldUserInterface;
 
 /**
  * The {@link GameScreen} extends a {@link ScreenAdapter} that contains a 3D {@link World} and a {@link WorldUserInterface}.
@@ -23,7 +24,8 @@ public class GameScreen extends ScreenAdapter {
 
     private SelectObjectInputController selectObjectInputController;
     private DragObjectInputController dragObjectInputController;
-    private addBlockInputController addBlockInputController;
+    private AddBlockInputController addBlockInputController;
+    private DeleteObjectInputController deleteObjectInputController;
 
     private String activeMarama = "block";
     private int activeTool = 0;
@@ -40,7 +42,8 @@ public class GameScreen extends ScreenAdapter {
 
         selectObjectInputController = new SelectObjectInputController(this);
         dragObjectInputController = new DragObjectInputController(this);
-        addBlockInputController = new addBlockInputController(this);
+        addBlockInputController = new AddBlockInputController(this);
+        deleteObjectInputController = new DeleteObjectInputController(this);
     }
 
     public String getActiveMarama() {
@@ -96,9 +99,13 @@ public class GameScreen extends ScreenAdapter {
             case 2:
                 inputMultiplexer.addProcessor(addBlockInputController);
                 break;
+            case 3:
+                inputMultiplexer.addProcessor(deleteObjectInputController);
+                break;
         }
 
-        // Always add the camera controller but make it a last priority.
+        // Always add the camera controller but make it a last priority, except with the add tool.
+        if (activeTool != 2)
         inputMultiplexer.addProcessor(world.getCameraInputController());
 
         // Apply the input multiplexer.
