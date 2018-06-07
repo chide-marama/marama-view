@@ -84,7 +84,7 @@ public class Axes {
         shapeRenderer.translate(target.x, target.y, target.z);
         shapeRenderer.cone(0, 0, 0, coneHeight, coneLength, coneSegments);
 
-        this.drawBoundingBoxes(shapeRenderer);
+//        this.drawBoundingBoxes(shapeRenderer);
     }
 
     /**
