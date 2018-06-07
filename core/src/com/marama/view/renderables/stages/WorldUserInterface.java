@@ -95,11 +95,13 @@ public class WorldUserInterface extends Stage implements Renderable {
             button.setWidth(blockSize);
             button.setHeight(blockSize);
 
-            Cell cell = table.add(button).padLeft(padding).padTop(padding).width(blockSize).height(blockSize);
-
-            if (maramafication.getName() == gameScreen.getActiveMarama()) {
-                cell.padLeft(40);
+            // Make the selected maramafication larger.
+            button.pad(10);
+            if (maramafication.getName().equals(gameScreen.getActiveMarama())) {
+                button.pad(0);
             }
+
+            table.add(button).padLeft(padding).padTop(padding).width(blockSize).height(blockSize);
 
             // Add a simple button click event. This only prints the name of the image. Not connected to a user story yet.
             button.addListener(new ClickListener() {

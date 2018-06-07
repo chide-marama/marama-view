@@ -25,8 +25,8 @@ public class GameScreen extends ScreenAdapter {
     private DragObjectInputController dragObjectInputController;
     private addBlockInputController addBlockInputController;
 
-    private String activeMarama;
-    private int activeTool;
+    private String activeMarama = "block";
+    private int activeTool = 0;
 
     /**
      * Instancing the GameScreen that contains a 3D {@link World} and a {@link WorldUserInterface}.
@@ -41,6 +41,8 @@ public class GameScreen extends ScreenAdapter {
         selectObjectInputController = new SelectObjectInputController(this);
         dragObjectInputController = new DragObjectInputController(this);
         addBlockInputController = new addBlockInputController(this);
+
+
     }
 
     public String getActiveMarama() {
@@ -63,9 +65,7 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        this.activeMarama = "block";
         this.setActiveMarama(this.activeMarama);
-        this.activeTool = 0;
         this.setTool(activeTool);
     }
 
