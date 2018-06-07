@@ -264,7 +264,7 @@ public class World extends Environment implements Renderable {
 
         // Add the three maramafications via the json file to the EntityManager.
         entityManager.loadMaramafication("marams/sphere.json");
-        entityManager.loadMaramafication("marams/donut.json");
+        entityManager.loadMaramafication("marams/cilinder.json");
         entityManager.loadMaramafication("marams/block.json");
 
     }

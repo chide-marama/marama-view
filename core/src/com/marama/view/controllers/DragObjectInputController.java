@@ -54,7 +54,6 @@ public class DragObjectInputController extends InputAdapter {
         if (instance != null && instance.isSelected()) {
             selectableInstance = instance; // Keep track of the found instance.
             distanceClickedFromInstance = intersection.sub(selectableInstance.getPosition());
-
         }
 
         return false; // Continue to the next 'touchDown' listener.
