@@ -4,12 +4,13 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
+import com.marama.view.screens.GameScreen;
 
 /**
  * A {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
  */
 public class SelectObjectInputController extends InputAdapter {
-    private World world;
+    private GameScreen gameScreen;
     private SelectableInstance newSelectableInstance = null;
     private SelectableInstance currentSelectableInstance = null;
 
@@ -19,15 +20,15 @@ public class SelectObjectInputController extends InputAdapter {
     /**
      * Instantiates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
      *
-     * @param world The ({@link World}) instance that renders 3D models.
+     * @param gameScreen The ({@link GameScreen}) instance that renders 3D models.
      */
-    public SelectObjectInputController(World world) {
-        this.world = world;
+    public SelectObjectInputController(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        newSelectableInstance = (SelectableInstance) world.getModelInstance(screenX, screenY);
+        newSelectableInstance = (SelectableInstance) gameScreen.world.getModelInstance(screenX, screenY);
         touchDownMousePosition = new Vector2(screenX, screenY);
         return false; // Continue to the next 'touchDown' listener.
     }
@@ -46,7 +47,7 @@ public class SelectObjectInputController extends InputAdapter {
 
         // Continue with selection
         if (newSelectableInstance != null) {
-            SelectableInstance selectableInstance = (SelectableInstance) world.getModelInstance(screenX, screenY);
+            SelectableInstance selectableInstance = (SelectableInstance) gameScreen.world.getModelInstance(screenX, screenY);
 
             if (newSelectableInstance == selectableInstance) {
                 newSelectableInstance.toggleSelected();

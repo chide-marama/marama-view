@@ -6,27 +6,28 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
+import com.marama.view.screens.GameScreen;
 
 
 public class DragObjectInputController extends InputAdapter {
-    private World world;
+    private GameScreen gameScreen;
     private SelectableInstance selectableInstance = null;
     private ActiveAxis activeAxis = null;
     private Vector3 translation = null;
     private Vector3 intersection = new Vector3();
     private Vector3 distanceClickedFromInstance = new Vector3();
 
-    public DragObjectInputController(World world) {
-        this.world = world;
+    public DragObjectInputController(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Ray ray = world.getPerspectiveCamera().getPickRay(screenX, screenY);
+        Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
         SelectableInstance instance = null;
 
-        for (int i = 0; i < world.getModelInstances().size; ++i) {
-            ModelInstance modelInstance = world.getModelInstances().get(i);
+        for (int i = 0; i < gameScreen.world.getModelInstances().size; ++i) {
+            ModelInstance modelInstance = gameScreen.world.getModelInstances().get(i);
             if (modelInstance instanceof SelectableInstance) {
                 instance = (SelectableInstance) modelInstance;
 
@@ -62,7 +63,7 @@ public class DragObjectInputController extends InputAdapter {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (selectableInstance != null && activeAxis != null) {
-            Ray ray = world.getPerspectiveCamera().getPickRay(screenX, screenY);
+            Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
             float distance = -ray.origin.y / ray.direction.y; // TODO: This is not right
             Vector3 moved = new Vector3(ray.direction.scl(distance).add(ray.origin)).sub(distanceClickedFromInstance);
             translation = selectableInstance.getPosition();

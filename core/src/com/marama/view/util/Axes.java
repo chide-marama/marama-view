@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+
 import java.util.ArrayList;
 
 public class Axes {
@@ -37,7 +38,7 @@ public class Axes {
      * Draw the axes including its tips/cones.
      *
      * @param shapeRenderer The {@link ShapeRenderer}'s drawing context.
-     * @param origin The location where drawing starts.
+     * @param origin        The location where drawing starts.
      */
     public void draw(ShapeRenderer shapeRenderer, Vector3 origin) {
         Vector3 target;
@@ -82,6 +83,8 @@ public class Axes {
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.translate(target.x, target.y, target.z);
         shapeRenderer.cone(0, 0, 0, coneHeight, coneLength, coneSegments);
+
+        this.drawBoundingBoxes(shapeRenderer);
     }
 
     /**
@@ -106,7 +109,7 @@ public class Axes {
 
 
         for (int i = 0; i < bounds.size(); i++) {
-            bounds.get(i).add(new Vector3(0, -(bbHeight/2), -(bbHeight/2))).add(origin); // Center around axis and origin.
+            bounds.get(i).add(new Vector3(0, -(bbHeight / 2), -(bbHeight / 2))).add(origin); // Center around axis and origin.
         }
 
         BoundingBox boundingBox = new BoundingBox();
@@ -136,7 +139,7 @@ public class Axes {
         bounds.add(new Vector3(0, bbWidth, bbHeight));
 
         for (int i = 0; i < bounds.size(); i++) {
-            bounds.get(i).add(new Vector3(-(bbHeight/2), 0, -(bbHeight/2))).add(origin); // Center around axis and origin.
+            bounds.get(i).add(new Vector3(-(bbHeight / 2), 0, -(bbHeight / 2))).add(origin); // Center around axis and origin.
         }
 
         BoundingBox boundingBox = new BoundingBox();
@@ -166,7 +169,7 @@ public class Axes {
         bounds.add(new Vector3(0, bbHeight, bbWidth));
 
         for (int i = 0; i < bounds.size(); i++) {
-            bounds.get(i).add(new Vector3(-(bbHeight/2), -(bbHeight/2), 0)).add(origin); // Center around axis and origin.
+            bounds.get(i).add(new Vector3(-(bbHeight / 2), -(bbHeight / 2), 0)).add(origin); // Center around axis and origin.
         }
 
         BoundingBox boundingBox = new BoundingBox();

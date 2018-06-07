@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -23,12 +24,12 @@ public class SelectableInstance extends ModelInstance {
     public final float radius;
     public Axes axes;
 
+    private boolean selected = false;
     private Material defaultMaterial;
-    private boolean selected;
     private Vector3 oldPosition = new Vector3();
 
     public String name;
-    public Array<Vector3> faces = new Array<Vector3>();
+    public Array<Vector3> faces;
 
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
@@ -40,7 +41,7 @@ public class SelectableInstance extends ModelInstance {
         super(model);
 
         this.name = name;
-        selected = false;
+
         materials.add(new Material()); // Add a default empty material that we can clear and set.
         this.defaultMaterial = defaultMaterial;
         setMaterial(defaultMaterial);
@@ -52,7 +53,6 @@ public class SelectableInstance extends ModelInstance {
         radius = dimensions.len() / 2f;
 
         faces = calculateFacesfromBounding();
-
         axes = new Axes(getPosition());
     }
 
@@ -69,30 +69,31 @@ public class SelectableInstance extends ModelInstance {
     }
 
     /**
-     * @return The current position if the {@link SelectableInstance}.
+     * @return The current position of the {@link SelectableInstance}.
      */
     public Vector3 getPosition() {
         return transform.getTranslation(new Vector3());
     }
 
-    /***
-     * Should only be used on cubes or objects with similar faces.
+    /**
+     * Apply a new position to this instance.
+     * Will also update the bounding boxes, so don't call this when animating.
+     *
+     * @param position The new position to apply.
      */
-    private Array<Vector3> calculateFacesfromBounding(){
-        Array<Vector3> faces = new Array<Vector3>();
-        Vector3 bounds=new Vector3();
-        boundingBox.getDimensions(bounds);
-        faces.add(new Vector3(0, bounds.y/2, 0), new Vector3(bounds.x/2, 0, 0), new Vector3(0, 0, bounds.z/2));
-        faces.add(new Vector3(0, -bounds.y/2, 0), new Vector3(-bounds.x/2, 0, 0), new Vector3(0, 0, -bounds.z/2));
-        return faces;
+    public void setPosition(Vector3 position) {
+        transform.setTranslation(position);
+        this.updatePosition();
     }
 
+    /**
+     * Updates the positions of the bounding boxes.
+     */
     public void updatePosition() {
         // Update the bounding box
         boundingBox.mul(new Matrix4().setTranslation(getPosition().sub(oldPosition)));
         // Update the axes bounding boxes
         axes.calculateBoundingBoxes(getPosition());
-
         // update the oldPosition
         oldPosition = getPosition();
     }
@@ -151,5 +152,17 @@ public class SelectableInstance extends ModelInstance {
         shapeRenderer.circle(0, 0, radius, 16);
         shapeRenderer.rotate(0, 1, 0, 90);
         shapeRenderer.circle(0, 0, radius, 16);
+    }
+
+    /**
+     * Should only be used on cubes or objects with similar faces.
+     */
+    private Array<Vector3> calculateFacesfromBounding() {
+        Array<Vector3> faces = new Array<Vector3>();
+        Vector3 bounds = new Vector3();
+        boundingBox.getDimensions(bounds);
+        faces.add(new Vector3(0, bounds.y / 2, 0), new Vector3(bounds.x / 2, 0, 0), new Vector3(0, 0, bounds.z / 2));
+        faces.add(new Vector3(0, -bounds.y / 2, 0), new Vector3(-bounds.x / 2, 0, 0), new Vector3(0, 0, -bounds.z / 2));
+        return faces;
     }
 }

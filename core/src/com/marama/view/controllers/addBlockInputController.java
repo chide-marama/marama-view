@@ -1,14 +1,16 @@
 package com.marama.view.controllers;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
+import com.marama.view.screens.GameScreen;
 
 public class addBlockInputController extends InputAdapter {
-    private World world;
+    private GameScreen gameScreen;
     private EntityManager entityManager = EntityManager.getInstance();
     private SelectableInstance targetInstance;
     private int currentFaceIndex;
@@ -17,16 +19,14 @@ public class addBlockInputController extends InputAdapter {
     /**
      * Instantiates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
      *
-     * @param world The ({@link World}) instance that renders 3D models.
+     * @param gameScreen The ({@link GameScreen}) instance that renders 3D models.
      */
-    public addBlockInputController(World world) {
-        this.world = world;
+    public addBlockInputController(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-         // Get from add object to world.
-
         return false; // Continue to the next 'touchDown' listener.
     }
 

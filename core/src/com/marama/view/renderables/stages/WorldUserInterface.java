@@ -1,11 +1,9 @@
 package com.marama.view.renderables.stages;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -28,8 +26,6 @@ public class WorldUserInterface extends Stage implements Renderable {
     private final World world;
     private final Skin skin;
 
-    private int activeTool = 0;
-
     /* Set a block size including and a padding so we
      * can work with these throughout the rest of the class. */
     private final float blockSize = 100f;
@@ -42,12 +38,14 @@ public class WorldUserInterface extends Stage implements Renderable {
 
         addActor(this.maramaList());
         addActor(this.tools());
+        this.update();
     }
 
-    public void setActiveTool(int activeTool) {
-        this.activeTool = activeTool;
-
+    public void update() {
         this.getActors().get(1).remove();
+        this.getActors().get(0).remove();
+
+        addActor(this.maramaList());
         addActor(this.tools());
     }
 
@@ -96,13 +94,20 @@ public class WorldUserInterface extends Stage implements Renderable {
             // This adds the button to the current row.
             button.setWidth(blockSize);
             button.setHeight(blockSize);
+
+            // Make the selected maramafication larger.
+            button.pad(10);
+            if (maramafication.getName().equals(gameScreen.getActiveMarama())) {
+                button.pad(0);
+            }
+
             table.add(button).padLeft(padding).padTop(padding).width(blockSize).height(blockSize);
 
             // Add a simple button click event. This only prints the name of the image. Not connected to a user story yet.
             button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    world.setMarama(maramafication.getName());
+                    gameScreen.setActiveMarama(maramafication.getName());
                 }
             });
 
@@ -145,7 +150,7 @@ public class WorldUserInterface extends Stage implements Renderable {
         for (int i = 0; i < tools.size; i++) {
             TextButton tool = tools.get(i);
 
-            if (activeTool == i) {
+            if (gameScreen.getActiveTool() == i) {
                 TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(tool.getStyle());
                 style.fontColor = Color.LIGHT_GRAY;
                 tool.setStyle(style);
@@ -155,7 +160,7 @@ public class WorldUserInterface extends Stage implements Renderable {
             tool.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    gameScreen.updateTool(index);
+                    gameScreen.setTool(index);
                 }
             });
 
