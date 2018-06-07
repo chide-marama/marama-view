@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -372,8 +373,14 @@ public class World extends Environment implements Renderable {
         Vector3 position = originInstance.transform.getTranslation(new Vector3());
         position.add(originFace).sub(targetFace);
         targetInstance.transform.setToTranslation(position);
-
+        targetInstance.setMaterial(new Material(ColorAttribute.createDiffuse(Color.GREEN)));
         modelInstances.add(targetInstance);
 
+    }
+
+    public void moveFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
+        Vector3 position = originInstance.transform.getTranslation(new Vector3());
+        position.add(originFace).sub(targetFace);
+        targetInstance.transform.setToTranslation(position);
     }
 }
