@@ -2,7 +2,10 @@ package com.marama.view.controllers;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.instances.SelectableInstance;
@@ -33,21 +36,22 @@ public class addBlockInputController extends InputAdapter {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
 
-        Ray ray = world.getPerspectiveCamera().getPickRay(screenX, screenY);
-        SelectableInstance instance = (SelectableInstance) world.getModelInstance(ray);
+        Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
+        SelectableInstance instance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
         if(instance==null)
             return false;
 
         if(targetInstance==null){
-            targetInstance = entityManager.createSelectableInstance(world.getNextMarama());
+            targetInstance = entityManager.createSelectableInstance(gameScreen.getActiveMarama());
             targetInstance.toggleSelected();
-            world.addFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
+            gameScreen.world.addFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
+            targetInstance.setMaterial(new Material(ColorAttribute.createDiffuse(Color.GREEN)));
         }
         if (targetInstance!=instance) {
-            currentFaceIndex = world.getClosestFaceIndex(ray, instance);
+            currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, instance);
             targetFaceIndex = getFaceIndex(currentFaceIndex, targetInstance);
             //world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex, "donut");
-            world.moveFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
+            gameScreen.world.moveFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
         }
 
         return false; // Continue to the next 'touchDragged' listener.
