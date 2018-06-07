@@ -41,8 +41,6 @@ public class GameScreen extends ScreenAdapter {
         selectObjectInputController = new SelectObjectInputController(this);
         dragObjectInputController = new DragObjectInputController(this);
         addBlockInputController = new addBlockInputController(this);
-
-
     }
 
     public String getActiveMarama() {
