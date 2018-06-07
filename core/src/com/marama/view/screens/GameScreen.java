@@ -104,8 +104,7 @@ public class GameScreen extends ScreenAdapter {
                 break;
         }
 
-        // Always add the camera controller but make it a last priority, except with the add tool.
-        if (activeTool != 2)
+        // Always add the camera controller but make it a last priority
         inputMultiplexer.addProcessor(world.getCameraInputController());
 
         // Apply the input multiplexer.
