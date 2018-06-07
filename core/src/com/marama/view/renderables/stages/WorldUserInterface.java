@@ -2,7 +2,10 @@ package com.marama.view.renderables.stages;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -88,18 +91,18 @@ public class WorldUserInterface extends Stage implements Renderable {
             // Get the texture from image and create a button out of it
             Texture texture = new Texture(maramafication.getImageLocation());
             Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
+
+            // Give the non selected maramas in the list a tint
+            if (!maramafication.getName().equals(gameScreen.getActiveMarama())) {
+                drawable = new TextureRegionDrawable(new TextureRegion(texture)).tint(new Color(0, 0, 0, 0.2f));
+            }
+
             ImageButton button = new ImageButton(drawable);
 
             // Set the size of the button and add it to the table.
             // This adds the button to the current row.
             button.setWidth(blockSize);
             button.setHeight(blockSize);
-
-            // Make the selected maramafication larger.
-            button.pad(10);
-            if (maramafication.getName().equals(gameScreen.getActiveMarama())) {
-                button.pad(0);
-            }
 
             table.add(button).padLeft(padding).padTop(padding).width(blockSize).height(blockSize);
 
