@@ -43,7 +43,7 @@ public class AddBlockInputController extends InputAdapter {
         if(targetInstance==null){
             targetInstance = entityManager.createSelectableInstance(gameScreen.getActiveMarama());
             targetInstance.toggleSelected();
-            gameScreen.world.addFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
+            gameScreen.world.addFaceToFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
             targetInstance.setMaterial(new Material(ColorAttribute.createDiffuse(Color.GREEN)));
         }
         if (targetInstance!=instance) {

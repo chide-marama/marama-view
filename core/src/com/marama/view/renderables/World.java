@@ -274,7 +274,7 @@ public class World extends Environment implements Renderable {
      */
     private void doneLoading() {
         ObjectMap<String, Maramafication> maramaficationsObjectMap = entityManager.getMaramafications();
-        float pos = 0f;
+        float pos = -2f;
         for (ObjectMap.Entries<String, Maramafication> maramaficationsIterator =
              maramaficationsObjectMap.entries(); maramaficationsIterator.hasNext(); ) {
 
@@ -286,7 +286,7 @@ public class World extends Environment implements Renderable {
                 currentSelectableInstance.transform.translate(pos, 0f, 0f);
                 currentSelectableInstance.updatePosition();
                 modelInstances.add(currentSelectableInstance);
-                pos += 3f;
+                pos += 2f;
             } catch (ModelNotFoundException e) {
                 e.printStackTrace();
             }
@@ -297,47 +297,14 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Adds a new model to one of the faces of your current instance.
-     *
-     * @param instance     The model you want to add another block to.
-     * @param instanceFace The face of the object you want to add a block to.
-     */
-    public void addBlocktoFace(SelectableInstance instance, int instanceFace, String name) {
-        SelectableInstance newblock = entityManager.createSelectableInstance(name);
-        Vector3 position = instance.transform.getTranslation(new Vector3());
-
-        switch (instanceFace) {
-            case 0:
-                newblock.transform.setToTranslation(new Vector3(0, (newblock.radius + instance.radius) / 2, 0).add(position));
-                break;
-            case 1:
-                newblock.transform.setToTranslation(new Vector3((newblock.radius + instance.radius) / 2, 0, 0).add(position));
-                break;
-            case 2:
-                newblock.transform.setToTranslation(new Vector3(0, 0, (newblock.radius + instance.radius) / 2).add(position));
-                break;
-            case 3:
-                newblock.transform.setToTranslation(new Vector3(0, -(newblock.radius + instance.radius) / 2, 0).add(position));
-                break;
-            case 4:
-                newblock.transform.setToTranslation(new Vector3(-(newblock.radius + instance.radius) / 2, 0, 0).add(position));
-                break;
-            case 5:
-                newblock.transform.setToTranslation(new Vector3(0, 0, -(newblock.radius + instance.radius) / 2).add(position));
-                break;
-        }
-        modelInstances.add(newblock);
-    }
-
-    /**
-     * Only works for
+     * Only works for ... ???
      *
      * @param originInstance
      * @param targetInstance
      * @param originFace
      * @param targetFace
      */
-    public void addFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
+    public void addFaceToFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
         Vector3 position = originInstance.getPosition();
         position.add(originFace).sub(targetFace);
         targetInstance.setPosition(position);
@@ -345,14 +312,24 @@ public class World extends Environment implements Renderable {
 
     }
 
+    /**
+     * ???
+     * @param originInstance
+     * @param targetInstance
+     * @param originFace
+     * @param targetFace
+     */
     public void moveFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
         Vector3 position = originInstance.transform.getTranslation(new Vector3());
         position.add(originFace).sub(targetFace);
         targetInstance.transform.setToTranslation(position);
     }
 
+    /**
+     * ???
+     * @param selectableInstance
+     */
     public void deleteObject(SelectableInstance selectableInstance) {
         modelInstances.removeValue(selectableInstance, true);
     }
-
 }
