@@ -3,7 +3,6 @@ package com.marama.view.renderables.stages;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -136,6 +135,7 @@ public class WorldUserInterface extends Stage implements Renderable {
         tools.add(new TextButton("Select tool", skin, "default"));
         tools.add(new TextButton("Move tool", skin, "default"));
         tools.add(new TextButton("Add tool", skin, "default"));
+        tools.add(new TextButton("Remove tool", skin, "default"));
 
         int padding = 20;
         int toolheight = (int) tools.get(0).getHeight() + padding;

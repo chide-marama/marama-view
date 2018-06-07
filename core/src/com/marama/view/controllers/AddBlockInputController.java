@@ -1,6 +1,5 @@
 package com.marama.view.controllers;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -12,7 +11,7 @@ import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.renderables.World;
 import com.marama.view.screens.GameScreen;
 
-public class addBlockInputController extends InputAdapter {
+public class AddBlockInputController extends InputAdapter {
     private GameScreen gameScreen;
     private EntityManager entityManager = EntityManager.getInstance();
     private SelectableInstance targetInstance;
@@ -24,7 +23,7 @@ public class addBlockInputController extends InputAdapter {
      *
      * @param gameScreen The ({@link GameScreen}) instance that renders 3D models.
      */
-    public addBlockInputController(GameScreen gameScreen) {
+    public AddBlockInputController(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
     }
 
