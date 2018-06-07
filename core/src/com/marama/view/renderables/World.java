@@ -22,8 +22,6 @@ import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.screens.GameScreen;
 
-import java.util.Random;
-
 /**
  * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
  */
@@ -39,8 +37,6 @@ public class World extends Environment implements Renderable {
     private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
     private Array<ModelInstance> modelInstances;
     private ShapeRenderer shapeRenderer;
-
-    private Random random = new Random();
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
@@ -273,23 +269,6 @@ public class World extends Environment implements Renderable {
 
     }
 
-    private int randInt(Random random, int min, int max) {
-        return random.nextInt((max - min) + 1) + min;
-    }
-
-
-    public void addObject(String name) {
-        try {
-            SelectableInstance instance = entityManager.getMaramaficationByName(name).createInstance();
-            // TODO: Don't make this position random.
-            Vector3 instancePosition = new Vector3(randInt(random, -5, 5), randInt(random, -5, 5), randInt(random, -5, 5));
-            instance.transform.translate(instancePosition);
-            modelInstances.add(instance);
-        } catch(ModelNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Will be called when the {@link EntityManager} is done loading.
      */
@@ -359,11 +338,9 @@ public class World extends Environment implements Renderable {
      * @param targetFace
      */
     public void addFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
-        Vector3 position = originInstance.transform.getTranslation(new Vector3());
+        Vector3 position = originInstance.getPosition();
         position.add(originFace).sub(targetFace);
-        targetInstance.transform.setToTranslation(position);
-
+        targetInstance.setPosition(position);
         modelInstances.add(targetInstance);
-
     }
 }

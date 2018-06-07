@@ -50,7 +50,6 @@ public class SelectableInstance extends ModelInstance {
         radius = dimensions.len() / 2f;
 
         faces = calculateFacesfromBounding();
-
         axes = new Axes(getPosition());
     }
 
@@ -73,15 +72,20 @@ public class SelectableInstance extends ModelInstance {
         return transform.getTranslation(new Vector3());
     }
 
+    public void setPosition(Vector3 position) {
+        transform.setTranslation(position);
+        this.updatePosition();
+    }
+
     /***
      * Should only be used on cubes or objects with similar faces.
      */
-    private Array<Vector3> calculateFacesfromBounding(){
+    private Array<Vector3> calculateFacesfromBounding() {
         Array<Vector3> faces = new Array<Vector3>();
-        Vector3 bounds=new Vector3();
+        Vector3 bounds = new Vector3();
         boundingBox.getDimensions(bounds);
-        faces.add(new Vector3(0, bounds.y/2, 0), new Vector3(bounds.x/2, 0, 0), new Vector3(0, 0, bounds.z/2));
-        faces.add(new Vector3(0, -bounds.y/2, 0), new Vector3(-bounds.x/2, 0, 0), new Vector3(0, 0, -bounds.z/2));
+        faces.add(new Vector3(0, bounds.y / 2, 0), new Vector3(bounds.x / 2, 0, 0), new Vector3(0, 0, bounds.z / 2));
+        faces.add(new Vector3(0, -bounds.y / 2, 0), new Vector3(-bounds.x / 2, 0, 0), new Vector3(0, 0, -bounds.z / 2));
         return faces;
     }
 
