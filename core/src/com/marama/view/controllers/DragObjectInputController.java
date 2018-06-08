@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.instances.SelectableInstance;
-import com.marama.view.renderables.World;
 import com.marama.view.screens.GameScreen;
+
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 
 public class DragObjectInputController extends InputAdapter {
@@ -24,6 +26,7 @@ public class DragObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        lastTouch = new Vector2(screenX, screenY); // Used in touchDragged.
         Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
         SelectableInstance instance = null;
 
@@ -65,33 +68,25 @@ public class DragObjectInputController extends InputAdapter {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (selectableInstance != null && activeAxis != null) {
             // Calculate the difference between this touchDragged call and the previous.
-            System.out.print("");
-            if (lastTouch == null) {
-                lastTouch = new Vector2(screenX, screenY);
-            }
             Vector2 newTouch = new Vector2(screenX, screenY);
-            Vector2 delta = newTouch.cpy().sub(lastTouch);
 
-            //Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
-            //Vector3 inter = new Vector3(intersection); // Temp vector since substraction updates the vector object and there is no static method.
-            //Vector3 rayDir = new Vector3(ray.direction); // See above comment, but now regarding cross product.
-            //Vector3 rayOri = new Vector3(ray.origin);
-            //float dist2 = rayDir.crs(inter.sub(ray.origin)).len();
-            //float dist2 = Vector3.dst(rayOri.x, rayOri.y, rayOri.z, selectableInstance.getPosition().x, selectableInstance.getPosition().y, selectableInstance.getPosition().z);
-
-            Vector3 mouseMovementInWorld = projectScreenToWorldSpace(delta);
+            // Calculate
+            Vector3 newTouchInWorld = projectScreenToWorldSpace(newTouch);
+            Vector3 lastTouchInWorld = projectScreenToWorldSpace(lastTouch);
+            Vector3 deltaInWorld = (newTouchInWorld.cpy().sub(lastTouchInWorld)).scl(10); // 10 speed modifier
 
             // Calculate the new position of the object.
             translation = selectableInstance.getPosition();
+
             switch (activeAxis) {
                 case X:
-                    translation.x =+ Vector3.dot(mouseMovementInWorld.x, mouseMovementInWorld.y, mouseMovementInWorld.z, 1, 0, 0);
+                    translation.x += deltaInWorld.x;
                     break;
                 case Y:
-                    translation.y =+ Vector3.dot(mouseMovementInWorld.x, mouseMovementInWorld.y, mouseMovementInWorld.z, 0, 1, 0);
+                    translation.y += deltaInWorld.y;
                     break;
                 case Z:
-                    translation.z =+ Vector3.dot(mouseMovementInWorld.x, mouseMovementInWorld.y, mouseMovementInWorld.z, 0, 0, 1);
+                    translation.z += deltaInWorld.z;
                     break;
             }
             // Animate the selectable instance.
