@@ -15,7 +15,7 @@ public class EntityManager extends AssetManager {
     private static EntityManager instance = new EntityManager();
 
     // Since in AssetManager there is no good way to get all assets of a certain type, we have to remember our maramafications here.
-    final ObjectMap<String, Maramafication> maramafications = new ObjectMap();
+    final ObjectMap<String, Maramafication> maramafications = new ObjectMap<String, Maramafication>();
     public ObjLoader objLoader = new ObjLoader();
 
     /**
