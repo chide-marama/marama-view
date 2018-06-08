@@ -13,14 +13,16 @@ import com.marama.view.renderables.World;
 import com.marama.view.screens.GameScreen;
 
 public class AddBlockInputController extends InputAdapter {
-    private GameScreen gameScreen;
-    private EntityManager entityManager = EntityManager.getInstance();
+    private final GameScreen gameScreen;
+    private final EntityManager entityManager = EntityManager.getInstance();
+    private final BlendingAttribute blendingAttribute = new BlendingAttribute();
+    private final ColorAttribute colorAttribute = ColorAttribute.createDiffuse(new Color(0x00ff00aa));
+    private final Material moveMaterial = new Material(blendingAttribute, colorAttribute);
+
     private SelectableInstance targetInstance;
-    private int currentFaceIndex;
+    private SelectableInstance worldInstance;
     private Vector3 targetFace;
-    private BlendingAttribute blendingAttribute = new BlendingAttribute();
-    private ColorAttribute colorAttribute = ColorAttribute.createDiffuse(new Color(0x00ff00aa));
-    private Material moveMaterial = new Material(blendingAttribute, colorAttribute);
+    private int currentFaceIndex;
 
     /**
      * Instantiates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
@@ -34,31 +36,36 @@ public class AddBlockInputController extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if(targetInstance!=null){
+            gameScreen.world.deleteObject(targetInstance);
+            targetInstance=null;
+        }
         targetInstance = createPreview();
         Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
-        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
-
-
-        if (worldInstance != null) {
-            addTargetInstance(ray);
-        }
+        addTargetInstance(ray);
         return false; // Continue to the next 'touchDown' listener.
     }
 
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if(targetInstance==null){
+            return false;
+        }
         Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
             if (!targetInstance.isSelected()) {
                 addTargetInstance(ray);
             }
             if (targetInstance.isSelected()) {
                 moveTargetInstance(ray);
-
             }
         return targetInstance.isSelected(); // Continue to the next 'touchDragged' listener.
     }
 
+    /**
+     * Uses a pickray
+     * @param ray
+     */
     private void moveTargetInstance(Ray ray) {
         SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
         if(worldInstance!=null && worldInstance!=targetInstance) {
@@ -70,11 +77,6 @@ public class AddBlockInputController extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (!targetInstance.isSelected()) {
-            Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
-            addTargetInstance(ray);
-        }
-
         if (targetInstance!=null) {
             targetInstance.resetMaterial();
             targetInstance.setSelected(false);
