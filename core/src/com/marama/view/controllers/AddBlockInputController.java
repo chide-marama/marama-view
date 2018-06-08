@@ -62,18 +62,7 @@ public class AddBlockInputController extends InputAdapter {
         return targetInstance.isSelected(); // Continue to the next 'touchDragged' listener.
     }
 
-    /**
-     * Uses a pickray
-     * @param ray
-     */
-    private void moveTargetInstance(Ray ray) {
-        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
-        if(worldInstance!=null && worldInstance!=targetInstance) {
-            currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
-            targetFace = getFace(currentFaceIndex, targetInstance);
-            gameScreen.world.moveFaceToFaceBasic(worldInstance, targetInstance, worldInstance.faces.get(currentFaceIndex), targetFace);
-        }
-    }
+
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
@@ -86,7 +75,25 @@ public class AddBlockInputController extends InputAdapter {
         return false; // Continue to the next 'touchUp' listener.
 }
 
+    /**
+     * Moves the targetInstance around the world after calculating the position it ought to go in
+     *
+     * @param ray A ray cast from the position on screen where the user clicked.
+     */
+    private void moveTargetInstance(Ray ray) {
+        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
+        if (worldInstance != null && worldInstance != targetInstance) {
+            currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
+            targetFace = getFace(currentFaceIndex, targetInstance);
+            gameScreen.world.moveFaceToFaceBasic(worldInstance, targetInstance, worldInstance.faces.get(currentFaceIndex), targetFace);
+        }
+    }
 
+    /**
+     * Adds the targetInstance to the world after calculating the position it ought to go in
+     *
+     * @param ray A ray cast from the position on screen where the user clicked.
+     */
     private void addTargetInstance(Ray ray) {
         SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
         if(worldInstance!=null) {
@@ -97,7 +104,14 @@ public class AddBlockInputController extends InputAdapter {
         }
     }
 
-    //TODO:Make this work for things other than cubes
+    /**
+     * Returns the Vector3 position of the face on the targetInstance that you
+     *
+     * @param currentFaceIndex The position in the faces array in the currentInstance
+     * @param targetInstance   The instance of which you want to calculate the most fitting face
+     * @return The face that is the best fit for the currentInstance
+     */
+    //TODO:Make this work for things other than cubes. Communicate with editor.
     private Vector3 getFace(int currentFaceIndex, SelectableInstance targetInstance) {
 
         int targetFaceIndex = (currentFaceIndex+3)%6;
@@ -105,6 +119,11 @@ public class AddBlockInputController extends InputAdapter {
 
     }
 
+    /**
+     * Creates a 'preview' version of a {@link SelectableInstance} to make it stand out from the regular version
+     *
+     * @return The preview object as a {@link SelectableInstance}
+     */
     private SelectableInstance createPreview(){
         SelectableInstance preview = entityManager.createSelectableInstance(gameScreen.getActiveMarama());
         preview.setMaterial(moveMaterial);
