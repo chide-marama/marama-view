@@ -15,8 +15,8 @@ public class EntityManager extends AssetManager {
     private static EntityManager instance = new EntityManager();
 
     // Since in AssetManager there is no good way to get all assets of a certain type, we have to remember our maramafications here.
-    final ObjectMap<String, Maramafication> maramafications = new ObjectMap<String, Maramafication>();
-    public ObjLoader objLoader = new ObjLoader();
+    private final ObjectMap<String, Maramafication> maramafications = new ObjectMap<String, Maramafication>();
+    private ObjLoader objLoader = new ObjLoader();
 
     /**
      * An instance of {@link AssetManager} that is also able to load maramafications.
@@ -74,7 +74,7 @@ public class EntityManager extends AssetManager {
      * @param name: Name of the object inside the asset list
      * @return The maramafication retrieved maramafication
      */
-    public Maramafication getMaramaficationByName(String name) {
+    private Maramafication getMaramaficationByName(String name) {
         return (Maramafication) get("marams/" + name + ".json");
     }
 
