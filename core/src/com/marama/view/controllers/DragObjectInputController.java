@@ -16,6 +16,7 @@ public class DragObjectInputController extends InputAdapter {
     private Vector3 translation = null;
     private Vector3 intersection = new Vector3();
     private Vector3 distanceClickedFromInstance = new Vector3();
+    private Vector2 lastTouch = null;
 
     public DragObjectInputController(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
@@ -63,30 +64,55 @@ public class DragObjectInputController extends InputAdapter {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (selectableInstance != null && activeAxis != null) {
-            Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
-            float distance = -ray.origin.y / ray.direction.y; // TODO: This is not right
-            Vector3 moved = new Vector3(ray.direction.scl(distance).add(ray.origin)).sub(distanceClickedFromInstance);
-            translation = selectableInstance.getPosition();
+            // Calculate the difference between this touchDragged call and the previous.
+            System.out.print("");
+            if (lastTouch == null) {
+                lastTouch = new Vector2(screenX, screenY);
+            }
+            Vector2 newTouch = new Vector2(screenX, screenY);
+            Vector2 delta = newTouch.cpy().sub(lastTouch);
 
+            //Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
+            //Vector3 inter = new Vector3(intersection); // Temp vector since substraction updates the vector object and there is no static method.
+            //Vector3 rayDir = new Vector3(ray.direction); // See above comment, but now regarding cross product.
+            //Vector3 rayOri = new Vector3(ray.origin);
+            //float dist2 = rayDir.crs(inter.sub(ray.origin)).len();
+            //float dist2 = Vector3.dst(rayOri.x, rayOri.y, rayOri.z, selectableInstance.getPosition().x, selectableInstance.getPosition().y, selectableInstance.getPosition().z);
+
+            Vector3 mouseMovementInWorld = projectScreenToWorldSpace(delta);
+
+            // Calculate the new position of the object.
+            translation = selectableInstance.getPosition();
             switch (activeAxis) {
                 case X:
-                    translation.x = moved.x;
+                    translation.x =+ Vector3.dot(mouseMovementInWorld.x, mouseMovementInWorld.y, mouseMovementInWorld.z, 1, 0, 0);
                     break;
                 case Y:
-                    translation.y = (moved.z * -1);
+                    translation.y =+ Vector3.dot(mouseMovementInWorld.x, mouseMovementInWorld.y, mouseMovementInWorld.z, 0, 1, 0);
                     break;
                 case Z:
-                    translation.z = moved.z;
+                    translation.z =+ Vector3.dot(mouseMovementInWorld.x, mouseMovementInWorld.y, mouseMovementInWorld.z, 0, 0, 1);
                     break;
             }
-
-            // Animate the selectable instance
+            // Animate the selectable instance.
             selectableInstance.transform.setTranslation(translation);
 
+            lastTouch = newTouch; // Update the latest touch data.
             return true; // Block the next 'touchDragged' listener.
         }
-
         return false; // Continue to the next 'touchDragged' listener.
+    }
+
+    /**
+     * Converts a Vec2 representing screen space to a Vec3 world space by unprojection.
+     * No side effects, unlike LibGDX its functions.
+     * @param screenSpace Vec2 representing mouse location for example.
+     * @return Vec3 representing screenSpace in world space.
+     */
+    private Vector3 projectScreenToWorldSpace(Vector2 screenSpace) {
+        Vector3 worldSpace = new Vector3();
+        gameScreen.world.getPerspectiveCamera().unproject(worldSpace.set(screenSpace.x, screenSpace.y, 0));
+        return  worldSpace;
     }
 
     @Override
