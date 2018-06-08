@@ -21,8 +21,6 @@ public class AddBlockInputController extends InputAdapter {
 
     private SelectableInstance targetInstance;
     private SelectableInstance worldInstance;
-    private Vector3 targetFace;
-    private int currentFaceIndex;
 
     /**
      * Instantiates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
@@ -46,7 +44,6 @@ public class AddBlockInputController extends InputAdapter {
         return false; // Continue to the next 'touchDown' listener.
     }
 
-
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if(targetInstance==null){
@@ -61,8 +58,6 @@ public class AddBlockInputController extends InputAdapter {
             }
         return targetInstance.isSelected(); // Continue to the next 'touchDragged' listener.
     }
-
-
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
@@ -83,8 +78,8 @@ public class AddBlockInputController extends InputAdapter {
     private void moveTargetInstance(Ray ray) {
         SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
         if (worldInstance != null && worldInstance != targetInstance) {
-            currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
-            targetFace = getFace(currentFaceIndex, targetInstance);
+            int currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
+            Vector3 targetFace = getFace(currentFaceIndex, targetInstance);
             gameScreen.world.moveFaceToFaceBasic(worldInstance, targetInstance, worldInstance.faces.get(currentFaceIndex), targetFace);
         }
     }
@@ -97,8 +92,8 @@ public class AddBlockInputController extends InputAdapter {
     private void addTargetInstance(Ray ray) {
         SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
         if(worldInstance!=null) {
-            currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
-            targetFace = getFace(currentFaceIndex, targetInstance);
+            int currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
+            Vector3 targetFace = getFace(currentFaceIndex, targetInstance);
             gameScreen.world.addFaceToFaceBasic(worldInstance, targetInstance, worldInstance.faces.get(currentFaceIndex), targetFace);
             targetInstance.setSelected(true);
         }
