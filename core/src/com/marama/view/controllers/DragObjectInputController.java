@@ -7,18 +7,13 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.screens.GameScreen;
 
-import java.util.ArrayList;
-import java.util.TreeMap;
-
-
 public class DragObjectInputController extends InputAdapter {
     private GameScreen gameScreen;
     private SelectableInstance selectableInstance = null;
     private ActiveAxis activeAxis = null;
     private Vector3 translation = null;
     private Vector3 intersection = new Vector3();
-    private Vector3 distanceClickedFromInstance = new Vector3();
-    private Vector2 lastTouch = null;
+    private Vector2 lastTouch = null; // Used for keeping track of mouse position on screen between calls of touch handlers.
 
     public DragObjectInputController(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
@@ -57,8 +52,7 @@ public class DragObjectInputController extends InputAdapter {
 
         if (instance != null && instance.isSelected()) {
             selectableInstance = instance; // Keep track of the found instance.
-            distanceClickedFromInstance = intersection.sub(selectableInstance.getPosition());
-
+            intersection.sub(selectableInstance.getPosition());
         }
 
         return false; // Continue to the next 'touchDown' listener.
@@ -70,14 +64,13 @@ public class DragObjectInputController extends InputAdapter {
             // Calculate the difference between this touchDragged call and the previous.
             Vector2 newTouch = new Vector2(screenX, screenY);
 
-            // Calculate
+            // Calculate the difference between the mouse location in world space on this call and the previous call.
             Vector3 newTouchInWorld = projectScreenToWorldSpace(newTouch);
             Vector3 lastTouchInWorld = projectScreenToWorldSpace(lastTouch);
-            Vector3 deltaInWorld = (newTouchInWorld.cpy().sub(lastTouchInWorld)).scl(10); // 10 speed modifier
+            Vector3 deltaInWorld = (newTouchInWorld.cpy().sub(lastTouchInWorld)).scl(10); // 10 speed modifier TODO why is this necessary
 
-            // Calculate the new position of the object.
+            // Assign the new position of the object based on the selected axis.
             translation = selectableInstance.getPosition();
-
             switch (activeAxis) {
                 case X:
                     translation.x += deltaInWorld.x;
