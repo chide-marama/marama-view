@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Select;
 import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
@@ -305,9 +306,7 @@ public class World extends Environment implements Renderable {
      * @param targetFace
      */
     public void addFaceToFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
-        Vector3 position = originInstance.getPosition();
-        position.add(originFace).sub(targetFace);
-        targetInstance.setPosition(position);
+        moveFaceToFaceBasic(originInstance, targetInstance, originFace, targetFace);
         modelInstances.add(targetInstance);
 
     }
@@ -319,11 +318,12 @@ public class World extends Environment implements Renderable {
      * @param originFace
      * @param targetFace
      */
-    public void moveFacetoFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
+    public void moveFaceToFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
         Vector3 position = originInstance.transform.getTranslation(new Vector3());
         position.add(originFace).sub(targetFace);
         targetInstance.transform.setToTranslation(position);
     }
+
 
     /**
      * ???

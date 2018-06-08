@@ -3,9 +3,9 @@ package com.marama.view.controllers;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.instances.SelectableInstance;
@@ -17,7 +17,7 @@ public class AddBlockInputController extends InputAdapter {
     private EntityManager entityManager = EntityManager.getInstance();
     private SelectableInstance targetInstance;
     private int currentFaceIndex;
-    private int targetFaceIndex;
+    private Vector3 targetFace;
     private BlendingAttribute blendingAttribute = new BlendingAttribute();
     private ColorAttribute colorAttribute = ColorAttribute.createDiffuse(new Color(0x00ff00aa));
     private Material moveMaterial = new Material(blendingAttribute, colorAttribute);
@@ -29,81 +29,84 @@ public class AddBlockInputController extends InputAdapter {
      */
     public AddBlockInputController(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
-
         blendingAttribute.opacity = 0.25f;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        targetInstance = createPreview();
         Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
-        SelectableInstance instance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
-        if (instance != null) {
-            targetInstance = entityManager.createSelectableInstance(gameScreen.getActiveMarama());
-            targetInstance.toggleSelected();
-            BlendingAttribute blendingAttribute = new BlendingAttribute();
-            targetInstance.setMaterial(new Material(blendingAttribute, ColorAttribute.createDiffuse(new Color(0x00ff00aa))));
-            currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, instance);
-            targetFaceIndex = getFaceIndex(currentFaceIndex, targetInstance);
-            //world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex, "donut");
-            gameScreen.world.addFaceToFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
+        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
 
+
+        if (worldInstance != null) {
+            addTargetInstance(ray);
         }
         return false; // Continue to the next 'touchDown' listener.
     }
 
+
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
-        SelectableInstance instance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
-        if (instance != null) {
-            if (targetInstance == null) {
-                targetInstance = entityManager.createSelectableInstance(gameScreen.getActiveMarama());
-                targetInstance.toggleSelected();
-                targetInstance.setMaterial(new Material(ColorAttribute.createDiffuse(Color.GREEN)));
-                gameScreen.world.addFaceToFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
+            if (!targetInstance.isSelected()) {
+                addTargetInstance(ray);
             }
-            if (targetInstance != instance) {
-                currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, instance);
-                targetFaceIndex = getFaceIndex(currentFaceIndex, targetInstance);
-                //world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex, "donut");
-                gameScreen.world.moveFacetoFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
+            if (targetInstance.isSelected()) {
+                moveTargetInstance(ray);
 
             }
+        return targetInstance.isSelected(); // Continue to the next 'touchDragged' listener.
+    }
+
+    private void moveTargetInstance(Ray ray) {
+        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
+        if(worldInstance!=null && worldInstance!=targetInstance) {
+            currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
+            targetFace = getFace(currentFaceIndex, targetInstance);
+            gameScreen.world.moveFaceToFaceBasic(worldInstance, targetInstance, worldInstance.faces.get(currentFaceIndex), targetFace);
         }
-        if (targetInstance != null) {
-            return true;
-        }
-        return false; // Continue to the next 'touchDragged' listener.
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (targetInstance == null) {
+        if (!targetInstance.isSelected()) {
             Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
-            SelectableInstance instance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
-            if (instance != null) {
-                currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, instance);
-                targetFaceIndex = getFaceIndex(currentFaceIndex, targetInstance);
-                //world.addBlocktoFace((SelectableInstance)instance, currentFaceIndex, "donut");
-                gameScreen.world.addFaceToFaceBasic(instance, targetInstance, instance.faces.get(currentFaceIndex), targetInstance.faces.get((currentFaceIndex + 3) % 6));
-
-            }
+            addTargetInstance(ray);
         }
 
         if (targetInstance!=null) {
-            targetInstance.toggleSelected();
             targetInstance.resetMaterial();
+            targetInstance.setSelected(false);
             targetInstance=null;
         }
 
         return false; // Continue to the next 'touchUp' listener.
+}
+
+
+    private void addTargetInstance(Ray ray) {
+        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
+        if(worldInstance!=null) {
+            currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
+            targetFace = getFace(currentFaceIndex, targetInstance);
+            gameScreen.world.addFaceToFaceBasic(worldInstance, targetInstance, worldInstance.faces.get(currentFaceIndex), targetFace);
+            targetInstance.setSelected(true);
+        }
     }
 
-    //TODO:
-    private int getFaceIndex(int currentFaceIndex, ModelInstance targetInstance) {
+    //TODO:Make this work for things other than cubes
+    private Vector3 getFace(int currentFaceIndex, SelectableInstance targetInstance) {
 
-        return 1;
+        int targetFaceIndex = (currentFaceIndex+3)%6;
+        return targetInstance.faces.get(targetFaceIndex);
 
+    }
+
+    private SelectableInstance createPreview(){
+        SelectableInstance preview = entityManager.createSelectableInstance(gameScreen.getActiveMarama());
+        preview.setMaterial(moveMaterial);
+        return preview;
     }
 
 }
