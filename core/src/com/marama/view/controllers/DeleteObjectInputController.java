@@ -8,14 +8,16 @@ import com.marama.view.screens.GameScreen;
 public class DeleteObjectInputController extends InputAdapter {
     private GameScreen gameScreen;
 
+    //TODO Possibly: Add preview for deletion.
     public DeleteObjectInputController(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
     }
 
+
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
-        SelectableInstance instance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
+        SelectableInstance instance = (SelectableInstance) gameScreen.world.getClosestModelInstance(ray);
         if (instance != null)
             gameScreen.world.deleteObject(instance);
 

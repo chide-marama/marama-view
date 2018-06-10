@@ -73,10 +73,11 @@ public class AddBlockInputController extends InputAdapter {
     /**
      * Moves the targetInstance around the world after calculating the position it ought to go in
      *
+     * Question for the boys: Controller or World?
      * @param ray A ray cast from the position on screen where the user clicked.
      */
     private void moveTargetInstance(Ray ray) {
-        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
+        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getClosestModelInstance(ray);
         if (worldInstance != null && worldInstance != targetInstance) {
             int currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
             Vector3 targetFace = getFace(currentFaceIndex, targetInstance);
@@ -87,10 +88,11 @@ public class AddBlockInputController extends InputAdapter {
     /**
      * Adds the targetInstance to the world after calculating the position it ought to go in
      *
+     * Question for the boys: Controller or World?
      * @param ray A ray cast from the position on screen where the user clicked.
      */
     private void addTargetInstance(Ray ray) {
-        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getModelInstance(ray);
+        SelectableInstance worldInstance = (SelectableInstance) gameScreen.world.getClosestModelInstance(ray);
         if(worldInstance!=null) {
             int currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
             Vector3 targetFace = getFace(currentFaceIndex, targetInstance);
@@ -102,6 +104,7 @@ public class AddBlockInputController extends InputAdapter {
     /**
      * Returns the Vector3 position of the face on the targetInstance that you
      *
+     * Question for the boys: Controller or World?
      * @param currentFaceIndex The position in the faces array in the currentInstance
      * @param targetInstance   The instance of which you want to calculate the most fitting face
      * @return The face that is the best fit for the currentInstance
@@ -117,6 +120,7 @@ public class AddBlockInputController extends InputAdapter {
     /**
      * Creates a 'preview' version of a {@link SelectableInstance} to make it stand out from the regular version
      *
+     * Question for the boys: Controller or World?
      * @return The preview object as a {@link SelectableInstance}
      */
     private SelectableInstance createPreview(){

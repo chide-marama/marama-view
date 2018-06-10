@@ -129,24 +129,14 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Retrieving a {@link ModelInstance} from screen coordinates.
+     * Retrieving the closest  {@link ModelInstance} from screen coordinates.
      *
      * @param screenX The x coordinate, origin is in the upper left corner
      * @param screenY The y coordinate, origin is in the upper left corner
      * @return The {@link ModelInstance} if it was found, otherwise null.
      */
-    public ModelInstance getModelInstance(int screenX, int screenY) {
-        int index = getModelInstanceIndex(screenX, screenY);
-
-        if (index > -1) {
-            return modelInstances.get(index);
-        }
-
-        return null;
-    }
-
-    public ModelInstance getModelInstance(Ray ray) {
-        int index = getModelInstanceIndex(ray);
+    public ModelInstance getClosestModelInstance(int screenX, int screenY) {
+        int index = getClosestInstanceIndex(screenX, screenY);
 
         if (index > -1) {
             return modelInstances.get(index);
@@ -156,15 +146,31 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Retrieving a {@link ModelInstance} index from screen coordinates.
+     * Retrieving the closest {@link ModelInstance} index from a {@link Ray}
+     *
+     * @param ray The ray for which you want the collission checked.
+     * @return
+     */
+    public ModelInstance getClosestModelInstance(Ray ray) {
+        int index = getClosestInstanceIndex(ray);
+
+        if (index > -1) {
+            return modelInstances.get(index);
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieving the closest {@link ModelInstance} index from screen coordinates.
      *
      * @param screenX The x coordinate, origin is in the upper left corner.
      * @param screenY The y coordinate, origin is in the upper left corner.
      * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
      */
-    private int getModelInstanceIndex(int screenX, int screenY) {
+    public int getClosestInstanceIndex(int screenX, int screenY) {
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
-        return getModelInstanceIndex(ray);
+        return getClosestInstanceIndex(ray);
     }
 
 
@@ -173,12 +179,11 @@ public class World extends Environment implements Renderable {
      *
      * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
      */
-    public int getModelInstanceIndex(Ray ray) {
+    public int getClosestInstanceIndex(Ray ray) {
         int result = -1;
         float distance = -1f;
 
         Vector3 position = new Vector3();
-        //Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
 
         for (int i = 0; i < modelInstances.size; ++i) {
             final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);

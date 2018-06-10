@@ -28,7 +28,7 @@ public class SelectObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        newSelectableInstance = (SelectableInstance) gameScreen.world.getModelInstance(screenX, screenY);
+        newSelectableInstance = (SelectableInstance) gameScreen.world.getClosestModelInstance(screenX, screenY);
         touchDownMousePosition = new Vector2(screenX, screenY);
         return false; // Continue to the next 'touchDown' listener.
     }
@@ -47,7 +47,7 @@ public class SelectObjectInputController extends InputAdapter {
 
         // Continue with selection
         if (newSelectableInstance != null) {
-            SelectableInstance selectableInstance = (SelectableInstance) gameScreen.world.getModelInstance(screenX, screenY);
+            SelectableInstance selectableInstance = (SelectableInstance) gameScreen.world.getClosestModelInstance(screenX, screenY);
 
             if (newSelectableInstance == selectableInstance) {
                 newSelectableInstance.toggleSelected();
