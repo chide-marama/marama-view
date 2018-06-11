@@ -191,6 +191,15 @@
     The first BoundingBox that is intersected by the ray will be the selected object.
     Casting the rays from the camera origin and locating the first intersected BoundingBox will prevent that 3D objects in the background will be selected.
 
+    \myparagraph{\href{\clickup{26uy5}}{\#26uy5} As a MGD or MG I want to be able to add M to world from the list}
+    The list shows all the possible m-blocks that can eventually be added to the world.
+    Only one m-bock can be selected at a time in this list.
+    The one that is selected will be the one that will be added to the world.
+    These m-blocks are already loaded into the assetmanger in the background, so that makes i quite simple to add these.
+    The world contains an array of all the instances that are currently in the world.
+    Adding a m-block is as easy as creating a new instance and adding this instance to the array.
+    The location where the m-block is placed is worked out in another user story (#2e294).
+
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Build Automation
     \section{Continous Intergration}
