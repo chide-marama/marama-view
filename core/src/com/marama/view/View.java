@@ -3,7 +3,9 @@ package com.marama.view;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.marama.view.screens.GameScreen;
+import com.marama.view.screens.SplashScreen;
 
 /**
  * This is the initial {@link Game} class that will be instantiated by libGDX in the different launchers.
@@ -11,7 +13,7 @@ import com.marama.view.screens.GameScreen;
 public class View extends Game {
     @Override
     public void create () {
-        setScreen(new GameScreen());
+        setScreen(new SplashScreen(this, new ScreenViewport()));
     }
 
     @Override
