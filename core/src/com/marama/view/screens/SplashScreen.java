@@ -52,12 +52,12 @@ public class SplashScreen extends ScreenAdapter {
         batch.begin();
         if (elapsedTime > FADE_OUT_START) {
             // Set the alpha to engage a fade out animation.
-            batch.setColor( batch.getColor().r,
-                            batch.getColor().g,
-                            batch.getColor().b,
-                            newAlpha(elapsedTime));
+            batch.setColor(batch.getColor().r,
+                    batch.getColor().g,
+                    batch.getColor().b,
+                    newAlpha(elapsedTime));
         }
-        batch.draw(splash ,-viewport.getScreenWidth() / 2, -viewport.getScreenHeight() / 2, viewport.getScreenWidth(), viewport.getScreenHeight());
+        batch.draw(splash, -viewport.getScreenWidth() / 2, -viewport.getScreenHeight() / 2, viewport.getScreenWidth(), viewport.getScreenHeight());
         batch.end();
 
         // Exit after the duration has elapsed.
@@ -79,6 +79,7 @@ public class SplashScreen extends ScreenAdapter {
     /**
      * Helper function for Render().
      * Gives the alpha value for a linear fade-out as a function of time.
+     *
      * @param currentTime
      * @return alpha value between zero and one.
      */

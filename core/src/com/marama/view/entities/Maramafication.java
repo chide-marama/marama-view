@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
-import com.marama.view.MaramaParts.Joint;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
 
@@ -19,7 +18,6 @@ public class Maramafication {
     private String filePath;
     private String imageLocation;
     private Model model;
-    private ArrayList<Joint> joints;
     private FileHandle modelFileHandle;
     private Material material = new Material(ColorAttribute.createDiffuse(Color.WHITE));
 
@@ -29,15 +27,10 @@ public class Maramafication {
      * @param fileName
      */
     public Maramafication(UUID id, String fileName, String name, String imageLocation) {
-        this(id, fileName, name, imageLocation, null);
-    }
-
-    public Maramafication(UUID id, String fileName, String name, String imageLocation, ArrayList<Joint> joints) {
         this.id = id;
         this.filePath = fileName;
         this.name = name;
         this.imageLocation = imageLocation;
-        this.joints = joints == null ? new ArrayList<Joint>() : joints;
     }
 
     /**

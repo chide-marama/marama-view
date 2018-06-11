@@ -82,25 +82,14 @@ public class DragObjectInputController extends InputAdapter {
                     translation.z += deltaInWorld.z;
                     break;
             }
+
             // Animate the selectable instance.
             selectableInstance.transform.setTranslation(translation);
-
             lastTouch = newTouch; // Update the latest touch data.
+
             return true; // Block the next 'touchDragged' listener.
         }
         return false; // Continue to the next 'touchDragged' listener.
-    }
-
-    /**
-     * Converts a Vec2 representing screen space to a Vec3 world space by unprojection.
-     * No side effects, unlike LibGDX its functions.
-     * @param screenSpace Vec2 representing mouse location for example.
-     * @return Vec3 representing screenSpace in world space.
-     */
-    private Vector3 projectScreenToWorldSpace(Vector2 screenSpace) {
-        Vector3 worldSpace = new Vector3();
-        gameScreen.world.getPerspectiveCamera().unproject(worldSpace.set(screenSpace.x, screenSpace.y, 0));
-        return  worldSpace;
     }
 
     @Override
@@ -109,7 +98,7 @@ public class DragObjectInputController extends InputAdapter {
             // Apply new position to selectableInstance
 
             if (translation != null) {
-                selectableInstance.updatePosition();
+                selectableInstance.updateBoundingBoxPositions();
             }
 
             // Reset.
@@ -121,6 +110,22 @@ public class DragObjectInputController extends InputAdapter {
         return false; // Continue to the next 'touchUp' listener.
     }
 
+    /**
+     * Converts a Vec2 representing screen space to a Vec3 world space by unprojection.
+     * No side effects, unlike LibGDX its functions.
+     *
+     * @param screenSpace Vec2 representing mouse location for example.
+     * @return Vec3 representing screenSpace in world space.
+     */
+    private Vector3 projectScreenToWorldSpace(Vector2 screenSpace) {
+        Vector3 worldSpace = new Vector3();
+        gameScreen.world.getPerspectiveCamera().unproject(worldSpace.set(screenSpace.x, screenSpace.y, 0));
+        return worldSpace;
+    }
+
+    /**
+     * The value for tracking the current active axis.
+     */
     private enum ActiveAxis {
         X,
         Y,

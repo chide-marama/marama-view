@@ -66,7 +66,7 @@ public class World extends Environment implements Renderable {
 
         cameraInputController.update();
 
-        // Render all the SelectableInstances.
+        // Render all the ModelInstances.
         modelBatch.begin(perspectiveCamera);
         for (final ModelInstance instance : modelInstances) {
             modelBatch.render(instance, this);
@@ -131,8 +131,8 @@ public class World extends Environment implements Renderable {
     /**
      * Retrieving the closest  {@link ModelInstance} from screen coordinates.
      *
-     * @param screenX The x coordinate, origin is in the upper left corner
-     * @param screenY The y coordinate, origin is in the upper left corner
+     * @param screenX The x coordinate, origin is in the upper left corner.
+     * @param screenY The y coordinate, origin is in the upper left corner.
      * @return The {@link ModelInstance} if it was found, otherwise null.
      */
     public ModelInstance getClosestModelInstance(int screenX, int screenY) {
@@ -146,10 +146,10 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Retrieving the closest {@link ModelInstance} index from a {@link Ray}
+     * Retrieving the closest {@link ModelInstance} index from a {@link Ray}.
      *
-     * @param ray The ray for which you want the collission checked.
-     * @return
+     * @param ray The ray for which you want the collision checked.
+     * @return The {@link ModelInstance} if it was found, otherwise null.
      */
     public ModelInstance getClosestModelInstance(Ray ray) {
         int index = getClosestInstanceIndex(ray);
@@ -172,7 +172,6 @@ public class World extends Environment implements Renderable {
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
         return getClosestInstanceIndex(ray);
     }
-
 
     /**
      * Retrieving a {@link ModelInstance} index from a {@link Ray}.
@@ -212,20 +211,20 @@ public class World extends Environment implements Renderable {
      * Then it compares the intersection point to the location of the faces
      * and gets the closest one.
      *
-     * @param ray           The pick ray you want to intersect with the object, the origin
-     * @param modelInstance The object whose face you want to detect
-     * @return
+     * @param ray           The pick ray you want to intersect with the object, the origin.
+     * @param modelInstance The object whose face you want to detect.
+     * @return The index of the closest.
      */
     public int getClosestFaceIndex(Ray ray, SelectableInstance modelInstance) {
         Vector3 intersect = new Vector3();
-        Vector3 position = new Vector3();
-        modelInstance.transform.getTranslation(position);
+        Vector3 position = modelInstance.getPosition();
+        int closest = -1;
+        float min = Integer.MAX_VALUE;
+
         position.add(modelInstance.center);
         Intersector.intersectRaySphere(ray, position, modelInstance.radius, intersect);
         intersect.sub(position);
 
-        int closest = -1;
-        float min = Integer.MAX_VALUE;
         for (int j = 0; j < modelInstance.faces.size; j++) {
             Vector3 temp = modelInstance.faces.get(j);
             float dist = temp.dst(intersect);
@@ -233,7 +232,6 @@ public class World extends Environment implements Renderable {
                 min = dist;
                 closest = j;
             }
-
         }
 
         return closest;
@@ -271,7 +269,6 @@ public class World extends Environment implements Renderable {
         entityManager.loadMaramafication("marams/sphere.json");
         entityManager.loadMaramafication("marams/cilinder.json");
         entityManager.loadMaramafication("marams/block.json");
-
     }
 
     /**
@@ -289,7 +286,7 @@ public class World extends Environment implements Renderable {
             try {
                 SelectableInstance currentSelectableInstance = maramafication.createInstance();
                 currentSelectableInstance.transform.translate(pos, 0f, 0f);
-                currentSelectableInstance.updatePosition();
+                currentSelectableInstance.updateBoundingBoxPositions();
                 modelInstances.add(currentSelectableInstance);
                 pos += 2f;
             } catch (ModelNotFoundException e) {
@@ -302,21 +299,21 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Only works for ... ???
+     * Add a {@link SelectableInstance} seamlessly to another {@link SelectableInstance} and add it to the {@link World}.
      *
-     * @param originInstance
-     * @param targetInstance
-     * @param originFace
+     * @param originInstance The {@link SelectableInstance} to add the target instance to.
+     * @param targetInstance The {@link SelectableInstance} that will be added to the origin instance.
+     * @param originFace     ...
      * @param targetFace
      */
     public void addFaceToFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
         moveFaceToFaceBasic(originInstance, targetInstance, originFace, targetFace);
         modelInstances.add(targetInstance);
-
     }
 
     /**
-     * ???
+     * Add a {@link SelectableInstance} seamlessly to another {@link SelectableInstance}.
+     *
      * @param originInstance
      * @param targetInstance
      * @param originFace
@@ -328,9 +325,9 @@ public class World extends Environment implements Renderable {
         targetInstance.transform.setToTranslation(position);
     }
 
-
     /**
      * ???
+     *
      * @param selectableInstance
      */
     public void deleteObject(SelectableInstance selectableInstance) {

@@ -81,13 +81,13 @@ public class SelectableInstance extends ModelInstance {
      */
     public void setPosition(Vector3 position) {
         transform.setTranslation(position);
-        this.updatePosition();
+        this.updateBoundingBoxPositions();
     }
 
     /**
      * Updates the positions of the bounding boxes.
      */
-    public void updatePosition() {
+    public void updateBoundingBoxPositions() {
         // Update the bounding box
         boundingBox.mul(new Matrix4().setTranslation(getPosition().sub(oldPosition)));
         // Update the axes bounding boxes
@@ -106,7 +106,7 @@ public class SelectableInstance extends ModelInstance {
         materials.get(0).set(material);
     }
 
-    public void resetMaterial(){
+    public void resetMaterial() {
         setMaterial(defaultMaterial);
     }
 

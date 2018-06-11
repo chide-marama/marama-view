@@ -22,11 +22,6 @@ public class GameScreen extends ScreenAdapter {
     public final WorldUserInterface worldUserInterface;
     private InputMultiplexer inputMultiplexer;
 
-    private SelectObjectInputController selectObjectInputController;
-    private DragObjectInputController dragObjectInputController;
-    private AddBlockInputController addBlockInputController;
-    private DeleteObjectInputController deleteObjectInputController;
-
     private String activeMarama = "block";
     private int activeTool = 0;
 
@@ -39,11 +34,6 @@ public class GameScreen extends ScreenAdapter {
         this.world = new World(this, new DirectionalLight(),
                 new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), new AssetManager());
         this.worldUserInterface = new WorldUserInterface(this, this.world, new Skin(Gdx.files.internal("skin/uiskin.json")));
-
-        selectObjectInputController = new SelectObjectInputController(this);
-        dragObjectInputController = new DragObjectInputController(this);
-        addBlockInputController = new AddBlockInputController(this);
-        deleteObjectInputController = new DeleteObjectInputController(this);
     }
 
     public String getActiveMarama() {
@@ -89,18 +79,18 @@ public class GameScreen extends ScreenAdapter {
         switch (activeTool) {
             // Select tool
             case 0:
-                inputMultiplexer.addProcessor(selectObjectInputController);
+                inputMultiplexer.addProcessor(new SelectObjectInputController(this));
                 break;
             // Move tool
             case 1:
-                inputMultiplexer.addProcessor(dragObjectInputController);
+                inputMultiplexer.addProcessor(new DragObjectInputController(this));
                 break;
             // Add tool
             case 2:
-                inputMultiplexer.addProcessor(addBlockInputController);
+                inputMultiplexer.addProcessor(new AddBlockInputController(this));
                 break;
             case 3:
-                inputMultiplexer.addProcessor(deleteObjectInputController);
+                inputMultiplexer.addProcessor(new DeleteObjectInputController(this));
                 break;
         }
 

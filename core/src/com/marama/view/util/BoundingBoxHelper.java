@@ -31,7 +31,7 @@ public abstract class BoundingBoxHelper {
      * Draws the vertices of a boundingbox.
      *
      * @param shapeRenderer The {@link ShapeRenderer}'s context to draw in.
-     * @param boundingBox The {@link BoundingBox} to draw.
+     * @param boundingBox   The {@link BoundingBox} to draw.
      */
     public static void draw(ShapeRenderer shapeRenderer, BoundingBox boundingBox) {
         Vector3 vertex1 = boundingBox.getCorner000(new Vector3());
