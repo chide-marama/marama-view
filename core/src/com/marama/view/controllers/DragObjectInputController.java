@@ -67,7 +67,7 @@ public class DragObjectInputController extends InputAdapter {
             // Calculate the difference between the mouse location in world space on this call and the previous call.
             Vector3 newTouchInWorld = projectScreenToWorldSpace(newTouch);
             Vector3 lastTouchInWorld = projectScreenToWorldSpace(lastTouch);
-            Vector3 deltaInWorld = (newTouchInWorld.cpy().sub(lastTouchInWorld)).scl(10); // 10 speed modifier TODO why is this necessary
+            Vector3 deltaInWorld = (newTouchInWorld.cpy().sub(lastTouchInWorld)).scl(10); // 10 speed modifier; otherwise movement is a crawl.
 
             // Assign the new position of the object based on the selected axis.
             translation = selectableInstance.getPosition();

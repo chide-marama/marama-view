@@ -191,14 +191,21 @@
     The first BoundingBox that is intersected by the ray will be the selected object.
     Casting the rays from the camera origin and locating the first intersected BoundingBox will prevent that 3D objects in the background will be selected.
 
+    \myparagraph{\href{\clickup{3v5e5}}{\##2e2b8} As a MGD or player I want to move a 3D object}
+    After an object has been selected and the move tool has been equipped three axes will surround the object in question.
+    By pulling or pushing on an axis the object moves along the axis.
+    One manipulate an axis by clicking with the left mouse button and dragging or by touch and dragging depending on your platform.
+    To calculate the distance an object should move the previous click event coordinates and current event coordinates are projected to the 3D world.
+    Then the difference between these two 3-vectors will be used to select the new position of the object based on the used axis.
+
     \myparagraph{\href{\clickup{26uy5}}{\#26uy5} As a MGD or MG I want to be able to add M to world from the list}
     The list shows all the possible m-blocks that can eventually be added to the world.
     Only one m-bock can be selected at a time in this list.
     The one that is selected will be the one that will be added to the world.
-    These m-blocks are already loaded into the assetmanger in the background, so that makes i quite simple to add these.
+    These m-blocks are already loaded as assets in the game background, so that makes i quite simple to add these.
     The world contains an array of all the instances that are currently in the world.
     Adding a m-block is as easy as creating a new instance and adding this instance to the array.
-    The location where the m-block is placed is worked out in another user story (#2e294).
+    The location where the m-block is placed is worked out in another user story: \href{\clickup{2e294}}{\#2e294}.
 
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Build Automation
