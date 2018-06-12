@@ -51,6 +51,7 @@ public class GameScreen extends ScreenAdapter {
 
     public void setTool(int index) {
         this.activeTool = index;
+        worldUserInterface.update();
         this.initializeInputControllers();
     }
 
@@ -69,8 +70,6 @@ public class GameScreen extends ScreenAdapter {
 
     public void initializeInputControllers() {
         inputMultiplexer.clear();
-
-        worldUserInterface.update();
 
         // The user interface has the highest priority.
         inputMultiplexer.addProcessor(worldUserInterface);
