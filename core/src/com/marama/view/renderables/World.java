@@ -318,7 +318,7 @@ public class World extends Environment implements Renderable {
      * @return True if delete was succesful, false if not.
      */
     public boolean deleteObject(SelectableInstance selectableInstance) {
-        return (modelInstances.removeValue(selectableInstance, true));
+        return modelInstances.removeValue(selectableInstance, true);
     }
 
     /**
