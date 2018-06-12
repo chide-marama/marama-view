@@ -26,7 +26,7 @@ public class SelectableInstance extends ModelInstance {
     private final Material defaultMaterial;
     private Vector3 oldPosition = new Vector3();
 
-    public final Array<Vector3> faces;
+    public final Array<Vector3> joints;
 
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
@@ -46,7 +46,7 @@ public class SelectableInstance extends ModelInstance {
         boundingBox.getCenter(center); // Actually sets the center value
         radius = boundingBox.getDimensions(new Vector3()).len() / 2f;
 
-        faces = calculateFacesFromBounding();
+        joints = calculateFacesFromBounding();
         axes = new Axes(getPosition());
     }
 
@@ -160,7 +160,7 @@ public class SelectableInstance extends ModelInstance {
     }
 
     /**
-     * Should only be used on cubes or objects with similar faces.
+     * Should only be used on cubes or objects with similar joints.
      */
     private Array<Vector3> calculateFacesFromBounding() {
         Array<Vector3> faces = new Array<Vector3>();

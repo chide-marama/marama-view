@@ -205,7 +205,7 @@ public class World extends Environment implements Renderable {
      * Uses ray casting to find the closest intersection point with an object.
      * It normalises the intersection point to make it so the point is
      * relative to the modelInstance.
-     * Then it compares the intersection point to the location of the faces
+     * Then it compares the intersection point to the location of the joints
      * and gets the closest one.
      *
      * @param ray           The pick ray you want to intersect with the object, the origin.
@@ -220,7 +220,7 @@ public class World extends Environment implements Renderable {
         Intersector.intersectRaySphere(ray, position, modelInstance.radius, intersect);
         intersect.sub(position);
 
-        return getClosestIndex(modelInstance.faces, intersect);
+        return getClosestIndex(modelInstance.joints, intersect);
     }
 
     /**

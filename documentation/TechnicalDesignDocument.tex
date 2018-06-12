@@ -192,7 +192,7 @@
     Using the bounding box you can find which object you are close to fairly easily.
     However, there is no functionality in libGDX for finding the face of an object.
     To remedy this a new addition was made to the SelectableInstance: Faces.
-    Every SelectableInstance has a list of Faces/Joints which contain a vector3 which states the location of the joints.
+    Every SelectableInstance has a list of Joints which contain a vector3 which states the location of the faces of the instance that can be interacted with.
     When the ray wants to interact with an object(See \href{\clickup{2e29e}}{\#2e29e}) it returns the location of the intersect point.
     The points get translated and compared to one another to find the closest face to the intersect point.
     Then the new object can be added.
