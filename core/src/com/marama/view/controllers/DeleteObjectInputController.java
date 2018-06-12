@@ -7,7 +7,7 @@ import com.marama.view.screens.GameScreen;
 
 public class DeleteObjectInputController extends InputAdapter {
     private final GameScreen gameScreen;
-    private SelectableInstance DeletionSelected = null;
+    private SelectableInstance deletionSelected = null;
     public DeleteObjectInputController(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
     }
@@ -19,20 +19,20 @@ public class DeleteObjectInputController extends InputAdapter {
         Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
         SelectableInstance instance = (SelectableInstance) gameScreen.world.getClosestModelInstance(ray);
         if (instance != null) {
-            if (DeletionSelected != null) {
-                DeletionSelected.setOpacity(1f);
+            if (deletionSelected != null) {
+                deletionSelected.setOpacity(1f);
             }
-            if (instance == DeletionSelected) {
+            if (instance == deletionSelected) {
                 gameScreen.world.deleteObject(instance);
-                DeletionSelected = null;
+                deletionSelected = null;
             } else {
-                DeletionSelected = ((SelectableInstance) gameScreen.world.getClosestModelInstance(ray));
-                DeletionSelected.setOpacity(deletionOpacity);
+                deletionSelected = ((SelectableInstance) gameScreen.world.getClosestModelInstance(ray));
+                deletionSelected.setOpacity(deletionOpacity);
             }
         } else {
-            if (DeletionSelected != null) {
-                DeletionSelected.setOpacity(1f);
-                DeletionSelected = null;
+            if (deletionSelected != null) {
+                deletionSelected.setOpacity(1f);
+                deletionSelected = null;
             }
         }
         return false;
@@ -40,7 +40,7 @@ public class DeleteObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return DeletionSelected != null;
+        return deletionSelected != null;
     }
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
