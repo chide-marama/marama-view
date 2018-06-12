@@ -3,7 +3,6 @@ package com.marama.view.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -19,8 +18,8 @@ import com.marama.view.renderables.stages.WorldUserInterface;
  */
 public class GameScreen extends ScreenAdapter {
     public final World world;
-    public final WorldUserInterface worldUserInterface;
-    private InputMultiplexer inputMultiplexer;
+    private final WorldUserInterface worldUserInterface;
+    private final InputMultiplexer inputMultiplexer;
 
     private String activeMarama = "block";
     private int activeTool = 0;
@@ -32,8 +31,8 @@ public class GameScreen extends ScreenAdapter {
         inputMultiplexer = new InputMultiplexer();
 
         this.world = new World(this, new DirectionalLight(),
-                new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), new AssetManager());
-        this.worldUserInterface = new WorldUserInterface(this, this.world, new Skin(Gdx.files.internal("skin/uiskin.json")));
+                new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        this.worldUserInterface = new WorldUserInterface(this, new Skin(Gdx.files.internal("skin/uiskin.json")));
     }
 
     public String getActiveMarama() {
@@ -68,7 +67,7 @@ public class GameScreen extends ScreenAdapter {
         worldUserInterface.render(delta);
     }
 
-    public void initializeInputControllers() {
+    private void initializeInputControllers() {
         inputMultiplexer.clear();
 
         // The user interface has the highest priority.

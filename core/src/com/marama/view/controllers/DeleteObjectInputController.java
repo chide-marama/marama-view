@@ -6,7 +6,7 @@ import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.screens.GameScreen;
 
 public class DeleteObjectInputController extends InputAdapter {
-    private GameScreen gameScreen;
+    private final GameScreen gameScreen;
 
     public DeleteObjectInputController(GameScreen gameScreen) {
         this.gameScreen = gameScreen;

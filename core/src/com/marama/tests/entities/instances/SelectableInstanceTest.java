@@ -19,7 +19,7 @@ public class SelectableInstanceTest extends TestApplication {
 
     @Test
     public void setPositionWillUpdateTheSelectableInstancePosition() {
-        SelectableInstance selectableInstance = new SelectableInstance(new Model(), new Material(), "block");
+        SelectableInstance selectableInstance = new SelectableInstance(new Model(), new Material());
 
         Vector3 initialPosition = selectableInstance.getPosition();
         selectableInstance.setPosition(new Vector3(1f, 1f, 1f));
@@ -31,16 +31,16 @@ public class SelectableInstanceTest extends TestApplication {
     @Test
     public void setPositionWillUpdateTheBoundingBox() {
         Model box = new ModelBuilder().createBox(1f, 1f, 1f, new Material(ColorAttribute.createDiffuse(Color.WHITE)), Usage.Normal | Usage.Position);
-        SelectableInstance selectableInstance = new SelectableInstance(box, new Material(), "block");
+        SelectableInstance selectableInstance = new SelectableInstance(box, new Material());
 
-        // Grab a position from the boundingbox
+        // Grab a position from the bounding box
         Vector3 initialPosition = selectableInstance.boundingBox.getCorner001(new Vector3());
 
         // Apply the translation
         Vector3 translation = new Vector3(1f, 1f, 1f);
         selectableInstance.setPosition(translation);
 
-        // Grab the new position from the boundingbox
+        // Grab the new position from the bounding box
         Vector3 newPosition = selectableInstance.boundingBox.getCorner001(new Vector3());
 
         // The applied translation is exactly the same as the new position

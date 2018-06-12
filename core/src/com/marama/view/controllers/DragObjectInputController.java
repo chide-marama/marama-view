@@ -8,11 +8,11 @@ import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.screens.GameScreen;
 
 public class DragObjectInputController extends InputAdapter {
-    private GameScreen gameScreen;
+    private final GameScreen gameScreen;
     private SelectableInstance selectableInstance = null;
     private ActiveAxis activeAxis = null;
     private Vector3 translation = null;
-    private Vector3 intersection = new Vector3();
+    private final Vector3 intersection = new Vector3();
     private Vector2 lastTouch = null; // Used for keeping track of mouse position on screen between calls of touch handlers.
 
     public DragObjectInputController(GameScreen gameScreen) {

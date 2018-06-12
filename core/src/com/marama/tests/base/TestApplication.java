@@ -25,7 +25,7 @@ public class TestApplication {
             @Override public void dispose() {}
         });
 
-        // Use Mockito to mock the OpenGL methods since we are running headlessly
+        // Use Mockito to mock the OpenGL methods since we are running headless
         Gdx.gl20 = Mockito.mock(GL20.class);
         Gdx.gl = Gdx.gl20;
     }

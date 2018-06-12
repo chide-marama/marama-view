@@ -9,14 +9,13 @@ import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class Maramafication {
-    private UUID id;
-    private String name;
-    private String filePath;
-    private String imageLocation;
+    private final UUID id;
+    private final String name;
+    private final String filePath;
+    private final String imageLocation;
     private Model model;
     private FileHandle modelFileHandle;
     private Material material = new Material(ColorAttribute.createDiffuse(Color.WHITE));
@@ -24,7 +23,10 @@ public class Maramafication {
     /**
      * Instantiates a new {@link Maramafication}.
      *
+     * @param id
      * @param fileName
+     * @param name
+     * @param imageLocation
      */
     public Maramafication(UUID id, String fileName, String name, String imageLocation) {
         this.id = id;
@@ -42,7 +44,7 @@ public class Maramafication {
         if (model == null) {
             throw new ModelNotFoundException();
         }
-        return new SelectableInstance(model, material, name);
+        return new SelectableInstance(model, material);
     }
 
     public void setModelFileHandle(FileHandle fileHandle) {

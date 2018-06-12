@@ -1,7 +1,5 @@
 package com.marama.view.renderables;
 
-
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -28,24 +26,23 @@ import com.marama.view.screens.GameScreen;
 public class World extends Environment implements Renderable {
     private boolean loading;
 
-    private GameScreen gameScreen;
-    private DirectionalLight directionalLight;
-    private PerspectiveCamera perspectiveCamera;
+    private final GameScreen gameScreen;
+    private final DirectionalLight directionalLight;
+    private final PerspectiveCamera perspectiveCamera;
     private ModelBatch modelBatch; // The unit that can render the modelInstances
     private CameraInputController cameraInputController;
 
-    private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
+    private final EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
     private Array<ModelInstance> modelInstances;
-    private ShapeRenderer shapeRenderer;
+    private final ShapeRenderer shapeRenderer;
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
      *
-     * @param directionalLight
-     * @param perspectiveCamera
-     * @param assetManager
+     * @param directionalLight The light that will be applied in the {@link World}.
+     * @param perspectiveCamera The main camera that will be used to view the {@link World}.
      */
-    public World(GameScreen gameScreen, DirectionalLight directionalLight, PerspectiveCamera perspectiveCamera, AssetManager assetManager) {
+    public World(GameScreen gameScreen, DirectionalLight directionalLight, PerspectiveCamera perspectiveCamera) {
         super();
 
         this.gameScreen = gameScreen;
@@ -168,7 +165,7 @@ public class World extends Environment implements Renderable {
      * @param screenY The y coordinate, origin is in the upper left corner.
      * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
      */
-    public int getClosestInstanceIndex(int screenX, int screenY) {
+    private int getClosestInstanceIndex(int screenX, int screenY) {
         Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
         return getClosestInstanceIndex(ray);
     }
@@ -178,7 +175,7 @@ public class World extends Environment implements Renderable {
      *
      * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
      */
-    public int getClosestInstanceIndex(Ray ray) {
+    private int getClosestInstanceIndex(Ray ray) {
         int result = -1;
         float distance = -1f;
 
@@ -205,7 +202,7 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Uses raycasting to find the closest intersection point with an object.
+     * Uses ray casting to find the closest intersection point with an object.
      * It normalises the intersection point to make it so the point is
      * relative to the modelInstance.
      * Then it compares the intersection point to the location of the faces
@@ -267,7 +264,7 @@ public class World extends Environment implements Renderable {
 
         // Add the three maramafications via the json file to the EntityManager.
         entityManager.loadMaramafication("marams/sphere.json");
-        entityManager.loadMaramafication("marams/cilinder.json");
+        entityManager.loadMaramafication("marams/cylinder.json");
         entityManager.loadMaramafication("marams/block.json");
     }
 
