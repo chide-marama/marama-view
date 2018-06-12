@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -150,6 +151,17 @@ public class SelectableInstance extends ModelInstance {
         shapeRenderer.circle(0, 0, radius, 16);
         shapeRenderer.rotate(0, 1, 0, 90);
         shapeRenderer.circle(0, 0, radius, 16);
+    }
+
+    /**
+     * Sets the opacity of the {@link SelectableInstance}
+     *
+     * @param opacity A float value containing the opacity. Best between 0 and 1.
+     */
+    public void setOpacity(float opacity) {
+        BlendingAttribute blendingAttribute = new BlendingAttribute();
+        blendingAttribute.opacity = opacity;
+        materials.get(0).set(blendingAttribute);
     }
 
     /**

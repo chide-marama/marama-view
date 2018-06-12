@@ -1,8 +1,6 @@
 package com.marama.view.controllers;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.EntityManager;
@@ -12,9 +10,7 @@ import com.marama.view.screens.GameScreen;
 
 public class AddBlockInputController extends InputAdapter {
     private final GameScreen gameScreen;
-    private final Material moveMaterial = new Material(new BlendingAttribute() {{
-        opacity = 0.25f; // The opacity of the preview block.
-    }});
+    private float SelectionOpacity = 0.25f;
     private SelectableInstance targetInstance;
 
     /**
@@ -115,7 +111,7 @@ public class AddBlockInputController extends InputAdapter {
      */
     private SelectableInstance createPreview() {
         SelectableInstance preview = EntityManager.getInstance().createSelectableInstance(gameScreen.getActiveMarama());
-        preview.setMaterial(moveMaterial);
+        preview.setOpacity(SelectionOpacity);
         return preview;
     }
 }
