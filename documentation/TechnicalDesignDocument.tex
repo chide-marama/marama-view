@@ -171,13 +171,13 @@
     Then the difference between these two 3-vectors will be used to select the new position of the object based on the used axis.
 
     \myparagraph{\href{\clickup{26uy5}}{\#26uy5} As a MGD or MG I want to be able to add M to world from the list}
-    The list shows all the possible m-blocks that can eventually be added to the world.
+    The list shows all the possible M-blocks that can eventually be added to the world.
     Only one m-bock can be selected at a time in this list.
-    The one that is selected will be the one that will be added to the world.
-    These m-blocks are already loaded as assets in the game background, so that makes i quite simple to add these.
-    The world contains an array of all the instances that are currently in the world.
-    Adding a m-block is as easy as creating a new instance and adding this instance to the array.
-    The location where the m-block is placed is worked out in another user story: \href{\clickup{2e294}}{\#2e294}.
+    The one that is selected will be the one that will be added to the world, if the add tool is selected.
+    These M-blocks are already loaded as assets in the entityManager, so that makes it quite simple to add these M-blocks to the world.
+    The world contains an array of all the instances that are currently rendered in the world.
+    Adding a M-block is as easy as retrieving the M-block from the entityManager, creating a a new instance and adding this instance to the array.
+    The location where the M-block is placed is worked out in another user story: \href{\clickup{2e294}}{\#2e294}.
 
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Build Automation
