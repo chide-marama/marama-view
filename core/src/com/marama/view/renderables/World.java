@@ -205,7 +205,7 @@ public class World extends Environment implements Renderable {
      * Uses ray casting to find the closest intersection point with an object.
      * It normalises the intersection point to make it so the point is
      * relative to the modelInstance.
-     * Then it compares the intersection point to the location of the faces
+     * Then it compares the intersection point to the location of the joints
      * and gets the closest one.
      *
      * @param ray           The pick ray you want to intersect with the object, the origin.
@@ -215,23 +215,12 @@ public class World extends Environment implements Renderable {
     public int getClosestFaceIndex(Ray ray, SelectableInstance modelInstance) {
         Vector3 intersect = new Vector3();
         Vector3 position = modelInstance.getPosition();
-        int closest = -1;
-        float min = Integer.MAX_VALUE;
 
         position.add(modelInstance.center);
         Intersector.intersectRaySphere(ray, position, modelInstance.radius, intersect);
         intersect.sub(position);
 
-        for (int j = 0; j < modelInstance.faces.size; j++) {
-            Vector3 temp = modelInstance.faces.get(j);
-            float dist = temp.dst(intersect);
-            if (dist < min) {
-                min = dist;
-                closest = j;
-            }
-        }
-
-        return closest;
+        return getClosestIndex(modelInstance.joints, intersect);
     }
 
     /**
@@ -300,8 +289,8 @@ public class World extends Environment implements Renderable {
      *
      * @param originInstance The {@link SelectableInstance} to add the target instance to.
      * @param targetInstance The {@link SelectableInstance} that will be added to the origin instance.
-     * @param originFace     ...
-     * @param targetFace
+     * @param originFace A {@link Vector3} of the face on the originInstance you want to use as a starting point.
+     * @param targetFace A {@link Vector3} of the face on the targetInstance you want to add to the origininstance/
      */
     public void addFaceToFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
         moveFaceToFaceBasic(originInstance, targetInstance, originFace, targetFace);
@@ -309,12 +298,12 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Add a {@link SelectableInstance} seamlessly to another {@link SelectableInstance}.
+     * Move a {@link SelectableInstance} seamlessly to another {@link SelectableInstance}.
      *
-     * @param originInstance
-     * @param targetInstance
-     * @param originFace
-     * @param targetFace
+     * @param originInstance The {@link SelectableInstance} you want to use as a starting point.
+     * @param targetInstance The {@link SelectableInstance} you want to move to the origin instance.
+     * @param originFace A {@link Vector3} of the face on the originInstance you want to use as a starting point.
+     * @param targetFace A {@link Vector3} of the face on the targetInstance you want to move to the origininstance/
      */
     public void moveFaceToFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
         Vector3 position = originInstance.transform.getTranslation(new Vector3());
@@ -323,11 +312,33 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * ???
+     * Deletes a {@link SelectableInstance} from modelInstances
      *
-     * @param selectableInstance
+     * @param selectableInstance The {@link SelectableInstance} you want to remove.
+     * @return True if delete was succesful, false if not.
      */
-    public void deleteObject(SelectableInstance selectableInstance) {
-        modelInstances.removeValue(selectableInstance, true);
+    public boolean deleteObject(SelectableInstance selectableInstance) {
+        return modelInstances.removeValue(selectableInstance, true);
+    }
+
+    /**
+     * Get the closest {@link Vector3} position when compared to a target.
+     *
+     * @param array  A {@link Array<Vector3> } that holds the values you want compared.
+     * @param target A {@link Vector3 } for which you want to know the closest vector in the array.
+     * @return the index of the array that holds the closest Vector3 to the target. If there's no closest, returns -1.
+     */
+    private int getClosestIndex(Array<Vector3> array, Vector3 target) {
+        int closest = -1;
+        float min = Integer.MAX_VALUE;
+        for (int j = 0; j < array.size; j++) {
+            Vector3 temp = array.get(j);
+            float dist = temp.dst(target);
+            if (dist < min) {
+                min = dist;
+                closest = j;
+            }
+        }
+        return closest;
     }
 }

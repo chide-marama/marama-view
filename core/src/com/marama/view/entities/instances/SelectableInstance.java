@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -25,7 +26,7 @@ public class SelectableInstance extends ModelInstance {
     private final Material defaultMaterial;
     private Vector3 oldPosition = new Vector3();
 
-    public final Array<Vector3> faces;
+    public final Array<Vector3> joints;
 
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
@@ -45,7 +46,7 @@ public class SelectableInstance extends ModelInstance {
         boundingBox.getCenter(center); // Actually sets the center value
         radius = boundingBox.getDimensions(new Vector3()).len() / 2f;
 
-        faces = calculateFacesFromBounding();
+        joints = calculateFacesFromBounding();
         axes = new Axes(getPosition());
     }
 
@@ -148,7 +149,18 @@ public class SelectableInstance extends ModelInstance {
     }
 
     /**
-     * Should only be used on cubes or objects with similar faces.
+     * Sets the opacity of the {@link SelectableInstance}
+     *
+     * @param opacity A float value containing the opacity. Best between 0 and 1.
+     */
+    public void setOpacity(float opacity) {
+        BlendingAttribute blendingAttribute = new BlendingAttribute();
+        blendingAttribute.opacity = opacity;
+        materials.get(0).set(blendingAttribute);
+    }
+
+    /**
+     * Should only be used on cubes or objects with similar joints.
      */
     private Array<Vector3> calculateFacesFromBounding() {
         Array<Vector3> faces = new Array<Vector3>();

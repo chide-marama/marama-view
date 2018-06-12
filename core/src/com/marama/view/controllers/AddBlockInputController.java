@@ -1,8 +1,6 @@
 package com.marama.view.controllers;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.g3d.Material;
-import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.marama.view.entities.EntityManager;
@@ -12,9 +10,7 @@ import com.marama.view.screens.GameScreen;
 
 public class AddBlockInputController extends InputAdapter {
     private final GameScreen gameScreen;
-    private final Material moveMaterial = new Material(new BlendingAttribute() {{
-        opacity = 0.25f; // The opacity of the preview block.
-    }});
+    private final float SelectionOpacity = 0.25f;
     private SelectableInstance targetInstance;
 
     /**
@@ -77,7 +73,7 @@ public class AddBlockInputController extends InputAdapter {
         if (worldInstance != null && worldInstance != targetInstance) {
             int currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
             Vector3 targetFace = getFace(currentFaceIndex, targetInstance);
-            gameScreen.world.moveFaceToFaceBasic(worldInstance, targetInstance, worldInstance.faces.get(currentFaceIndex), targetFace);
+            gameScreen.world.moveFaceToFaceBasic(worldInstance, targetInstance, worldInstance.joints.get(currentFaceIndex), targetFace);
         }
     }
 
@@ -91,7 +87,7 @@ public class AddBlockInputController extends InputAdapter {
         if (worldInstance != null) {
             int currentFaceIndex = gameScreen.world.getClosestFaceIndex(ray, worldInstance);
             Vector3 targetFace = getFace(currentFaceIndex, targetInstance);
-            gameScreen.world.addFaceToFaceBasic(worldInstance, targetInstance, worldInstance.faces.get(currentFaceIndex), targetFace);
+            gameScreen.world.addFaceToFaceBasic(worldInstance, targetInstance, worldInstance.joints.get(currentFaceIndex), targetFace);
             targetInstance.setSelected(true);
         }
     }
@@ -99,13 +95,13 @@ public class AddBlockInputController extends InputAdapter {
     /**
      * Returns the Vector3 position of the face on the targetInstance that you.
      *
-     * @param currentFaceIndex The position in the faces array in the currentInstance.
+     * @param currentFaceIndex The position in the joints array in the currentInstance.
      * @param targetInstance   The instance of which you want to calculate the most fitting face.
      * @return The face that is the best fit for the currentInstance.
      */
     private Vector3 getFace(int currentFaceIndex, SelectableInstance targetInstance) {
         int targetFaceIndex = (currentFaceIndex + 3) % 6;
-        return targetInstance.faces.get(targetFaceIndex);
+        return targetInstance.joints.get(targetFaceIndex);
     }
 
     /**
@@ -115,7 +111,7 @@ public class AddBlockInputController extends InputAdapter {
      */
     private SelectableInstance createPreview() {
         SelectableInstance preview = EntityManager.getInstance().createSelectableInstance(gameScreen.getActiveMarama());
-        preview.setMaterial(moveMaterial);
+        preview.setOpacity(SelectionOpacity);
         return preview;
     }
 }

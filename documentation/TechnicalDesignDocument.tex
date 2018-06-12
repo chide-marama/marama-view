@@ -1,7 +1,7 @@
 \documentclass[10pt]{extarticle} % article doctype, possible font size range from 8pt to 20pt with not all being avaiable.
 \setcounter{secnumdepth}{4} % Max. section depth, e.g. 3 means 4.1.1 is possible but not 4.1.1.2
 \title{\huge Technical Design Document MaramaUU}
-\author{Tim Hintzbergen, Wilbert Schepenaar, <nextname>    \\s1097561, s1094484, <nextcode>
+\author{Erik van Lune, Tim Hintzbergen, Wilbert Schepenaar, <nextname>    \\s1095043, s1097561, s1094484, <nextcode>
 \\\\ICTGPb
 \\Wilco Moerman}
 \date{May 8th, 2018 <TODO>}
@@ -17,6 +17,7 @@
 
 % custom commands
 \newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\} % Without \mbox{} all newlines will be ignored, making the first sentence appear on the same line as a paragraph title.
+\def\code#1{\texttt{#1}}
 
 \DeclareCaptionFormat{cancaption}{#1#2#3\par} % Normal format actually
 \DeclareCaptionLabelFormat{cancaptionlabel}{#1}
@@ -178,6 +179,29 @@
     The world contains an array of all the instances that are currently rendered in the world.
     Adding a M-block is as easy as retrieving the M-block from the entityManager, creating a new instance and adding this instance to the array.
     The location where the M-block is placed is worked out in another user story: \href{\clickup{2e294}}{\#2e294}.
+
+    \myparagraph{\href{\clickup{2e2bq}}{\#2e2bq} As a MGD or player I want to be able to delete a 3D object from the world.}
+Object deletion is handled through an \code{InputController}, which libgdx uses to catch events from pointer behaviour.
+When deleting an \code{SelectableInstance}, the user selects an \code{SelectableInstance} using a \code{BoundingBox} and a \code{Ray} on the press of a button. This process is explained above: \href{\clickup{2e29e}}{\#2e29e}.
+When this occurs the \code{SelectableInstance} is turned slightly transparent to function as a preview.
+While a \code{SelectableInstance} is selected for deletion, the camera is locked.
+A second click will delete the \code{SelectableInstance} by removing it from the list of \code{SelectableInstance} in the world.
+If the click hits another \code{SelectableInstance}, that \code{SelectableInstance} becomes selected instead.
+    If it clicks elsewhere it deselects entirely.
+
+    \myparagraph{\href{\clickup{2e294}}{\#2e294} As a MGD or MG I want the blocks to connect while I am dragging it within a certain range.}
+Using the \code{BoundingBox} you can find which \code{SelectableInstance} you are close to fairly easily.
+However, there is no functionality in libGDX for finding the face of a \code{SelectableInstance}.
+To remedy this a new addition was made to the \code{SelectableInstance}: Joints.
+Every \code{SelectableInstance} has a list of Joints which contain a \code{Vector3} which states the location of the joints of the \code{SelectableInstance} that can be interacted with.
+When the ray wants to interact with a \code{SelectableInstance}(See \href{\clickup{2e29e}}{\#2e29e}) it returns the location of the intersect point.
+    The points get translated and compared to one another to find the closest face to the intersect point.
+Then the new \code{SelectableInstance} can be added.
+    The functionality is not wholly completed.
+It uses the face of the target \code{SelectableInstance} and that of the origin \code{SelectableInstance} to position the new \code{SelectableInstance} in the correct spot.
+    In the future it should also rotate so that the joints properly face one another.
+
+
 
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Build Automation
