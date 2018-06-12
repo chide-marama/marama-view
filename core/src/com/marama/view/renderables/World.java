@@ -325,8 +325,8 @@ public class World extends Environment implements Renderable {
      * Get the closest {@link Vector3} position when compared to a target.
      *
      * @param array  A {@link Array<Vector3> } that holds the values you want compared.
-     * @param target A {@link Vector3 } for which you want to know its closest companions.
-     * @return the index of the array that holds the closest Vector3 to the target.
+     * @param target A {@link Vector3 } for which you want to know the closest vector in the array.
+     * @return the index of the array that holds the closest Vector3 to the target. If there's no closest, returns -1.
      */
     private int getClosestIndex(Array<Vector3> array, Vector3 target) {
         int closest = -1;
