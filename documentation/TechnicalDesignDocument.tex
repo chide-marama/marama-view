@@ -1,7 +1,7 @@
 \documentclass[10pt]{extarticle} % article doctype, possible font size range from 8pt to 20pt with not all being avaiable.
 \setcounter{secnumdepth}{4} % Max. section depth, e.g. 3 means 4.1.1 is possible but not 4.1.1.2
 \title{\huge Technical Design Document MaramaUU}
-\author{Tim Hintzbergen, Wilbert Schepenaar, <nextname>    \\s1097561, s1094484, <nextcode>
+\author{Erik van Lune, Tim Hintzbergen, Wilbert Schepenaar, <nextname>    \\s1095043, s1097561, s1094484, <nextcode>
 \\\\ICTGPb
 \\Wilco Moerman}
 \date{May 8th, 2018 <TODO>}
@@ -184,6 +184,24 @@
     When deleting an object, the user selects an object using a boundingbox and a ray on the press of a button. This process is explained above: \href{\clickup{2e29e}}{\#2e29e}.
     When this occurs the object is turned slightly transparent to function as a preview.
     While an object is selected for deletion, the camera is locked.
+    A second click will delete the object by removing it from the list of instances in the world.
+    If the click hits another object, that object becomes selected instead.
+    If it clicks elsewhere it deselects entirely.
+
+    \myparagraph{\href{\clickup{2e294}}}{\#2e294} As a MGD or MG I want the blocks to connect while I am dragging it within a certain range
+    Using the bounding box you can find which object you are close to fairly easily.
+    However, there is no functionality in libGDX for finding the face of an object.
+    To remedy this a new addition was made to the SelectableInstance: Faces.
+    Every SelectableInstance has a list of Faces/Joints which contain a vector3 which states the location of the joints.
+    When the ray wants to interact with an object(See \href{\clickup{2e29e}}{\#2e29e}) it returns the location of the intersect point.
+    The points get translated and compared to one another to find the closest face to the intersect point.
+    Then the new object can be added.
+    The functionality is not wholly completed.
+    It uses the face of the targetinstance and that of the origininstance to position the new object in the correct spot.
+    In the future it should also rotate so that the joints properly face one another.
+
+
+
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Build Automation
     \section{Continous Intergration}
