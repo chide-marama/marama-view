@@ -1,4 +1,4 @@
-package com.marama.tests.entities.instances;
+package entities.instances;
 
 
 import com.badlogic.gdx.graphics.Color;
