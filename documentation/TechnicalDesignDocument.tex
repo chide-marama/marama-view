@@ -188,12 +188,12 @@
     If the click hits another object, that object becomes selected instead.
     If it clicks elsewhere it deselects entirely.
 
-    \myparagraph{\href{\clickup{2e294}}}{\#2e294} As a MGD or MG I want the blocks to connect while I am dragging it within a certain range
+    \myparagraph{\href{\clickup{2e294}}{\#2e294} As a MGD or MG I want the blocks to connect while I am dragging it within a certain range}
     Using the bounding box you can find which object you are close to fairly easily.
     However, there is no functionality in libGDX for finding the face of an object.
     To remedy this a new addition was made to the SelectableInstance: Faces.
     Every SelectableInstance has a list of Faces/Joints which contain a vector3 which states the location of the joints.
-    When the ray wants to interact with an object(See \href{\clickup{2e29e}}{\#2e29e}) it returns the location of the intersect point.
+    When the ray wants to interact with an object (See \href{\clickup{2e29e}}{\#2e29e}) it returns the location of the intersect point.
     The points get translated and compared to one another to find the closest face to the intersect point.
     Then the new object can be added.
     The functionality is not wholly completed.
