@@ -10,8 +10,8 @@ import com.marama.view.renderables.stages.MainMenuUserInterface;
 /**
  * This class is a {@link Stage} that defines the 2d context and acts as a {@link Screen} for rendering the main menu.
  */
-public class MainMenuScreen extends Stage implements Screen {
-    private MainMenuUserInterface mainMenuUserInterface;
+class MainMenuScreen extends Stage implements Screen {
+    private final MainMenuUserInterface mainMenuUserInterface;
 
     /**
      * Instantiates a {@link Stage} that acts as a main menu.

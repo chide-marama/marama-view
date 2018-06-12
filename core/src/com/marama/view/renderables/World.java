@@ -1,7 +1,5 @@
 package com.marama.view.renderables;
 
-
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -10,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
@@ -19,6 +18,7 @@ import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
+import com.marama.view.screens.GameScreen;
 
 /**
  * The {@link World} is an {@link Environment} that is able to render 3D {@link ModelInstance}'s
@@ -26,40 +26,69 @@ import com.marama.view.entities.instances.SelectableInstance;
 public class World extends Environment implements Renderable {
     private boolean loading;
 
-    private DirectionalLight directionalLight;
-    private PerspectiveCamera perspectiveCamera;
+    private final GameScreen gameScreen;
+    private final DirectionalLight directionalLight;
+    private final PerspectiveCamera perspectiveCamera;
     private ModelBatch modelBatch; // The unit that can render the modelInstances
     private CameraInputController cameraInputController;
 
-    private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
+    private final EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
     private Array<ModelInstance> modelInstances;
+    private final ShapeRenderer shapeRenderer;
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
      *
-     * @param directionalLight
-     * @param perspectiveCamera
-     * @param assetManager
+     * @param directionalLight The light that will be applied in the {@link World}.
+     * @param perspectiveCamera The main camera that will be used to view the {@link World}.
      */
-    public World(DirectionalLight directionalLight, PerspectiveCamera perspectiveCamera, AssetManager assetManager) {
+    public World(GameScreen gameScreen, DirectionalLight directionalLight, PerspectiveCamera perspectiveCamera) {
         super();
 
+        this.gameScreen = gameScreen;
         this.directionalLight = directionalLight;
         this.perspectiveCamera = perspectiveCamera;
         this.entityManager = EntityManager.getInstance();
+        this.shapeRenderer = new ShapeRenderer();
 
         init();
     }
 
     @Override
     public void render(float delta) {
-        if (loading && entityManager.update()) // When the assets are done loading.
+        // When the assets are done loading.
+        if (loading && entityManager.update()) {
             doneLoading();
+        }
+
         cameraInputController.update();
 
+        // Render all the ModelInstances.
         modelBatch.begin(perspectiveCamera);
-        modelBatch.render(modelInstances, this);
+        for (final ModelInstance instance : modelInstances) {
+            modelBatch.render(instance, this);
+        }
         modelBatch.end();
+
+        // Render shapes.
+        shapeRenderer.setProjectionMatrix(perspectiveCamera.combined); // Accept the used PerspectiveCamera matrix.
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.begin();
+        for (final ModelInstance instance : modelInstances) {
+            if (instance instanceof SelectableInstance) {
+                SelectableInstance selectableInstance = (SelectableInstance) instance;
+                if (selectableInstance.isSelected()) {
+                    if (gameScreen.getActiveTool() == 0) {
+                        selectableInstance.drawDimensions(shapeRenderer);
+                    }
+
+                    if (gameScreen.getActiveTool() == 1) {
+                        selectableInstance.drawAxes(shapeRenderer);
+                    }
+                }
+            }
+        }
+        shapeRenderer.end();
     }
 
     @Override
@@ -88,15 +117,23 @@ public class World extends Environment implements Renderable {
         return cameraInputController;
     }
 
+    public PerspectiveCamera getPerspectiveCamera() {
+        return perspectiveCamera;
+    }
+
+    public Array<ModelInstance> getModelInstances() {
+        return modelInstances;
+    }
+
     /**
-     * Retrieving a {@link ModelInstance} from screen coordinates.
+     * Retrieving the closest  {@link ModelInstance} from screen coordinates.
      *
-     * @param screenX The x coordinate, origin is in the upper left corner
-     * @param screenY The y coordinate, origin is in the upper left corner
+     * @param screenX The x coordinate, origin is in the upper left corner.
+     * @param screenY The y coordinate, origin is in the upper left corner.
      * @return The {@link ModelInstance} if it was found, otherwise null.
      */
-    public ModelInstance getModelInstance(int screenX, int screenY) {
-        int index = getModelInstanceIndex(screenX, screenY);
+    public ModelInstance getClosestModelInstance(int screenX, int screenY) {
+        int index = getClosestInstanceIndex(screenX, screenY);
 
         if (index > -1) {
             return modelInstances.get(index);
@@ -106,27 +143,52 @@ public class World extends Environment implements Renderable {
     }
 
     /**
-     * Retrieving a {@link ModelInstance} index from screen coordinates.
+     * Retrieving the closest {@link ModelInstance} index from a {@link Ray}.
+     *
+     * @param ray The ray for which you want the collision checked.
+     * @return The {@link ModelInstance} if it was found, otherwise null.
+     */
+    public ModelInstance getClosestModelInstance(Ray ray) {
+        int index = getClosestInstanceIndex(ray);
+
+        if (index > -1) {
+            return modelInstances.get(index);
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieving the closest {@link ModelInstance} index from screen coordinates.
      *
      * @param screenX The x coordinate, origin is in the upper left corner.
      * @param screenY The y coordinate, origin is in the upper left corner.
      * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
      */
-    private int getModelInstanceIndex(int screenX, int screenY) {
+    private int getClosestInstanceIndex(int screenX, int screenY) {
+        Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
+        return getClosestInstanceIndex(ray);
+    }
+
+    /**
+     * Retrieving a {@link ModelInstance} index from a {@link Ray}.
+     *
+     * @return The index of the {@link ModelInstance} if it was found, otherwise -1.
+     */
+    private int getClosestInstanceIndex(Ray ray) {
         int result = -1;
         float distance = -1f;
 
         Vector3 position = new Vector3();
-        Ray ray = perspectiveCamera.getPickRay(screenX, screenY);
 
-        for (int i = 0; i < modelInstances.size - 1; ++i) {
+        for (int i = 0; i < modelInstances.size; ++i) {
             final SelectableInstance instance = (SelectableInstance) modelInstances.get(i);
 
             // Set the center location of the instance.
             instance.transform.getTranslation(position);
             position.add(instance.center);
 
-            float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance position.
+            float dist2 = ray.origin.dst2(position); // The squared distance from the ray origin to the instance cachedPosition.
 
             if (distance >= 0f && dist2 > distance) continue; // instance is not closer than a previous one.
 
@@ -137,6 +199,39 @@ public class World extends Environment implements Renderable {
         }
 
         return result;
+    }
+
+    /**
+     * Uses ray casting to find the closest intersection point with an object.
+     * It normalises the intersection point to make it so the point is
+     * relative to the modelInstance.
+     * Then it compares the intersection point to the location of the faces
+     * and gets the closest one.
+     *
+     * @param ray           The pick ray you want to intersect with the object, the origin.
+     * @param modelInstance The object whose face you want to detect.
+     * @return The index of the closest.
+     */
+    public int getClosestFaceIndex(Ray ray, SelectableInstance modelInstance) {
+        Vector3 intersect = new Vector3();
+        Vector3 position = modelInstance.getPosition();
+        int closest = -1;
+        float min = Integer.MAX_VALUE;
+
+        position.add(modelInstance.center);
+        Intersector.intersectRaySphere(ray, position, modelInstance.radius, intersect);
+        intersect.sub(position);
+
+        for (int j = 0; j < modelInstance.faces.size; j++) {
+            Vector3 temp = modelInstance.faces.get(j);
+            float dist = temp.dst(intersect);
+            if (dist < min) {
+                min = dist;
+                closest = j;
+            }
+        }
+
+        return closest;
     }
 
     /**
@@ -158,7 +253,7 @@ public class World extends Environment implements Renderable {
         set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 
         // Default camera settings.
-        perspectiveCamera.position.set(7f, 7f, 7f);
+        perspectiveCamera.position.set(5f, 5f, 5f);
         perspectiveCamera.lookAt(0, 0, 0);
         perspectiveCamera.near = 1f;
         perspectiveCamera.far = 300f;
@@ -169,8 +264,8 @@ public class World extends Environment implements Renderable {
 
         // Add the three maramafications via the json file to the EntityManager.
         entityManager.loadMaramafication("marams/sphere.json");
+        entityManager.loadMaramafication("marams/cylinder.json");
         entityManager.loadMaramafication("marams/block.json");
-        entityManager.loadMaramafication("marams/donut.json");
     }
 
     /**
@@ -178,7 +273,7 @@ public class World extends Environment implements Renderable {
      */
     private void doneLoading() {
         ObjectMap<String, Maramafication> maramaficationsObjectMap = entityManager.getMaramafications();
-        float pos = 0f;
+        float pos = -2f;
         for (ObjectMap.Entries<String, Maramafication> maramaficationsIterator =
              maramaficationsObjectMap.entries(); maramaficationsIterator.hasNext(); ) {
 
@@ -187,10 +282,10 @@ public class World extends Environment implements Renderable {
             final Maramafication maramafication = (Maramafication) maramaficationEntry.value;
             try {
                 SelectableInstance currentSelectableInstance = maramafication.createInstance();
-                currentSelectableInstance.transform.setToScaling(3.0f, 3.0f, 3.0f);
-                currentSelectableInstance.transform.setToTranslation(pos, 0f, 0f);
+                currentSelectableInstance.transform.translate(pos, 0f, 0f);
+                currentSelectableInstance.updateBoundingBoxPositions();
                 modelInstances.add(currentSelectableInstance);
-                pos += 3f;
+                pos += 2f;
             } catch (ModelNotFoundException e) {
                 e.printStackTrace();
             }
@@ -198,5 +293,41 @@ public class World extends Environment implements Renderable {
 
         // Quit loading else this function will be called every render.
         loading = false;
+    }
+
+    /**
+     * Add a {@link SelectableInstance} seamlessly to another {@link SelectableInstance} and add it to the {@link World}.
+     *
+     * @param originInstance The {@link SelectableInstance} to add the target instance to.
+     * @param targetInstance The {@link SelectableInstance} that will be added to the origin instance.
+     * @param originFace     ...
+     * @param targetFace
+     */
+    public void addFaceToFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
+        moveFaceToFaceBasic(originInstance, targetInstance, originFace, targetFace);
+        modelInstances.add(targetInstance);
+    }
+
+    /**
+     * Add a {@link SelectableInstance} seamlessly to another {@link SelectableInstance}.
+     *
+     * @param originInstance
+     * @param targetInstance
+     * @param originFace
+     * @param targetFace
+     */
+    public void moveFaceToFaceBasic(SelectableInstance originInstance, SelectableInstance targetInstance, Vector3 originFace, Vector3 targetFace) {
+        Vector3 position = originInstance.transform.getTranslation(new Vector3());
+        position.add(originFace).sub(targetFace);
+        targetInstance.transform.setToTranslation(position);
+    }
+
+    /**
+     * ???
+     *
+     * @param selectableInstance
+     */
+    public void deleteObject(SelectableInstance selectableInstance) {
+        modelInstances.removeValue(selectableInstance, true);
     }
 }

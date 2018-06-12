@@ -21,7 +21,7 @@ public class MaramaficationLoader extends AsynchronousAssetLoader<Maramafication
     // The currently loaded maramafication.
     private Maramafication maramafication;
     // Remember the JsonReader so that it can be used for all maramafications
-    private JsonReader jsonReader;
+    private final JsonReader jsonReader;
 
     public MaramaficationLoader(FileHandleResolver resolver) {
         super(resolver);
@@ -63,7 +63,7 @@ public class MaramaficationLoader extends AsynchronousAssetLoader<Maramafication
         return null;
     }
 
-    static public class MaramaficationLoaderParameter extends AssetLoaderParameters<Maramafication> {
+    static class MaramaficationLoaderParameter extends AssetLoaderParameters<Maramafication> {
     }
 
 }

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marama.view.screens.SplashScreen;
 
 /**
@@ -12,11 +11,8 @@ import com.marama.view.screens.SplashScreen;
  */
 public class View extends Game {
     @Override
-    public void create () {
-        setScreen(new SplashScreen(
-            this,
-            new ScreenViewport()
-        ));
+    public void create() {
+        setScreen(new SplashScreen(this, new ScreenViewport()));
     }
 
     @Override
