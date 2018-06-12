@@ -29,7 +29,6 @@ public class SelectableInstance extends ModelInstance {
 
     public String name;
     public Array<Vector3> faces;
-
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
      *

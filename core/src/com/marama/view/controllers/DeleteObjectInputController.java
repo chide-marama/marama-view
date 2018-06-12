@@ -17,8 +17,24 @@ public class DeleteObjectInputController extends InputAdapter {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
-        DeletionSelected = ((SelectableInstance) gameScreen.world.getClosestModelInstance(ray));
-        DeletionSelected.setOpacity(deletionOpacity);
+        SelectableInstance instance = (SelectableInstance) gameScreen.world.getClosestModelInstance(ray);
+        if (instance != null) {
+            if (DeletionSelected != null) {
+                DeletionSelected.setOpacity(1f);
+            }
+            if (instance == DeletionSelected) {
+                gameScreen.world.deleteObject(instance);
+                DeletionSelected = null;
+            } else {
+                DeletionSelected = ((SelectableInstance) gameScreen.world.getClosestModelInstance(ray));
+                DeletionSelected.setOpacity(deletionOpacity);
+            }
+        } else {
+            if (DeletionSelected != null) {
+                DeletionSelected.setOpacity(1f);
+                DeletionSelected = null;
+            }
+        }
         return false;
     }
 
@@ -31,11 +47,6 @@ public class DeleteObjectInputController extends InputAdapter {
         Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
         SelectableInstance instance = (SelectableInstance) gameScreen.world.getClosestModelInstance(ray);
 
-        if (instance != null && instance == DeletionSelected) {
-            gameScreen.world.deleteObject(instance);
-        }
-        DeletionSelected.setOpacity(1f);
-        DeletionSelected = null;
         return false; // Continue to the next 'touchDragged' listener.
     }
 }
