@@ -11,7 +11,7 @@ This project uses [libGDX](https://libgdx.badlogicgames.com/). More info about t
 
 #### Intellij
 - Clone the repository
-- File -> Open -> marama-view.ipr
+- File -> Open -> build.gradle
 
 #### Eclipse
 - Clone the repository
