@@ -6,17 +6,17 @@ import com.marama.view.entities.instances.SelectableInstance;
 import com.marama.view.screens.GameScreen;
 
 public class DeleteObjectInputController extends InputAdapter {
-    private GameScreen gameScreen;
+    private final GameScreen gameScreen;
     private SelectableInstance DeletionSelected = null;
     public DeleteObjectInputController(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
     }
 
-    private float deletionOpacity = 0.5f;
+    private final float deletionOpacity = 0.5f;
 
     @Override
-    public boolean touchDown(int screenX, int screeny, int pointer, int button) {
-        Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screeny);
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        Ray ray = gameScreen.world.getPerspectiveCamera().getPickRay(screenX, screenY);
         DeletionSelected = ((SelectableInstance) gameScreen.world.getClosestModelInstance(ray));
         DeletionSelected.setOpacity(deletionOpacity);
         return false;

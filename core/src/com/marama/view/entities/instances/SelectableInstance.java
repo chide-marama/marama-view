@@ -51,7 +51,7 @@ public class SelectableInstance extends ModelInstance {
         boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
         radius = dimensions.len() / 2f;
 
-        faces = calculateFacesfromBounding();
+        faces = calculateFacesFromBounding();
         axes = new Axes(getPosition());
     }
 
@@ -167,7 +167,7 @@ public class SelectableInstance extends ModelInstance {
     /**
      * Should only be used on cubes or objects with similar faces.
      */
-    private Array<Vector3> calculateFacesfromBounding() {
+    private Array<Vector3> calculateFacesFromBounding() {
         Array<Vector3> faces = new Array<Vector3>();
         Vector3 bounds = new Vector3();
         boundingBox.getDimensions(bounds);

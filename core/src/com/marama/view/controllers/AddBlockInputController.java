@@ -10,7 +10,7 @@ import com.marama.view.screens.GameScreen;
 
 public class AddBlockInputController extends InputAdapter {
     private final GameScreen gameScreen;
-    private float SelectionOpacity = 0.25f;
+    private final float SelectionOpacity = 0.25f;
     private SelectableInstance targetInstance;
 
     /**

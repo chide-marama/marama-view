@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.marama.view.entities.exceptions.ModelNotFoundException;
 import com.marama.view.entities.instances.SelectableInstance;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class Maramafication {

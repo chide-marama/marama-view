@@ -28,15 +28,15 @@ import com.marama.view.screens.GameScreen;
 public class World extends Environment implements Renderable {
     private boolean loading;
 
-    private GameScreen gameScreen;
-    private DirectionalLight directionalLight;
-    private PerspectiveCamera perspectiveCamera;
+    private final GameScreen gameScreen;
+    private final DirectionalLight directionalLight;
+    private final PerspectiveCamera perspectiveCamera;
     private ModelBatch modelBatch; // The unit that can render the modelInstances
     private CameraInputController cameraInputController;
 
-    private EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
+    private final EntityManager entityManager; // The unit that can hold all the models of the currently loaded maramafications.
     private Array<ModelInstance> modelInstances;
-    private ShapeRenderer shapeRenderer;
+    private final ShapeRenderer shapeRenderer;
 
     /**
      * Instantiates a new {@link World} which is able to render 3D {@link ModelInstance}'s.
