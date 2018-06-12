@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.marama.view.entities.EntityManager;
 import com.marama.view.entities.Maramafication;
 import com.marama.view.renderables.Renderable;
-import com.marama.view.renderables.World;
 import com.marama.view.screens.GameScreen;
 
 /**
@@ -22,16 +21,9 @@ import com.marama.view.screens.GameScreen;
  */
 public class WorldUserInterface extends Stage implements Renderable {
     private final GameScreen gameScreen;
-    private final World world;
     private final Skin skin;
 
-    /* Set a block size including and a padding so we
-     * can work with these throughout the rest of the class. */
-    private final float blockSize = 100f;
-    private final float padding = 10f;
-
-    public WorldUserInterface(final GameScreen gameScreen, final World world, Skin skin) {
-        this.world = world;
+    public WorldUserInterface(final GameScreen gameScreen, Skin skin) {
         this.skin = skin;
         this.gameScreen = gameScreen;
 
@@ -70,6 +62,9 @@ public class WorldUserInterface extends Stage implements Renderable {
     }
 
     private Table maramaList() {
+        float blockSize = 100f;
+        float padding = 10f;
+
         Table table = new Table(); // Create the table that contains the UI elements
         table.left().top(); // Make the table stick to the upper left corner
 
@@ -77,6 +72,8 @@ public class WorldUserInterface extends Stage implements Renderable {
         ObjectMap<String, Maramafication> maramaficationsObjectMap = EntityManager.getInstance().getMaramafications();
 
         // Loop through the different maramafications in the object map
+        /* Set a block size including and a padding so we
+         * can work with these throughout the rest of the class. */
         for (ObjectMap.Entries<String, Maramafication> maramaficationsIterator =
              maramaficationsObjectMap.entries(); maramaficationsIterator.hasNext(); ) {
 
@@ -88,7 +85,7 @@ public class WorldUserInterface extends Stage implements Renderable {
             Texture texture = new Texture(maramafication.getImageLocation());
             Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
 
-            // Give the non selected maramas in the list a tint
+            // Give the non selected maramafications in the list a tint
             if (!maramafication.getName().equals(gameScreen.getActiveMarama())) {
                 drawable = new TextureRegionDrawable(new TextureRegion(texture)).tint(new Color(0, 0, 0, 0.2f));
             }
@@ -121,12 +118,6 @@ public class WorldUserInterface extends Stage implements Renderable {
         table.setHeight(height);
         table.setPosition(0f, getViewport().getScreenHeight() - height);
 
-        // Set the background color of the table using a pixmap.
-        // Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        // pixmap.setColor(5f, 5f, 5f, 1f);
-        // pixmap.fill();
-        // table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pixmap))));
-
         return table;
     }
 
@@ -138,8 +129,8 @@ public class WorldUserInterface extends Stage implements Renderable {
         tools.add(new TextButton("Remove tool", skin, "default"));
 
         int padding = 20;
-        int toolheight = (int) tools.get(0).getHeight() + padding;
-        int panelHeight = tools.size * toolheight + (padding * 2);
+        int toolHeight = (int) tools.get(0).getHeight() + padding;
+        int panelHeight = tools.size * toolHeight + (padding * 2);
         int panelWidth = 140;
 
         Table toolsPanel = new Table();

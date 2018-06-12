@@ -10,12 +10,11 @@ import com.marama.view.screens.GameScreen;
  * A {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
  */
 public class SelectObjectInputController extends InputAdapter {
-    private GameScreen gameScreen;
+    private final GameScreen gameScreen;
     private SelectableInstance newSelectableInstance = null;
     private SelectableInstance currentSelectableInstance = null;
 
     private Vector2 touchDownMousePosition;
-    private int maxDifference = 6;
 
     /**
      * Instantiates an {@link InputAdapter} specifically for selecting 3D objects rendered in {@link World}.
@@ -35,6 +34,8 @@ public class SelectObjectInputController extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        int maxDifference = 6;
+
         // Check whether the mouse was moved.
         Vector2 touchUpMousePosition = new Vector2(screenX, screenY);
         Vector2 difference = touchUpMousePosition.sub(touchDownMousePosition);

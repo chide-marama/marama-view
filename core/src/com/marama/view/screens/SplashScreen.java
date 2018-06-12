@@ -13,12 +13,12 @@ import com.marama.view.View;
  * This class acts as a splash screen that shows the Marama logo on application startup.
  */
 public class SplashScreen extends ScreenAdapter {
-    private SpriteBatch batch;
-    private Sprite splash;
+    private final SpriteBatch batch;
+    private final Sprite splash;
     private float elapsedTime;
 
     private final View view;
-    private Viewport viewport;
+    private final Viewport viewport;
 
     private final double SPLASH_DURATION = 2.0; // Total duration for the splash screen. From start of the app to appearance of the main menu.
     private final double FADE_OUT_START = SPLASH_DURATION * 0.6; // The duration is tweak-able. Try to keep it between 0.1 and 0.9 for best effect.
@@ -80,7 +80,7 @@ public class SplashScreen extends ScreenAdapter {
      * Helper function for Render().
      * Gives the alpha value for a linear fade-out as a function of time.
      *
-     * @param currentTime
+     * @param currentTime The elapsed time of the animation.
      * @return alpha value between zero and one.
      */
     private float newAlpha(double currentTime) {

@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 
 
-public abstract class BoundingBoxHelper {
+abstract class BoundingBoxHelper {
 
     /**
      * Return the vertices of a {@link BoundingBox} as an {@link Array}
@@ -28,7 +28,7 @@ public abstract class BoundingBoxHelper {
     }
 
     /**
-     * Draws the vertices of a boundingbox.
+     * Draws the vertices of a bounding box.
      *
      * @param shapeRenderer The {@link ShapeRenderer}'s context to draw in.
      * @param boundingBox   The {@link BoundingBox} to draw.

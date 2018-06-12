@@ -14,8 +14,8 @@ import com.marama.view.renderables.Renderable;
 import com.marama.view.screens.GameScreen;
 
 public class MainMenuUserInterface extends Stage implements Renderable {
-    private View view;
-    private Skin skin;
+    private final View view;
+    private final Skin skin;
 
     public MainMenuUserInterface(final View view, Skin skin) {
         this.view = view;

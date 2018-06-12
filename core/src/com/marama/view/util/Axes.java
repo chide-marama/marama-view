@@ -8,12 +8,10 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import java.util.ArrayList;
 
 public class Axes {
-    private float length = 1.5f;
-    private float coneLength = 0.15f;
-    private float coneHeight = 0.05f;
-    private int coneSegments = 16;
-    private float bbHeight = 0.1f;
-    private float bbWidth = length + coneLength;
+    private final float length = 1.5f;
+    private final float coneLength = 0.15f;
+    private final float bbHeight = 0.1f;
+    private final float bbWidth = length + coneLength;
 
     public BoundingBox boundingBoxX;
     public BoundingBox boundingBoxY;
@@ -41,6 +39,8 @@ public class Axes {
      * @param origin        The location where drawing starts.
      */
     public void draw(ShapeRenderer shapeRenderer, Vector3 origin) {
+        int coneSegments = 16;
+        float coneHeight = 0.05f;
         Vector3 target;
 
         // X Line

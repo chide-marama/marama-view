@@ -19,26 +19,23 @@ import com.marama.view.util.Axes;
 public class SelectableInstance extends ModelInstance {
     public final BoundingBox boundingBox = new BoundingBox();
     public final Vector3 center = new Vector3();
-    public final Vector3 dimensions = new Vector3();
     public final float radius;
-    public Axes axes;
+    public final Axes axes;
 
     private boolean selected = false;
-    private Material defaultMaterial;
+    private final Material defaultMaterial;
     private Vector3 oldPosition = new Vector3();
 
-    public String name;
-    public Array<Vector3> faces;
+    public final Array<Vector3> faces;
+
     /**
      * Instantiate a new {@link ModelInstance} that adds functionality for selecting them.
      *
      * @param model           The model to create the {@link SelectableInstance} from.
      * @param defaultMaterial The default material that should cover the model upon creation.
      */
-    public SelectableInstance(Model model, Material defaultMaterial, String name) {
+    public SelectableInstance(Model model, Material defaultMaterial) {
         super(model);
-
-        this.name = name;
 
         materials.add(new Material()); // Add a default empty material that we can clear and set.
         this.defaultMaterial = defaultMaterial;
@@ -47,8 +44,7 @@ public class SelectableInstance extends ModelInstance {
         // bounding box
         calculateBoundingBox(boundingBox);
         boundingBox.getCenter(center); // Actually sets the center value
-        boundingBox.getDimensions(dimensions); // Actually sets the dimensions value
-        radius = dimensions.len() / 2f;
+        radius = boundingBox.getDimensions(new Vector3()).len() / 2f;
 
         faces = calculateFacesFromBounding();
         axes = new Axes(getPosition());
@@ -113,7 +109,7 @@ public class SelectableInstance extends ModelInstance {
     /**
      * Draws the axes on top of this {@link SelectableInstance}.
      *
-     * @param shapeRenderer
+     * @param shapeRenderer The drawing {@link ShapeRenderer} context.
      */
     public void drawAxes(ShapeRenderer shapeRenderer) {
         axes.draw(shapeRenderer, getPosition());
@@ -122,7 +118,7 @@ public class SelectableInstance extends ModelInstance {
     /**
      * Draws a box around the {@link SelectableInstance}.
      *
-     * @param shapeRenderer
+     * @param shapeRenderer The drawing {@link ShapeRenderer} context.
      */
     public void drawDimensions(ShapeRenderer shapeRenderer) {
         Vector3 pos = transform.getTranslation(new Vector3());
@@ -137,7 +133,7 @@ public class SelectableInstance extends ModelInstance {
     /**
      * Draws the radius based on the dimensions.
      *
-     * @param shapeRenderer
+     * @param shapeRenderer The drawing {@link ShapeRenderer} context.
      */
     public void drawRadius(ShapeRenderer shapeRenderer) {
         Vector3 position = getPosition();
