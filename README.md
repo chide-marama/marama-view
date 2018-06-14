@@ -30,7 +30,7 @@ This project uses [libGDX](https://libgdx.badlogicgames.com/). More info about t
 - Make sure the project has access to the SDK path
   - Attach your SDK path to the ANDROID_HOME environment variable OR,
   - Add a local.properties file at the root of the project and add the following: sdk.dir=[path-to-your-SDK]
-- run AndroidLauncher.java
+- Run AndroidLauncher.java
 
 #### iOS
 Building for iOS is only available inside a OSX/MacOS environment. 
