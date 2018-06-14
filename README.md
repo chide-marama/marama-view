@@ -4,7 +4,6 @@ This repository represents the view layer of the Marama-editor. This project use
 
 TODO: describe connection to marama-editor project (technical details).
 
-###Travis
 [![Build Status](https://travis-ci.org/LuneCoding/marama-view.png)](https://travis-ci.org/LuneCoding/marama-view)
 ## Install
 This project uses [libGDX](https://libgdx.badlogicgames.com/). More info about the project structure is found [here](https://github.com/libgdx/libgdx/wiki/Project-Setup-Gradle#project-layout).
@@ -30,7 +29,7 @@ This project uses [libGDX](https://libgdx.badlogicgames.com/). More info about t
 - Make sure the project has access to the SDK path
   - Attach your SDK path to the ANDROID_HOME environment variable OR,
   - Add a local.properties file at the root of the project and add the following: sdk.dir=[path-to-your-SDK]
-- run AndroidLauncher.java
+- Run AndroidLauncher.java
 
 #### iOS
 Building for iOS is only available inside a OSX/MacOS environment. 
