@@ -84,7 +84,7 @@
     \end{wrapfigure}
     The Marama-view is devided in multiple parts to enforce reusibillity and modularity.
     These parts are drawn in the image on the right.
-    On the highest level, we define screens.
+    On the highest level, screens are defined.
     This is the current state of the game, and what the user can see.
     Examples of these screens are:
     \begin{itemize}
@@ -97,11 +97,11 @@
     Combining these parts one could create a functional view for the user.
     This way a screen can only contain one renderable as well.
     These renderables, mostly applicable to the 3D area, contain entities.
-    Entities could be anything, and for clarification we drew a block entity.
+    Entities could be anything, and for clarification a block entity is drawn.
     All the blocks drawn actually exist out of one entity.
     Out of that entity, three instances are created.
     If you want a different shape, you should add an entity, and create an instance out of that.
-    This system offers a lot of modularity since we can easily add more entities, more screens and more renderables.
+    This system offers a lot of modularity since it is not complicated to add more entities, more screens and more renderables.
     It is a clear system that is very easy-to-use and easy-to-understand.
     \newpage
 
@@ -208,7 +208,27 @@ It uses the face of the target \code{SelectableInstance} and that of the origin 
     \section{Continous Intergration}
     In this section build automation and its constituent components will be discussed.
     How we applied it, the software used and the targets and platforms supported are among a few.
+    \newpage
 
+    %------------------------------------------------------------------------------------------------------------------------------------------------------- Continuing Development
+    \section{Continuing Development}
+    This section describes the plan on how to continue with development in the best way.
+    The team worked on quite some user stories from april 9th, to june 15th.
+    The following functionalities are most critical at the moment to start working on:
+    \myparagraph{Communication from the View to the Editor}
+    A lot of communication is necessary for the View and Editor to work together.
+    The editor contains all marama logic that the View will visually represent.
+    To represent anything that contains marama logic, the communication needs te be established.
+    Research has already been done covering this topic an can be read at the \href{https://docs.google.com/document/d/1Y8Otrf0bv8S2L_Sy8z_-9-9obVQ05sHg25_af-n7i4U/edit}{devlog}.
+    \myparagraph{Able to load in a 3D object received from the Editor}
+    The Editor will determine the state that the view is in.
+    This means that the visual 3D state in the View is somewhere saved in the Editor.
+    The View will need to receive some information on which maramafications to show and how they look like.
+    \myparagraph{Validating if objects can be connected trough Editor communication}
+    This functionality needs some work in the Editor before this can be implemented in the View.
+    Whenever a user wants to connect two maramafications together the Editor needs to check if this connection is valid.
+    From the View, the Editor must be spoken with to decide whether the current move is valid.
+    The View must react to valid or invalid responses and needs te make clear to the user why the is valid or invalid.
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- References
     \bibliography{references}
