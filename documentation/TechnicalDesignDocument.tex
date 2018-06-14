@@ -215,16 +215,16 @@ It uses the face of the target \code{SelectableInstance} and that of the origin 
     This section describes the plan on how to continue with development in the best way.
     The team worked on quite some user stories from april 9th, to june 15th.
     The following functionalities are most critical at the moment to start working on:
-    \myparagraph{Communication from the View to the Editor}
+    \subsection{Communication from the View to the Editor}
     A lot of communication is necessary for the View and Editor to work together.
     The editor contains all marama logic that the View will visually represent.
     To represent anything that contains marama logic, the communication needs te be established.
     Research has already been done covering this topic an can be read at the \href{https://docs.google.com/document/d/1Y8Otrf0bv8S2L_Sy8z_-9-9obVQ05sHg25_af-n7i4U/edit}{devlog}.
-    \myparagraph{Able to load in a 3D object received from the Editor}
+    \subsection{Able to load in a 3D object received from the Editor}
     The Editor will determine the state that the view is in.
     This means that the visual 3D state in the View is somewhere saved in the Editor.
     The View will need to receive some information on which maramafications to show and how they look like.
-    \myparagraph{Validating if objects can be connected trough Editor communication}
+    \subsection{Validating if objects can be connected trough Editor communication}
     This functionality needs some work in the Editor before this can be implemented in the View.
     Whenever a user wants to connect two maramafications together the Editor needs to check if this connection is valid.
     From the View, the Editor must be spoken with to decide whether the current move is valid.
