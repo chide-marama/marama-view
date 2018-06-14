@@ -44,10 +44,10 @@
 
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Requirements
     \section{Requirements}
-    Functional and Non-functional requirements.
+    In this section the various functional and non-functional requirements the program has are listed.
     \subsection{Functional Requirements:}
     \begin{itemize}
-        \item The program should support loading different Marama shapes using the Marama transpiler.
+        \item The program should support loading different Marama shapes using the .mar files the Marama transpiler creates.
         \item The program should let users add Marama objects to a world.
         \item The program should let users see the Marama objects from any angle.
         \item The program should allow users to attach Maramas to one another by their joints.
@@ -238,12 +238,13 @@
     It is free for open source, and easy to use and learn.
     After some research between multiple options the available documentation, resources, and functionality, such as the multi-os build options, made the team decide that Travis would be the best option.
     There were a few problems with the setup, which will be detailed further below.
+
     The current implementation of Travis CI:
     \begin{itemize}
-        \item-Sets up a container for the project to run.
-        \item-Automatically builds the project
-        \item-Runs through all unit tests
-        \item-Allows live views and checks of the build.
+        \item Sets up a container for the project to run.
+        \item Automatically builds the project
+        \item Runs through all unit tests
+        \item Allows live views and checks of the build.
     \end{itemize}
     This is currently always a Linux build, due to being unable to properly set up a Mac OS or Windows build.
     This ensures that all commits have been properly tested (on Linux).
