@@ -4,7 +4,6 @@ This repository represents the view layer of the Marama-editor. This project use
 
 TODO: describe connection to marama-editor project (technical details).
 
-###Travis
 [![Build Status](https://travis-ci.org/LuneCoding/marama-view.png)](https://travis-ci.org/LuneCoding/marama-view)
 ## Install
 This project uses [libGDX](https://libgdx.badlogicgames.com/). More info about the project structure is found [here](https://github.com/libgdx/libgdx/wiki/Project-Setup-Gradle#project-layout).
