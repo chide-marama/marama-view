@@ -11,11 +11,8 @@ import com.marama.view.screens.SplashScreen;
  */
 public class View extends Game {
     @Override
-    public void create () {
-        setScreen(new SplashScreen(
-            this,
-            new ScreenViewport()
-        ));
+    public void create() {
+        setScreen(new SplashScreen(this, new ScreenViewport()));
     }
 
     @Override

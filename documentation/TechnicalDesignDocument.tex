@@ -1,7 +1,7 @@
 \documentclass[10pt]{extarticle} % article doctype, possible font size range from 8pt to 20pt with not all being avaiable.
 \setcounter{secnumdepth}{4} % Max. section depth, e.g. 3 means 4.1.1 is possible but not 4.1.1.2
 \title{\huge Technical Design Document MaramaUU}
-\author{Tim Hintzbergen, Wilbert Schepenaar, <nextname>    \\s1097561, s1094484, <nextcode>
+\author{Erik van Lune, Tim Hintzbergen, Wilbert Schepenaar, <nextname>    \\s1095043, s1097561, s1094484, <nextcode>
 \\\\ICTGPb
 \\Wilco Moerman}
 \date{May 8th, 2018 <TODO>}
@@ -17,6 +17,7 @@
 
 % custom commands
 \newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\} % Without \mbox{} all newlines will be ignored, making the first sentence appear on the same line as a paragraph title.
+\def\code#1{\texttt{#1}}
 
 \DeclareCaptionFormat{cancaption}{#1#2#3\par} % Normal format actually
 \DeclareCaptionLabelFormat{cancaptionlabel}{#1}
@@ -48,34 +49,8 @@
 
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Architecture
     \section{Architecture}
-    A high-level overview of the architecture of the system.
-    A UML component diagram can give a clear overview.
-    Boxes and arrows can be used during an early stage of the design.
-    It should be clear where different techniques (programming languages, database systems, data formats, frameworks, ..) are used in the system.
-    Class diagrams and package diagrams for the different components of your system.
-    Subdivide class diagrams into smaller diagrams that focus on a particular aspect.
-    Think about which details can be left out (e.g.\ private attributes and methods).
-    Always make sure diagrams are readable when printed on paper.
-    Only provide a textual description of classes and methods that require additional explanation.
-    \begin{itemize}
-              \item Sequence diagrams to show interactions between objects, if the interaction is particularly complex or involves many objects.
-              \item Deployment diagrams to show the hardware and middleware on which the different software components run.
-              \item Database designs, such as ERD diagrams.
-              \item Descriptions of custom protocols, data formats etc.
-              \item Security measures and considerations.
-              \item Algorithm designs.
-    \end{itemize}
-
-    \subsection[class_diagram]{Class diagram}
-
-    Database designs, such as ERD diagrams.
-
-    Descriptions of custom protocols, data formats etc.
-
-    Security measures and considerations.
-
-    Algorithm designs.
-
+    This section describes the architecture of the product.
+    A general class diagram is provided and all external libraries are found here.
     \subsection{Project Structure}
     LibGDX enforces a certain project structure\cite{libgdxprojstruct}.
     The project root directory contains subdirectories for each different target system. (e.g. android, ios, desktop)
@@ -88,7 +63,6 @@
     All project assets are stored inside the assets folder located inside the android folder
     This is because android builds require a certain project structure\cite{androidAssetLocation}.
     Finally there are a couple of build and property files together with the gitignore file.
-
 
     In the below diagram the core functionality of the entire Marama-View is described.\\
     This will be followed with an explanation of the different parts of this diagram for instance the LibGDX and the Screens part. \\
@@ -129,7 +103,6 @@
     If you want a different shape, you should add an entity, and create an instance out of that.
     This system offers a lot of modularity since we can easily add more entities, more screens and more renderables.
     It is a clear system that is very easy-to-use and easy-to-understand.
-
     \newpage
 
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Design Choices
@@ -191,11 +164,50 @@
     The first BoundingBox that is intersected by the ray will be the selected object.
     Casting the rays from the camera origin and locating the first intersected BoundingBox will prevent that 3D objects in the background will be selected.
 
+    \myparagraph{\href{\clickup{3v5e5}}{\##2e2b8} As a MGD or player I want to move a 3D object}
+    After an object has been selected and the move tool has been equipped three axes will surround the object in question.
+    By pulling or pushing on an axis the object moves along the axis.
+    One manipulate an axis by clicking with the left mouse button and dragging or by touch and dragging depending on your platform.
+    To calculate the distance an object should move the previous click event coordinates and current event coordinates are projected to the 3D world.
+    Then the difference between these two 3-vectors will be used to select the new position of the object based on the used axis.
+
+    \myparagraph{\href{\clickup{26uy5}}{\#26uy5} As a MGD or MG I want to be able to add M to world from the list}
+    The list shows all the possible M-blocks that can eventually be added to the world.
+    Only one m-bock can be selected at a time in this list.
+    The one that is selected will be the one that will be added to the world, if the add tool is selected.
+    These M-blocks are already loaded as assets in the entityManager, so that makes it quite simple to add these M-blocks to the world.
+    The world contains an array of all the instances that are currently rendered in the world.
+    Adding a M-block is as easy as retrieving the M-block from the entityManager, creating a new instance and adding this instance to the array.
+    The location where the M-block is placed is worked out in another user story: \href{\clickup{2e294}}{\#2e294}.
+
+    \myparagraph{\href{\clickup{2e2bq}}{\#2e2bq} As a MGD or player I want to be able to delete a 3D object from the world.}
+Object deletion is handled through an \code{InputController}, which libgdx uses to catch events from pointer behaviour.
+When deleting an \code{SelectableInstance}, the user selects an \code{SelectableInstance} using a \code{BoundingBox} and a \code{Ray} on the press of a button. This process is explained above: \href{\clickup{2e29e}}{\#2e29e}.
+When this occurs the \code{SelectableInstance} is turned slightly transparent to function as a preview.
+While a \code{SelectableInstance} is selected for deletion, the camera is locked.
+A second click will delete the \code{SelectableInstance} by removing it from the list of \code{SelectableInstance} in the world.
+If the click hits another \code{SelectableInstance}, that \code{SelectableInstance} becomes selected instead.
+    If it clicks elsewhere it deselects entirely.
+
+    \myparagraph{\href{\clickup{2e294}}{\#2e294} As a MGD or MG I want the blocks to connect while I am dragging it within a certain range.}
+Using the \code{BoundingBox} you can find which \code{SelectableInstance} you are close to fairly easily.
+However, there is no functionality in libGDX for finding the face of a \code{SelectableInstance}.
+To remedy this a new addition was made to the \code{SelectableInstance}: Joints.
+Every \code{SelectableInstance} has a list of Joints which contain a \code{Vector3} which states the location of the joints of the \code{SelectableInstance} that can be interacted with.
+When the ray wants to interact with a \code{SelectableInstance}(See \href{\clickup{2e29e}}{\#2e29e}) it returns the location of the intersect point.
+    The points get translated and compared to one another to find the closest face to the intersect point.
+Then the new \code{SelectableInstance} can be added.
+    The functionality is not wholly completed.
+It uses the face of the target \code{SelectableInstance} and that of the origin \code{SelectableInstance} to position the new \code{SelectableInstance} in the correct spot.
+    In the future it should also rotate so that the joints properly face one another.
+
+
+
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Build Automation
     \section{Continous Intergration}
     In this section build automation and its constituent components will be discussed.
-    How we applied it, the softwere used and the targets and platforms supported are among a few.
+    How we applied it, the software used and the targets and platforms supported are among a few.
 
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- References
