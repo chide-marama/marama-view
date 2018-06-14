@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 public class SelectableInstanceTest extends TestApplication {
 
     @Test
-    public void setPositionWillUpdateTheSelectableInstancePosition() {
+    public void setPositionShouldUpdateTheSelectableInstancePosition() {
         SelectableInstance selectableInstance = new SelectableInstance(new Model(), new Material());
 
         Vector3 initialPosition = selectableInstance.getPosition();
@@ -29,7 +29,7 @@ public class SelectableInstanceTest extends TestApplication {
     }
 
     @Test
-    public void setPositionWillUpdateTheBoundingBox() {
+    public void setPositionShouldUpdateTheBoundingBox() {
         Model box = new ModelBuilder().createBox(1f, 1f, 1f, new Material(ColorAttribute.createDiffuse(Color.WHITE)), Usage.Normal | Usage.Position);
         SelectableInstance selectableInstance = new SelectableInstance(box, new Material());
 
