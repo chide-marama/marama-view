@@ -60,7 +60,7 @@
         \item The logic of the program should be written entirely in Scala.
         \item The program should be made entirely open-source.
         \item The program should be accessible on multiple platforms, mostly focusing on desktop and the Android platform.
-        \item A continuous integration system must be used to ensure that the program can properly build, even with multiple people working on it.
+        \item A continuous integration system must be used to ensure that the program can properly build, so that multiple people can work on it and check that everyone's code is still running properly.
         \item The program should be made as modular as possible, so the view can be separated from the logic and parts of the program are replaceable.
     \end{itemize}
     \newpage
@@ -230,8 +230,8 @@
     The requirements for the project contain several important matters.
     The project needs to be able to be developed and built from several OSes.
     It needs to be able to switch hands between multiple developers easily, due to it being open source.
-    It should also obviously be thoroughly tested.
-    Because of this, the team, together with Chide decided that a continuous integration solution was necessary, and have been working on setting this up during the first part of the project.
+    Obviously it is also important that those developers can also see that the build they are working from is being tested properly.
+    Because of this the team, together with Chide, decided that a continuous integration solution was necessary, and have been working on setting this up during the first part of the project.
 
     The chosen CI tool is Travis CI .
     It is free for open source, and easy to use and learn.
@@ -247,12 +247,12 @@
     \end{itemize}
     This is currently always a Linux build, due to being unable to properly set up a Mac OS or Windows build.
     This ensures that all commits have been properly tested (on Linux).
-    Code review can be done without having to clone and test the code yourself.
+    Code review can be done without having to clone and test the code yourself, so you only need to look at the code without testing if it works or not.
 
     \textbf{Notes on Travis setup:}
     Travis needs to be activated per repository.
     The team repository has it activated, but that permission won't come along when it is merged to the main repository.
-    To activate this you will need to go to the travis website and allow them access to your GitHub account, then toggle the repositories you want it to review.
+    To activate this you will need to go to the travis website and allow them access to your GitHub account, then toggle the repositories you want it to track.
 
 
     \newpage
