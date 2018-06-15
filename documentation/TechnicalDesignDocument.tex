@@ -107,17 +107,6 @@
 
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Design Choices
     \section{Design Choices}
-    Design decisions: discuss the motivation (arguments/reasons), consequences,
-    and alternatives for the decisions.
-    Onderverdeeld in epics ipv user stories, makkelijker te snappen, overzichtelijker, etc. beschrijven..
-
-    Description of custom protocols, data formats etc.\\
-    Security measures and considerations.\\
-    Coding conventions may be added (as appendix).\\
-    Diagrams need textual explanation of context, interpretation and underlying design decisions and reasoning.\\
-
-    It has been decided to resizes texture assets to dimensions in the power of two.
-    This is to maintain backwards compatibility for OpenGL ES 1.0, to keep all functionality (some libGDX features are otherwise not supported) and it is a bit more memory efficient.\cite{libgdxpottex}
 
     \subsection{Epics}
     The view is made up of different epics.
@@ -136,6 +125,8 @@
     When the program is started, independent of which built is used, the splashscreen is displayed first.
     The splashscreen displays the marama-logo and fades out and finally transitions into the mainmenu.
     The fade-out time and total duration are variable and can be changed by changing their respective constants in the SplashScreen.java file.
+    It has been decided to resizes texture assets to dimensions in the power of two.
+    This is to maintain backwards compatibility for OpenGL ES 1.0, to keep all functionality (some libGDX features are otherwise not supported) and it is a bit more memory efficient.\cite{libgdxpottex}
 
     \myparagraph{Early sketch of the interface}
     \includegraphics[width=1\linewidth]{marama-view-sketch.jpg}
