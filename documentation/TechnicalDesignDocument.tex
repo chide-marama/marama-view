@@ -1,10 +1,10 @@
 \documentclass[10pt]{extarticle} % article doctype, possible font size range from 8pt to 20pt with not all being avaiable.
 \setcounter{secnumdepth}{4} % Max. section depth, e.g. 3 means 4.1.1 is possible but not 4.1.1.2
 \title{\huge Technical Design Document MaramaUU}
-\author{Erik van Lune, Tim Hintzbergen, Wilbert Schepenaar, <nextname>    \\s1095043, s1097561, s1094484, <nextcode>
+\author{Erik van Lune, Tim Hintzbergen, Wilbert Schepenaar   \\s1095043, s1097561, s1094484
 \\\\ICTGPb
 \\Wilco Moerman}
-\date{May 8th, 2018 <TODO>}
+\date{June 15th, 2018}
 
 % include packages
 \usepackage{graphicx}
@@ -44,7 +44,25 @@
 
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Requirements
     \section{Requirements}
-    Functional and Non-functional requirements.
+    In this section the various functional and non-functional requirements the program has are listed.
+    \subsection{Functional Requirements:}
+    \begin{itemize}
+        \item The program should support loading different maramafications using the .mar files the marama-transpiler creates.
+        \item The program should let users add maramafication objects to a world.
+        \item The program should let users see the maramafication objects from any angle.
+        \item The program should allow users to attach maramafication to one another by their joints.
+        \item The program should check if attaching maramafication to one another is possible.
+        \item The program should support maramafications of polymorphic algebraic data structure.
+        \item A game program should exist where the user can use the editor with a predefined set of maramafications.
+    \end{itemize}
+    \subsection{Non-Functional Requirements}
+    \begin{itemize}
+        \item The logic of the program should be written entirely in Scala.
+        \item The program should be made entirely open-source.
+        \item The program should be accessible on multiple platforms, mostly focusing on desktop and the Android platform.
+        \item A continuous integration system must be used to ensure that the program can properly build, and check that everyone's code is still running properly.
+        \item The program should be made as modular as possible, so the view can be separated from the logic and parts of the program are replaceable.
+    \end{itemize}
     \newpage
 
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Architecture
@@ -79,8 +97,9 @@
 
     \subsubsection[MaramaViewLogic]{Marama-View logic}
     For a game, a few elements are needed. These elements can clearly be determined by looking at the class diagram. \\
-    \begin{wrapfigure}[8]{r}{0.4\textwidth}
-        \includegraphics[width=0.4\textwidth]{marama-view-structure.jpg}
+    \begin{wrapfigure}{r}{5cm}
+        \centering
+        \includegraphics[width=0.4\textwidth, keepaspectratio]{marama-view-structure.jpg}
     \end{wrapfigure}
     The Marama-view is devided in multiple parts to enforce reusibillity and modularity.
     These parts are drawn in the image on the right.
@@ -107,17 +126,6 @@
 
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Design Choices
     \section{Design Choices}
-    Design decisions: discuss the motivation (arguments/reasons), consequences,
-    and alternatives for the decisions.
-    Onderverdeeld in epics ipv user stories, makkelijker te snappen, overzichtelijker, etc. beschrijven..
-
-    Description of custom protocols, data formats etc.\\
-    Security measures and considerations.\\
-    Coding conventions may be added (as appendix).\\
-    Diagrams need textual explanation of context, interpretation and underlying design decisions and reasoning.\\
-
-    It has been decided to resizes texture assets to dimensions in the power of two.
-    This is to maintain backwards compatibility for OpenGL ES 1.0, to keep all functionality (some libGDX features are otherwise not supported) and it is a bit more memory efficient.\cite{libgdxpottex}
 
     \subsection{Epics}
     The view is made up of different epics.
@@ -136,10 +144,17 @@
     When the program is started, independent of which built is used, the splashscreen is displayed first.
     The splashscreen displays the marama-logo and fades out and finally transitions into the mainmenu.
     The fade-out time and total duration are variable and can be changed by changing their respective constants in the SplashScreen.java file.
+    It has been decided to resizes texture assets to dimensions in the power of two.
+    This is to maintain backwards compatibility for OpenGL ES 1.0, to keep all functionality (some libGDX features are otherwise not supported) and it is a bit more memory efficient.\cite{libgdxpottex}
 
     \myparagraph{Early sketch of the interface}
-    \includegraphics[width=1\linewidth]{marama-view-sketch.jpg}
-    This sketch describes two pairs of different interfaces for the editor.
+    \begin{figure}[htb]
+        \centering
+        \includegraphics[width=11.5cm, angle=90, keepaspectratio]{marama-view-sketch.jpg}
+        \caption{First few sketches of the view interface.}
+        \label{fig:mvs}
+    \end{figure}
+    Figure \ref{fig:mvs} describes two pairs of different interfaces for the editor.
     The first pair shows different approaches to 'a pallette of maramafication'.
     The first outline includes a scrollable list and the second outline includes a (non-scrollable) pallette which the user can fill with the maramafication he or she needs at the moment.
     The second pair displays several ways to interact with an M-block in the editor.
@@ -181,33 +196,60 @@
     The location where the M-block is placed is worked out in another user story: \href{\clickup{2e294}}{\#2e294}.
 
     \myparagraph{\href{\clickup{2e2bq}}{\#2e2bq} As a MGD or player I want to be able to delete a 3D object from the world.}
-Object deletion is handled through an \code{InputController}, which libgdx uses to catch events from pointer behaviour.
-When deleting an \code{SelectableInstance}, the user selects an \code{SelectableInstance} using a \code{BoundingBox} and a \code{Ray} on the press of a button. This process is explained above: \href{\clickup{2e29e}}{\#2e29e}.
-When this occurs the \code{SelectableInstance} is turned slightly transparent to function as a preview.
-While a \code{SelectableInstance} is selected for deletion, the camera is locked.
-A second click will delete the \code{SelectableInstance} by removing it from the list of \code{SelectableInstance} in the world.
-If the click hits another \code{SelectableInstance}, that \code{SelectableInstance} becomes selected instead.
+    Object deletion is handled through an \code{InputController}, which libgdx uses to catch events from pointer behaviour.
+    When deleting an \code{SelectableInstance}, the user selects an \code{SelectableInstance} using a \code{BoundingBox} and a \code{Ray} on the press of a button. This process is explained above: \href{\clickup{2e29e}}{\#2e29e}.
+    When this occurs the \code{SelectableInstance} is turned slightly transparent to function as a preview.
+    While a \code{SelectableInstance} is selected for deletion, the camera is locked.
+    A second click will delete the \code{SelectableInstance} by removing it from the list of \code{SelectableInstance} in the world.
+    If the click hits another \code{SelectableInstance}, that \code{SelectableInstance} becomes selected instead.
     If it clicks elsewhere it deselects entirely.
 
     \myparagraph{\href{\clickup{2e294}}{\#2e294} As a MGD or MG I want the blocks to connect while I am dragging it within a certain range.}
-Using the \code{BoundingBox} you can find which \code{SelectableInstance} you are close to fairly easily.
-However, there is no functionality in libGDX for finding the face of a \code{SelectableInstance}.
-To remedy this a new addition was made to the \code{SelectableInstance}: Joints.
-Every \code{SelectableInstance} has a list of Joints which contain a \code{Vector3} which states the location of the joints of the \code{SelectableInstance} that can be interacted with.
-When the ray wants to interact with a \code{SelectableInstance}(See \href{\clickup{2e29e}}{\#2e29e}) it returns the location of the intersect point.
+    Using the \code{BoundingBox} you can find which \code{SelectableInstance} you are close to fairly easily.
+    However, there is no functionality in libGDX for finding the face of a \code{SelectableInstance}.
+    To remedy this a new addition was made to the \code{SelectableInstance}: Joints.
+    Every \code{SelectableInstance} has a list of Joints which contain a \code{Vector3} which states the location of the joints of the \code{SelectableInstance} that can be interacted with.
+    When the ray wants to interact with a \code{SelectableInstance}(See \href{\clickup{2e29e}}{\#2e29e}) it returns the location of the intersect point.
     The points get translated and compared to one another to find the closest face to the intersect point.
-Then the new \code{SelectableInstance} can be added.
+    Then the new \code{SelectableInstance} can be added.
     The functionality is not wholly completed.
-It uses the face of the target \code{SelectableInstance} and that of the origin \code{SelectableInstance} to position the new \code{SelectableInstance} in the correct spot.
+    It uses the face of the target \code{SelectableInstance} and that of the origin \code{SelectableInstance} to position the new \code{SelectableInstance} in the correct spot.
     In the future it should also rotate so that the joints properly face one another.
 
 
 
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Build Automation
-    \section{Continous Intergration}
+    \section{Continous Integration}
     In this section build automation and its constituent components will be discussed.
     How we applied it, the software used and the targets and platforms supported are among a few.
+
+    The requirements for the project contain several important matters.
+    The project needs to be able to be developed and built from several OSes.
+    It needs to be able to switch hands between multiple developers easily, due to it being open source.
+    Obviously it is also important that those developers can also see that the build they are working from is being tested properly.
+    Chide decided that a continuous integration solution was necessary, and the team has been working on setting this up during the first part of the project.
+
+    The chosen CI tool is Travis CI .
+    It is free for open source projects, and easy to use and learn.
+    After some research between multiple options the available documentation, resources, and functionality, such as the multi-os build options, made the team decide that Travis would be the best option.
+    There were a few problems with the setup, which will be detailed further below.
+
+    The current implementation of Travis CI:
+    \begin{itemize}
+        \item Sets up a container for the project to run.
+        \item Automatically builds the project
+        \item Runs through all unit tests
+        \item Allows live views and checks of the build.
+    \end{itemize}
+    This is currently always a Linux build, due to being unable to properly set up a Mac OS or Windows build.
+    This ensures that all commits have been properly tested (on Linux).
+    Code review can be done without having to clone and test the code yourself, so you only need to look at the code without testing if it works or not.
+
+    \textbf{Notes on Travis setup:}
+    Travis needs to be activated per repository.
+    The team repository has it activated, but that permission won't come along when it is merged to the main repository.
+    To activate this you will need to go to the travis website and allow them access to your GitHub account, then toggle the repositories you want it to track.
     \newpage
 
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Continuing Development
