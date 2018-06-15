@@ -101,12 +101,15 @@
 
     \subsubsection[MaramaViewLogic]{Marama-View logic}
     For a game, a few elements are needed. These elements can clearly be determined by looking at the class diagram. \\
-    \begin{wrapfigure}{r}{5cm}
+    \begin{figure}[htb]
         \centering
         \includegraphics[width=0.4\textwidth, keepaspectratio]{marama-view-structure.jpg}
-    \end{wrapfigure}
+        \caption{marama-view class diagram}
+        \label{fig:avs}
+    \end{figure}
+
     The Marama-view is devided in multiple parts to enforce reusibillity and modularity.
-    These parts are drawn in the image on the right.
+    These parts are drawn in the image in figure \ref{fig:avs}.
     On the highest level, screens are defined.
     This is the current state of the game, and what the user can see.
     Examples of these screens are:
