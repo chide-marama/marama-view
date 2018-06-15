@@ -97,12 +97,13 @@
 
     \subsubsection[MaramaViewLogic]{Marama-View logic}
     For a game, a few elements are needed. These elements can clearly be determined by looking at the class diagram. \\
-    \begin{wrapfigure}[8]{r}{0.4\textwidth}
-        \includegraphics[width=0.4\textwidth]{marama-view-structure.jpg}
+    \begin{wrapfigure}{r}{5cm}
+        \centering
+        \includegraphics[width=0.4\textwidth, keepaspectratio]{marama-view-structure.jpg}
     \end{wrapfigure}
     The Marama-view is devided in multiple parts to enforce reusibillity and modularity.
     These parts are drawn in the image on the right.
-    On the highest level, we define screens.
+    On the highest level, screens are defined.
     This is the current state of the game, and what the user can see.
     Examples of these screens are:
     \begin{itemize}
@@ -115,27 +116,16 @@
     Combining these parts one could create a functional view for the user.
     This way a screen can only contain one renderable as well.
     These renderables, mostly applicable to the 3D area, contain entities.
-    Entities could be anything, and for clarification we drew a block entity.
+    Entities could be anything, and for clarification a block entity is drawn.
     All the blocks drawn actually exist out of one entity.
     Out of that entity, three instances are created.
     If you want a different shape, you should add an entity, and create an instance out of that.
-    This system offers a lot of modularity since we can easily add more entities, more screens and more renderables.
+    This system offers a lot of modularity since it is not complicated to add more entities, more screens and more renderables.
     It is a clear system that is very easy-to-use and easy-to-understand.
     \newpage
 
     %------------------------------------------------------------------------------------------------------------------------------------------------------- Design Choices
     \section{Design Choices}
-    Design decisions: discuss the motivation (arguments/reasons), consequences,
-    and alternatives for the decisions.
-    Onderverdeeld in epics ipv user stories, makkelijker te snappen, overzichtelijker, etc. beschrijven..
-
-    Description of custom protocols, data formats etc.\\
-    Security measures and considerations.\\
-    Coding conventions may be added (as appendix).\\
-    Diagrams need textual explanation of context, interpretation and underlying design decisions and reasoning.\\
-
-    It has been decided to resizes texture assets to dimensions in the power of two.
-    This is to maintain backwards compatibility for OpenGL ES 1.0, to keep all functionality (some libGDX features are otherwise not supported) and it is a bit more memory efficient.\cite{libgdxpottex}
 
     \subsection{Epics}
     The view is made up of different epics.
@@ -154,10 +144,17 @@
     When the program is started, independent of which built is used, the splashscreen is displayed first.
     The splashscreen displays the marama-logo and fades out and finally transitions into the mainmenu.
     The fade-out time and total duration are variable and can be changed by changing their respective constants in the SplashScreen.java file.
+    It has been decided to resizes texture assets to dimensions in the power of two.
+    This is to maintain backwards compatibility for OpenGL ES 1.0, to keep all functionality (some libGDX features are otherwise not supported) and it is a bit more memory efficient.\cite{libgdxpottex}
 
     \myparagraph{Early sketch of the interface}
-    \includegraphics[width=1\linewidth]{marama-view-sketch.jpg}
-    This sketch describes two pairs of different interfaces for the editor.
+    \begin{figure}[htb]
+        \centering
+        \includegraphics[width=11.5cm, angle=90, keepaspectratio]{marama-view-sketch.jpg}
+        \caption{First few sketches of the view interface.}
+        \label{fig:mvs}
+    \end{figure}
+    Figure \ref{fig:mvs} describes two pairs of different interfaces for the editor.
     The first pair shows different approaches to 'a pallette of maramafication'.
     The first outline includes a scrollable list and the second outline includes a (non-scrollable) pallette which the user can fill with the maramafication he or she needs at the moment.
     The second pair displays several ways to interact with an M-block in the editor.
@@ -253,8 +250,27 @@
     Travis needs to be activated per repository.
     The team repository has it activated, but that permission won't come along when it is merged to the main repository.
     To activate this you will need to go to the travis website and allow them access to your GitHub account, then toggle the repositories you want it to track.
+    \newpage
 
-
+    %------------------------------------------------------------------------------------------------------------------------------------------------------- Continuing Development
+    \section{Continuing Development}
+    This section describes the plan on how to continue with development in the best way.
+    The team worked on quite some user stories from April 9th, to June 15th.
+    The following functionalities are most critical at the moment to start working on:
+    \subsection{Communication from the View to the Editor}
+    A lot of communication is necessary for the View and Editor to work together.
+    The editor contains all marama logic that the View will visually represent.
+    To represent anything that contains marama logic, the communication needs te be established.
+    Research has already been done covering this topic an can be read at the \href{https://docs.google.com/document/d/1Y8Otrf0bv8S2L_Sy8z_-9-9obVQ05sHg25_af-n7i4U/edit}{devlog}.
+    \subsection{Able to load in a 3D object received from the Editor}
+    The Editor will determine the state that the view is in.
+    This means that the visual 3D state in the View is somewhere saved in the Editor.
+    The View will need to receive some information on which maramafications to show and how they look like.
+    \subsection{Validating if objects can be connected trough Editor communication}
+    This functionality needs some work in the Editor before this can be implemented in the View.
+    Whenever a user wants to connect two maramafications together the Editor needs to check if this connection is valid.
+    From the View, the Editor must be spoken with to decide whether the current move is valid.
+    The View must react to valid or invalid responses and needs te make clear to the user why the is valid or invalid.
     \newpage
     %------------------------------------------------------------------------------------------------------------------------------------------------------- References
     \bibliography{references}
