@@ -1,0 +1,7 @@
+{
+	"id": "d2806948-0a11-4cd2-b035-3239bab456ae",
+	"name": "block",
+	"obj_location": "models/m-block.obj",
+	"image_location": "maram_images/block.png",
+	"joints": []
+}
